@@ -74,6 +74,13 @@ DCX 10L 公称 4.5V の起動電流 1.55A で、これに 12V をかける。そ
 
 ***書き途中***
 
+##### ラインセンサ
+- 野村先輩によると、アナログ値を返すセンサと、ディジタル値を返すセンサの二種類がある。
+- 試しに digikey で調べてみようとしたところ、『光センサ - フォトインタラプタ - スロットタイプ - トランジスタ出力』『光センサ - フォトインタラプタ - スロットタイプ - ロジック出力』という分類があり、トランジスタ出力が一般的なアナログ値を返すフォトインタラプタで、ロジック出力が野村先輩が言っていたディジタル値を返すセンサなのだろう。
+- 接続する抵抗によって閾値を変更する。
+- [なんかいい感じのサイト見つけた](https://components.omron.com/jp-ja/products/basic-knowledge/sensors/photomicro-sensors/technology)
+- [こっちはフォトセンサの設計についてのサイト](https://toshiba-semicon-storage.com/content/dam/toshiba-ss/jp/docs/design-support/elearning/elearning_discrete05_r51.pdf)
+
 ##### CPU
 先輩が STM32F405RGT6 を束買いしているので、とりあえずこれにするのはアリ。
 クロック数とメモリと機能的に、ロボトレにいい塩梅で使えそうなのがこの CPU らしい。
