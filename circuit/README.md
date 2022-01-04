@@ -94,6 +94,7 @@ digikey で以下の条件で絞り込んだ
 - Id：9A 以上 (上条件適応後だと 13A 以上)
 - 取り付けタイプ：面実装
 以上の条件だとただ一つ [DMHT3006LFJ](https://www.diodes.com/assets/Datasheets/DMHT3006LFJ.pdf) のみに絞られた。
+トランジスタシングルの場合で絞り込んでみたい。
 
 ***書き途中***
 
