@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name murakumo-rescue)(type Legacy)(uri ${KIPRJMOD}/murakumo-rescue.lib)(options "")(descr ""))
+)
