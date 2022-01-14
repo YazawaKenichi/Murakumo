@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 EESchema Schematic File Version 4
 EELAYER 30 0
 EELAYER END
@@ -1006,3 +1007,21 @@ Wire Bus Line
 Wire Bus Line
 	17400 6650 17400 7750
 $EndSCHEMATC
+=======
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A2 23386 16535
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$EndSCHEMATC
+>>>>>>> 1add34e6a75729a51462b1725ce0118c21c4f0f6

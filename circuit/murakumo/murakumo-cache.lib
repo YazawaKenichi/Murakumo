@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
@@ -155,3 +156,9 @@ ENDDRAW
 ENDDEF
 #
 #End Library
+=======
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+#End Library
+>>>>>>> 1add34e6a75729a51462b1725ce0118c21c4f0f6
