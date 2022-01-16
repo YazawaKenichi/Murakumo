@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 update=2021/11/10 11:54:47
 version=1
 last_client=kicad
@@ -291,4 +290,3 @@ uViaDrill=0.1
 dPairWidth=0.2
 dPairGap=0.25
 dPairViaGap=0.25
->>>>>>> 1add34e6a75729a51462b1725ce0118c21c4f0f6
