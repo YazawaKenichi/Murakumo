@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 回路設計時のノート
 
 いろいろ悩みそうなところだけど、どこから悩めばいいのかもわからなかったので、まずはモータドライバ回路から設計しようと思う。
@@ -239,4 +238,3 @@ SD カードを載せたいのであれば STM32F446 で、内部フラッシュ
 - サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/)
 - H ブリッジモータドライバ : [DRV8874PWPRCT](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874PWPR/11502339?s=N4IgTCBcDaIAQBEBKA1AHGg7AFgAoHVckQBdAXyA) 及び それを搭載した評価ボード [DRV8874EVM](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874EVM/10416576)
 - フォトトランジスタ : [TEMT7100]()
->>>>>>> 1add34e6a75729a51462b1725ce0118c21c4f0f6
