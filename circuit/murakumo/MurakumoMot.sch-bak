@@ -1,0 +1,438 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title "Murakumo Motor Circuit"
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:R R?
+U 1 1 61EEE661
+P 2950 4600
+AR Path="/61EEE661" Ref="R?"  Part="1" 
+AR Path="/61EDC519/61EEE661" Ref="R?"  Part="1" 
+F 0 "R?" H 3020 4646 50  0000 L CNN
+F 1 "Ripropi" H 3020 4555 50  0000 L CNN
+F 2 "" V 2880 4600 50  0001 C CNN
+F 3 "~" H 2950 4600 50  0001 C CNN
+	1    2950 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE667
+P 2950 4850
+AR Path="/61EEE667" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE667" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2950 4600 50  0001 C CNN
+F 1 "GND" H 2955 4677 50  0000 C CNN
+F 2 "" H 2950 4850 50  0001 C CNN
+F 3 "" H 2950 4850 50  0001 C CNN
+	1    2950 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 61EEE673
+P 3350 3500
+AR Path="/61EEE673" Ref="R?"  Part="1" 
+AR Path="/61EDC519/61EEE673" Ref="R?"  Part="1" 
+F 0 "R?" H 3420 3546 50  0000 L CNN
+F 1 "10k" H 3420 3455 50  0000 L CNN
+F 2 "" V 3280 3500 50  0001 C CNN
+F 3 "~" H 3350 3500 50  0001 C CNN
+	1    3350 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 4550 3350 4550
+Wire Wire Line
+	3350 3650 3350 3750
+Wire Wire Line
+	3350 3250 3350 3350
+Wire Wire Line
+	4350 4550 4450 4550
+Wire Wire Line
+	4650 4350 4650 4450
+Wire Wire Line
+	4350 4350 4650 4350
+Wire Wire Line
+	4350 4450 4650 4450
+Connection ~ 4650 4450
+Wire Wire Line
+	4350 4250 4850 4250
+$Comp
+L Device:C C?
+U 1 1 61EEE691
+P 4650 3450
+AR Path="/61EEE691" Ref="C?"  Part="1" 
+AR Path="/61EDC519/61EEE691" Ref="C?"  Part="1" 
+F 0 "C?" H 4765 3496 50  0000 L CNN
+F 1 "0.1u" H 4765 3405 50  0000 L CNN
+F 2 "" H 4688 3300 50  0001 C CNN
+F 3 "~" H 4650 3450 50  0001 C CNN
+	1    4650 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 61EEE697
+P 5050 3300
+AR Path="/61EEE697" Ref="C?"  Part="1" 
+AR Path="/61EDC519/61EEE697" Ref="C?"  Part="1" 
+F 0 "C?" H 5165 3346 50  0000 L CNN
+F 1 "0.1u" H 5165 3255 50  0000 L CNN
+F 2 "" H 5088 3150 50  0001 C CNN
+F 3 "~" H 5050 3300 50  0001 C CNN
+	1    5050 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE69D
+P 5050 3550
+AR Path="/61EEE69D" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE69D" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5050 3300 50  0001 C CNN
+F 1 "GND" H 5055 3377 50  0000 C CNN
+F 2 "" H 5050 3550 50  0001 C CNN
+F 3 "" H 5050 3550 50  0001 C CNN
+	1    5050 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C?
+U 1 1 61EEE6A3
+P 5450 3300
+AR Path="/61EEE6A3" Ref="C?"  Part="1" 
+AR Path="/61EDC519/61EEE6A3" Ref="C?"  Part="1" 
+F 0 "C?" H 5568 3346 50  0000 L CNN
+F 1 "100u" H 5568 3255 50  0000 L CNN
+F 2 "" H 5488 3150 50  0001 C CNN
+F 3 "~" H 5450 3300 50  0001 C CNN
+	1    5450 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE6A9
+P 5450 3550
+AR Path="/61EEE6A9" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE6A9" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5450 3300 50  0001 C CNN
+F 1 "GND" H 5455 3377 50  0000 C CNN
+F 2 "" H 5450 3550 50  0001 C CNN
+F 3 "" H 5450 3550 50  0001 C CNN
+	1    5450 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+BATT #PWR?
+U 1 1 61EEE6AF
+P 5450 2950
+AR Path="/61EEE6AF" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE6AF" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5450 2800 50  0001 C CNN
+F 1 "+BATT" H 5465 3123 50  0000 C CNN
+F 2 "" H 5450 2950 50  0001 C CNN
+F 3 "" H 5450 2950 50  0001 C CNN
+	1    5450 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 4550 4850 4250
+Wire Wire Line
+	4650 4450 4650 4550
+Wire Wire Line
+	5450 3050 5450 3150
+Wire Wire Line
+	5050 3050 5050 3150
+Wire Wire Line
+	4450 3750 4350 3750
+Wire Wire Line
+	4450 3050 4450 3750
+Wire Wire Line
+	5050 3450 5050 3550
+Wire Wire Line
+	5450 3550 5450 3450
+Wire Wire Line
+	3350 3750 3450 3750
+$Comp
+L Device:R R?
+U 1 1 61EEE6DA
+P 2400 4550
+AR Path="/61EEE6DA" Ref="R?"  Part="1" 
+AR Path="/61EDC519/61EEE6DA" Ref="R?"  Part="1" 
+F 0 "R?" H 2470 4596 50  0000 L CNN
+F 1 "Rref2" H 2470 4505 50  0000 L CNN
+F 2 "" V 2330 4550 50  0001 C CNN
+F 3 "~" H 2400 4550 50  0001 C CNN
+	1    2400 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE6E0
+P 2400 4850
+AR Path="/61EEE6E0" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE6E0" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2400 4600 50  0001 C CNN
+F 1 "GND" H 2405 4677 50  0000 C CNN
+F 2 "" H 2400 4850 50  0001 C CNN
+F 3 "" H 2400 4850 50  0001 C CNN
+	1    2400 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 61EEE6E8
+P 2400 3800
+AR Path="/61EEE6E8" Ref="R?"  Part="1" 
+AR Path="/61EDC519/61EEE6E8" Ref="R?"  Part="1" 
+F 0 "R?" H 2470 3846 50  0000 L CNN
+F 1 "Rref1" H 2470 3755 50  0000 L CNN
+F 2 "" V 2330 3800 50  0001 C CNN
+F 3 "~" H 2400 3800 50  0001 C CNN
+	1    2400 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2400 3550 2400 3650
+Wire Wire Line
+	4450 3050 4650 3050
+Wire Wire Line
+	4650 3300 4650 3050
+Connection ~ 4650 3050
+Wire Wire Line
+	4650 3050 5050 3050
+Wire Wire Line
+	4650 3600 4650 3850
+Wire Wire Line
+	4650 3850 4350 3850
+Connection ~ 5050 3050
+Wire Wire Line
+	5050 3050 5450 3050
+Wire Wire Line
+	5450 2950 5450 3050
+Connection ~ 5450 3050
+$Comp
+L power:VCC #PWR?
+U 1 1 61EEE701
+P 2400 3550
+AR Path="/61EEE701" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE701" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2400 3400 50  0001 C CNN
+F 1 "VCC" H 2415 3723 50  0000 C CNN
+F 2 "" H 2400 3550 50  0001 C CNN
+F 3 "" H 2400 3550 50  0001 C CNN
+	1    2400 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 61EEE707
+P 3350 3250
+AR Path="/61EEE707" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE707" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3350 3100 50  0001 C CNN
+F 1 "VCC" H 3365 3423 50  0000 C CNN
+F 2 "" H 3350 3250 50  0001 C CNN
+F 3 "" H 3350 3250 50  0001 C CNN
+	1    3350 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x10 J?
+U 1 1 61F1B58E
+P 1900 1700
+F 0 "J?" H 1818 975 50  0000 C CNN
+F 1 "Conn_01x10" H 1818 1066 50  0000 C CNN
+F 2 "" H 1900 1700 50  0001 C CNN
+F 3 "~" H 1900 1700 50  0001 C CNN
+	1    1900 1700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2400 4150 3450 4150
+Entry Wire Line
+	2850 4050 2750 3950
+Entry Wire Line
+	2850 3950 2750 3850
+Entry Wire Line
+	2850 3850 2750 3750
+Entry Wire Line
+	2850 3750 2750 3650
+Entry Wire Line
+	2750 3750 2850 3850
+Entry Wire Line
+	2650 1700 2750 1800
+Entry Wire Line
+	2650 1800 2750 1900
+Entry Wire Line
+	2650 1900 2750 2000
+Entry Wire Line
+	2650 2000 2750 2100
+Text Label 2850 3750 0    50   ~ 0
+D1_FAULT
+Text Label 2850 3850 0    50   ~ 0
+D1_SLEEP
+Text Label 2850 3950 0    50   ~ 0
+D1_IN1
+Text Label 2850 4050 0    50   ~ 0
+D1_IN2
+Wire Wire Line
+	2400 3950 2400 4150
+Wire Wire Line
+	2950 4450 2950 4350
+$Comp
+L DRVxxxx:DRV8874 U?
+U 1 1 61EEE657
+P 3900 4150
+AR Path="/61EEE657" Ref="U?"  Part="1" 
+AR Path="/61EDC519/61EEE657" Ref="U?"  Part="1" 
+F 0 "U?" H 3900 4765 50  0000 C CNN
+F 1 "DRV8874" H 3900 4674 50  0000 C CNN
+F 2 "original:TSSOP_16-Pin" H 3900 5050 50  0001 C CNN
+F 3 "" H 3250 4950 50  0001 C CNN
+	1    3900 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 4750 4450 4550
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE6C8
+P 4650 4550
+AR Path="/61EEE6C8" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE6C8" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4650 4300 50  0001 C CNN
+F 1 "GND" H 4655 4377 50  0000 C CNN
+F 2 "" H 4650 4550 50  0001 C CNN
+F 3 "" H 4650 4550 50  0001 C CNN
+	1    4650 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EEE6C2
+P 4850 4550
+AR Path="/61EEE6C2" Ref="#PWR?"  Part="1" 
+AR Path="/61EDC519/61EEE6C2" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4850 4300 50  0001 C CNN
+F 1 "GND" H 4855 4377 50  0000 C CNN
+F 2 "" H 4850 4550 50  0001 C CNN
+F 3 "" H 4850 4550 50  0001 C CNN
+	1    4850 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 4750 3850 4850
+Wire Wire Line
+	3350 4750 3850 4750
+Wire Wire Line
+	3350 4550 3350 4750
+Wire Wire Line
+	3950 4750 4450 4750
+Wire Wire Line
+	3950 4850 3950 4750
+$Comp
+L Connector_Generic:Conn_01x02 J?
+U 1 1 61EEE6B5
+P 3950 5050
+AR Path="/61EEE6B5" Ref="J?"  Part="1" 
+AR Path="/61EDC519/61EEE6B5" Ref="J?"  Part="1" 
+F 0 "J?" V 3822 5130 50  0000 L CNN
+F 1 "Conn_01x02" V 3913 5130 50  0000 L CNN
+F 2 "" H 3950 5050 50  0001 C CNN
+F 3 "~" H 3950 5050 50  0001 C CNN
+	1    3950 5050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4350 4150 4850 4150
+Wire Wire Line
+	4850 4150 4850 4250
+Connection ~ 4850 4250
+Wire Wire Line
+	2950 4750 2950 4850
+Wire Wire Line
+	2400 4150 2400 4400
+Connection ~ 2400 4150
+Wire Wire Line
+	2400 4700 2400 4850
+Wire Wire Line
+	2950 4350 3450 4350
+Entry Wire Line
+	2650 2100 2750 2200
+Wire Wire Line
+	2850 3750 3350 3750
+Connection ~ 3350 3750
+Wire Wire Line
+	2850 3850 3450 3850
+Wire Wire Line
+	2850 3950 3450 3950
+Wire Wire Line
+	2850 4050 3450 4050
+Entry Wire Line
+	2750 4250 2850 4350
+Wire Wire Line
+	2850 4350 2950 4350
+Connection ~ 2950 4350
+Text Label 2850 4350 0    50   ~ 0
+D1_IPROPI
+Text Label 2250 1700 0    50   ~ 0
+D1_FAULT
+Text Label 2250 1800 0    50   ~ 0
+D1_SLEEP
+Text Label 2250 1900 0    50   ~ 0
+D1_IN1
+Text Label 2250 2000 0    50   ~ 0
+D1_IN2
+Wire Wire Line
+	2100 1700 2650 1700
+Wire Wire Line
+	2100 1800 2650 1800
+Wire Wire Line
+	2100 1900 2650 1900
+Wire Wire Line
+	2100 2000 2650 2000
+Wire Wire Line
+	2100 2100 2650 2100
+Text Label 2250 2100 0    50   ~ 0
+D1_IPROPI
+Wire Bus Line
+	2750 1800 2750 4250
+Wire Wire Line
+	4950 4150 4950 4050
+Wire Wire Line
+	5100 4150 4950 4150
+Wire Wire Line
+	4950 3850 5100 3850
+Wire Wire Line
+	4950 3950 4950 3850
+Wire Wire Line
+	4350 3950 4950 3950
+Wire Wire Line
+	4950 4050 4350 4050
+$Comp
+L Device:C C?
+U 1 1 61EEE685
+P 5100 4000
+AR Path="/61EEE685" Ref="C?"  Part="1" 
+AR Path="/61EDC519/61EEE685" Ref="C?"  Part="1" 
+F 0 "C?" H 5215 4046 50  0000 L CNN
+F 1 "22n" H 5215 3955 50  0000 L CNN
+F 2 "" H 5138 3850 50  0001 C CNN
+F 3 "~" H 5100 4000 50  0001 C CNN
+	1    5100 4000
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
