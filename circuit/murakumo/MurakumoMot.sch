@@ -812,8 +812,6 @@ F 3 "~" H 8650 4000 50  0001 C CNN
 	1    8650 4000
 	1    0    0    -1  
 $EndComp
-Wire Bus Line
-	6300 850  2750 850 
 Entry Wire Line
 	2750 2600 2650 2700
 Entry Wire Line
@@ -845,9 +843,11 @@ Wire Wire Line
 Text Label 2250 2700 0    50   ~ 0
 D2_IPROPI
 Wire Bus Line
-	6300 850  6300 4250
+	2750 1700 6300 1700
 Wire Bus Line
-	2750 850  2750 2600
+	2750 1700 2750 2600
+Wire Bus Line
+	6300 1700 6300 4250
 Wire Bus Line
 	2750 2900 2750 3950
 $EndSCHEMATC
