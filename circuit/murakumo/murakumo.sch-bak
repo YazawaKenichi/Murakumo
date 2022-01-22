@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 3
+Sheet 1 4
 Title ""
 Date ""
 Rev ""
@@ -14,15 +14,21 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Sheet
-S 6000 7500 500  150 
+S 5050 7500 500  150 
 U 61E3FF76
 F0 "MurakumoSens" 50
 F1 "MurakumoSens.sch" 50
 $EndSheet
 $Sheet
-S 5050 7500 500  150 
+S 4100 7500 500  150 
 U 61EDC519
 F0 "MurakumoMot" 50
 F1 "MurakumoMot.sch" 50
+$EndSheet
+$Sheet
+S 6000 7500 500  150 
+U 61EC4080
+F0 "MurakumoSubSens" 50
+F1 "MurakumoSubSens.sch" 50
 $EndSheet
 $EndSCHEMATC

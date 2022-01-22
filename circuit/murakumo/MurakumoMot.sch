@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 3
+Sheet 3 4
 Title "Murakumo Motor Circuit"
 Date ""
 Rev ""
@@ -845,9 +845,9 @@ D2_IPROPI
 Wire Bus Line
 	2750 1700 6300 1700
 Wire Bus Line
-	2750 1700 2750 2600
-Wire Bus Line
 	6300 1700 6300 4250
+Wire Bus Line
+	2750 1700 2750 2600
 Wire Bus Line
 	2750 2900 2750 3950
 $EndSCHEMATC
