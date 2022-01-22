@@ -244,4 +244,11 @@ SD カードを載せたいのであれば STM32F446 で、内部フラッシュ
 - メインセンサ : フォトトランジスタ [TEMT7100X01](https://jp.rs-online.com/web/p/phototransistors/7000767) 赤外線 LED [SIR19-21C/TR8](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
 - サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/)
 - H ブリッジモータドライバ : [DRV8874PWPRCT](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874PWPR/11502339?s=N4IgTCBcDaIAQBEBKA1AHGg7AFgAoHVckQBdAXyA) 及び それを搭載した評価ボード [DRV8874EVM](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874EVM/10416576)
-- フォトトランジスタ : [TEMT7100]()
+
+タスク
+- [ ] CPU
+- [ ] IMU
+- [ ] UI
+- [ ] Conn
+
+
