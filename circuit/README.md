@@ -246,9 +246,11 @@ SD カードを載せたいのであれば STM32F446 で、内部フラッシュ
 - H ブリッジモータドライバ : [DRV8874PWPRCT](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874PWPR/11502339?s=N4IgTCBcDaIAQBEBKA1AHGg7AFgAoHVckQBdAXyA) 及び それを搭載した評価ボード [DRV8874EVM](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874EVM/10416576)
 
 タスク
-- [] CPU
-- [] IMU
-- [] インターフェイス
-- [] コネクタ
-- []
+<ul>
+<li><input type="checkbox">CPU</li>
+<li><input type="checkbox">IMU</li>
+<li><input type="checkbox">UI</li>
+<li><input type="checkbox">Conn</li>
+<li><input type="checkbox"></li>
+</ul>
 
