@@ -4,7 +4,7 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 4
-Title "Murakumo Motor Circuit"
+Title "Murakumo Power Circuit"
 Date ""
 Rev ""
 Comp ""
@@ -249,44 +249,19 @@ F 3 "" H 5050 4450 50  0001 C CNN
 	1    5050 4450
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x10 J?
-U 1 1 61F1B58E
-P 3600 4000
-F 0 "J?" H 3518 3275 50  0000 C CNN
-F 1 "Conn_01x10" H 3518 3366 50  0000 C CNN
-F 2 "" H 3600 4000 50  0001 C CNN
-F 3 "~" H 3600 4000 50  0001 C CNN
-	1    3600 4000
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	4100 5350 5150 5350
 Entry Wire Line
-	4550 5250 4450 5150
+	4800 5250 4700 5150
 Entry Wire Line
-	4550 5150 4450 5050
+	4800 5150 4700 5050
 Entry Wire Line
-	4550 5050 4450 4950
+	4600 4300 4700 4400
 Entry Wire Line
-	4550 4950 4450 4850
-Entry Wire Line
-	4450 4950 4550 5050
-Entry Wire Line
-	4350 4000 4450 4100
-Entry Wire Line
-	4350 4100 4450 4200
-Entry Wire Line
-	4350 4200 4450 4300
-Entry Wire Line
-	4350 4300 4450 4400
-Text Label 4550 4950 0    50   ~ 0
-D1_FAULT
-Text Label 4550 5050 0    50   ~ 0
-D1_SLEEP
-Text Label 4550 5150 0    50   ~ 0
+	4600 4400 4700 4500
+Text Label 4800 5150 0    50   ~ 0
 D1_IN1
-Text Label 4550 5250 0    50   ~ 0
+Text Label 4800 5250 0    50   ~ 0
 D1_IN2
 Wire Wire Line
 	4100 5150 4100 5350
@@ -370,44 +345,11 @@ Wire Wire Line
 	4100 5900 4100 6050
 Wire Wire Line
 	4650 5550 5150 5550
-Entry Wire Line
-	4350 4400 4450 4500
-Wire Wire Line
-	4550 4950 5050 4950
 Connection ~ 5050 4950
-Wire Wire Line
-	4550 5050 5150 5050
-Wire Wire Line
-	4550 5150 5150 5150
-Wire Wire Line
-	4550 5250 5150 5250
-Entry Wire Line
-	4450 5450 4550 5550
-Wire Wire Line
-	4550 5550 4650 5550
-Connection ~ 4650 5550
-Text Label 4550 5550 0    50   ~ 0
-D1_IPROPI
-Text Label 3950 4000 0    50   ~ 0
-D1_FAULT
-Text Label 3950 4100 0    50   ~ 0
-D1_SLEEP
-Text Label 3950 4200 0    50   ~ 0
+Text Label 4600 4400 2    50   ~ 0
 D1_IN1
-Text Label 3950 4300 0    50   ~ 0
+Text Label 4600 4300 2    50   ~ 0
 D1_IN2
-Wire Wire Line
-	3800 4000 4350 4000
-Wire Wire Line
-	3800 4100 4350 4100
-Wire Wire Line
-	3800 4200 4350 4200
-Wire Wire Line
-	3800 4300 4350 4300
-Wire Wire Line
-	3800 4400 4350 4400
-Text Label 3950 4400 0    50   ~ 0
-D1_IPROPI
 Wire Wire Line
 	6650 5350 6650 5250
 Wire Wire Line
@@ -675,16 +617,6 @@ Entry Wire Line
 	8100 5250 8000 5150
 Entry Wire Line
 	8100 5150 8000 5050
-Entry Wire Line
-	8100 5050 8000 4950
-Entry Wire Line
-	8100 4950 8000 4850
-Entry Wire Line
-	8000 4950 8100 5050
-Text Label 8100 4950 0    50   ~ 0
-D2_FAULT
-Text Label 8100 5050 0    50   ~ 0
-D2_SLEEP
 Text Label 8100 5150 0    50   ~ 0
 D2_IN1
 Text Label 8100 5250 0    50   ~ 0
@@ -771,22 +703,11 @@ Wire Wire Line
 	7650 5900 7650 6050
 Wire Wire Line
 	8200 5550 8700 5550
-Wire Wire Line
-	8100 4950 8600 4950
 Connection ~ 8600 4950
-Wire Wire Line
-	8100 5050 8700 5050
 Wire Wire Line
 	8100 5150 8700 5150
 Wire Wire Line
 	8100 5250 8700 5250
-Entry Wire Line
-	8000 5450 8100 5550
-Wire Wire Line
-	8100 5550 8200 5550
-Connection ~ 8200 5550
-Text Label 8100 5550 0    50   ~ 0
-D2_IPROPI
 Wire Wire Line
 	10200 5350 10200 5250
 Wire Wire Line
@@ -813,41 +734,122 @@ F 3 "~" H 10350 5200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Entry Wire Line
-	4450 3800 4350 3900
+	4700 4100 4600 4200
 Entry Wire Line
-	4450 3700 4350 3800
-Entry Wire Line
-	4450 3600 4350 3700
-Entry Wire Line
-	4450 3500 4350 3600
-Entry Wire Line
-	4450 3400 4350 3500
-Text Label 3950 3500 0    50   ~ 0
-D2_FAULT
-Text Label 3950 3600 0    50   ~ 0
-D2_SLEEP
-Text Label 3950 3700 0    50   ~ 0
+	4700 4000 4600 4100
+Text Label 4600 4200 2    50   ~ 0
 D2_IN1
-Text Label 3950 3800 0    50   ~ 0
+Text Label 4600 4100 2    50   ~ 0
 D2_IN2
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 61EF4312
+P 6700 7200
+F 0 "#FLG?" H 6700 7275 50  0001 C CNN
+F 1 "PWR_FLAG" H 6700 7373 50  0000 C CNN
+F 2 "" H 6700 7200 50  0001 C CNN
+F 3 "~" H 6700 7200 50  0001 C CNN
+	1    6700 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 61EF4D26
+P 5700 7450
+F 0 "#FLG?" H 5700 7525 50  0001 C CNN
+F 1 "PWR_FLAG" H 5700 7623 50  0000 C CNN
+F 2 "" H 5700 7450 50  0001 C CNN
+F 3 "~" H 5700 7450 50  0001 C CNN
+	1    5700 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 61EF5009
+P 6200 7450
+F 0 "#FLG?" H 6200 7525 50  0001 C CNN
+F 1 "PWR_FLAG" H 6200 7623 50  0000 C CNN
+F 2 "" H 6200 7450 50  0001 C CNN
+F 3 "~" H 6200 7450 50  0001 C CNN
+	1    6200 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+BATT #PWR?
+U 1 1 61EF545B
+P 6200 7200
+F 0 "#PWR?" H 6200 7050 50  0001 C CNN
+F 1 "+BATT" H 6215 7373 50  0000 C CNN
+F 2 "" H 6200 7200 50  0001 C CNN
+F 3 "" H 6200 7200 50  0001 C CNN
+	1    6200 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 61EF58C4
+P 5700 7200
+F 0 "#PWR?" H 5700 7050 50  0001 C CNN
+F 1 "VCC" H 5715 7373 50  0000 C CNN
+F 2 "" H 5700 7200 50  0001 C CNN
+F 3 "" H 5700 7200 50  0001 C CNN
+	1    5700 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 61EF5D3D
+P 6700 7450
+F 0 "#PWR?" H 6700 7200 50  0001 C CNN
+F 1 "GND" H 6705 7277 50  0000 C CNN
+F 2 "" H 6700 7450 50  0001 C CNN
+F 3 "" H 6700 7450 50  0001 C CNN
+	1    6700 7450
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	3800 3500 4350 3500
+	6200 7200 6200 7450
 Wire Wire Line
-	3800 3600 4350 3600
+	5700 7450 5700 7200
 Wire Wire Line
-	3800 3700 4350 3700
+	6700 7450 6700 7200
 Wire Wire Line
-	3800 3800 4350 3800
+	5050 4950 5050 5050
 Wire Wire Line
-	3800 3900 4350 3900
-Text Label 3950 3900 0    50   ~ 0
-D2_IPROPI
+	5050 5050 5150 5050
+Wire Wire Line
+	8600 5050 8600 4950
+Wire Wire Line
+	8600 5050 8700 5050
+$Comp
+L Connector_Generic:Conn_01x04 J?
+U 1 1 61F6ED9A
+P 4050 4300
+F 0 "J?" H 3968 3875 50  0000 C CNN
+F 1 "Conn_01x04" H 3968 3966 50  0000 C CNN
+F 2 "" H 4050 4300 50  0001 C CNN
+F 3 "~" H 4050 4300 50  0001 C CNN
+	1    4050 4300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4800 5150 5150 5150
+Wire Wire Line
+	5150 5250 4800 5250
+Wire Wire Line
+	4250 4100 4600 4100
+Wire Wire Line
+	4600 4200 4250 4200
+Wire Wire Line
+	4250 4400 4600 4400
+Wire Wire Line
+	4600 4300 4250 4300
 Wire Bus Line
-	4450 2900 8000 2900
+	4700 3750 8000 3750
 Wire Bus Line
-	8000 2900 8000 5450
+	4700 3750 4700 4100
 Wire Bus Line
-	4450 2900 4450 3800
+	8000 3750 8000 5150
 Wire Bus Line
-	4450 4100 4450 5150
+	4700 4400 4700 5150
 $EndSCHEMATC
