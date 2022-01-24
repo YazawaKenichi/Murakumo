@@ -295,6 +295,7 @@ Complement は「補集合」の意味。つまり否定。
 - コントローラ : [ロータリコードスイッチ](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMB16R?qs=DRP5hA1CHApmGlVxOtUknA%3D%3D)もし在庫なくなっちゃったら[こっち](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMA16R?qs=xRR2c4tI8%252BMRurGPbsuWKA%3D%3D)
 - スイッチ : ただのプッシュスイッチくらいを回路に書くなら、まだ push switch 表記でいい気がする。
 - フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
+- ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
