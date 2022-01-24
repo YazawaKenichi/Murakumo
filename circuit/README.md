@@ -9,6 +9,9 @@
 - 100% duty で出力できるか？
 ということらしい。
 
+PWM 周波数の話。
+PWM 周波数は小さすぎるとトルクが足りなくなり、大きすぎるとモータによるサージの影響を受けやすくなる。よって適度な周波数に決める必要がある。
+
 ###### Nch フルブリッジ回路
 Nch フルブリッジ回路を組むことの利点は以下。
 - Pch は Nch に比べて性能が低い。
@@ -248,6 +251,8 @@ I2C:SDA SCL の二本線のみで制御することが可能だが、一般的�
 - ストップは自動で検出するようにすればいいのでストップボタンは必要ない
 - 記憶したコースを走れるように、何回目のコース記録を引き出すか指定できるようにしたい。
 
+操作スイッチ系チャタリング対策に、0.1uF + 15kOhm のローパスフィルタを通すことにした。チャタリング周波数から 0.1uF のコンデンサが決まり、チャタリング時間から必要な時定数にメドを付けて抵抗値を決める。尚、復習として、RC 秒経った時の実効値は、最大値のおおよそ 63% となっている。チャタリングの周波数は 50MHz で、チャタリング継続時間は最大 1ms として計算。
+
 ##### CPU
 先輩が STM32F405RGT6 を束買いしているので、とりあえずこれにするのはアリ。
 クロック数とメモリと機能的に、ロボトレにいい塩梅で使えそうなのがこの CPU らしい。
@@ -261,7 +266,11 @@ SD カードを載せたいのであれば STM32F446 で、内部フラッシュ
 データシートから得た情報
 VREF+ と VDDA が接続されているかいないかによって VDDA 周りの回路が変わる。VREF+ と VDDA が接続されていないパターンとしては UFBGA176, LQFP100, LQFP144, LQFP176 を用いる場合。今回は LQFP64 を用いているので、VREF+ と VDDA が IC 内部で接続されている。なので、それに対応するコンデンサ接続をする。
 OSC_IN 4Hz ~ 26MHz 周波数インプット。
-
+2.2.13 BOOT ピンでブート方法を指定することができる。
+具体的には、
+- ユーザフラッシュからの起動
+- システムメモリからの起動
+- 組み込み SRAM からの起動
 
 ***書き途中***
 
@@ -279,10 +288,13 @@ Complement は「補集合」の意味。つまり否定。
 
 #### 現状決まっている部品を列挙していく
 - メインセンサ : フォトトランジスタ [TEMT7100X01](https://jp.rs-online.com/web/p/phototransistors/7000767) 赤外線 LED [SIR19-21C/TR8](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
-- サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/)
+- サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/) 赤外線 LED [SIR19-21C/TR8 (メインセンサと同じ)](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
 - H ブリッジモータドライバ : [DRV8874PWPRCT](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874PWPR/11502339?s=N4IgTCBcDaIAQBEBKA1AHGg7AFgAoHVckQBdAXyA) 及び それを搭載した評価ボード [DRV8874EVM](https://www.digikey.jp/ja/products/detail/texas-instruments/DRV8874EVM/10416576)
 - モータコネクタ XA
 - マイコン : [STM32F405RGTx](https://www.st.com/resource/en/datasheet/dm00037051.pdf)
+- コントローラ : [ロータリコードスイッチ](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMB16R?qs=DRP5hA1CHApmGlVxOtUknA%3D%3D)もし在庫なくなっちゃったら[こっち](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMA16R?qs=xRR2c4tI8%252BMRurGPbsuWKA%3D%3D)
+- スイッチ : ただのプッシュスイッチくらいを回路に書くなら、まだ push switch 表記でいい気がする。
+- フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
@@ -290,9 +302,13 @@ Complement は「補集合」の意味。つまり否定。
 - [x] UI どんな操作ができるといいか先輩に聞く。
 - [x] Conn どんなコネクタがあるのか 9 号館を見る。
 - [x] Inventor の編集。基板二階建てにする。それにあたって下鳥先輩の VCM マシンを参考にバッテリの引き回しを見る。
+- [x] ロータリスイッチにデバウンスやプルアップ抵抗は必要ないのか？ > フィルタ回路があればプログラム上で読み飛ばす必要はない。
 
 KiCAD 設計中のメモ
 VDC は 1.8 ~ 3.3V
 F405 の VCAP にある 2.2uF コンデンサは、電圧レギュレータをバイパスするときには不要で、二つの 100nF デカップリングコンデンサに交換する必要がある。ソースはデータシート 5.3.2 Figure 23. External capacitor CEXT の注意書きに記述されている。
 CPU の VDD は 1.8 ~ 3.6V
 CPU の VBAT は 1.65 ~ 3.6V
+CPU の VDDA, VSSA は 1.8 ~ 3.6V 
+FB の値は実際に作ってから決める。PWM 周波数とかどのくらいになるかわからんし、ぶっちゃけ無くてもいいような気がするから、0Ohm 抵抗を接続できるパッケージのインダクタを選ぶ。
+
