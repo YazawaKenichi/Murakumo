@@ -297,6 +297,8 @@ Complement は「補集合」の意味。つまり否定。
 - フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
 - ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！
 - 発振器 : [ASTMLPA-16.000MHZ-LJ-E-T](https://www.digikey.jp/ja/products/detail/abracon-llc/ASTMLPA-16-000MHZ-LJ-E-T/5425114)
+- レギュレータ(5.0V) : [NCV7805BDTRKG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BDTRKG/1792758)
+- レギュレータ(3.3V) : [NCP1117LPST33T3G](https://www.digikey.jp/ja/products/detail/onsemi/NCP1117LPST33T3G/2194024)
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
