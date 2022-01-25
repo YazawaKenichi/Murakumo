@@ -286,6 +286,8 @@ OSC_IN 4Hz ~ 26MHz 周波数インプット。
 Complement は「補集合」の意味。つまり否定。
 インデックスは、「一回転」を判断するためのマーキング。使わないから正直未接続でいい。
 
+[裕ちゃん](https://www.mouser.jp/ProductDetail/Texas-Instruments/LP38690DT-33-NOPB?qs=1FNqv8aZn1RDCTlgvtVtOw%3D%3D)
+
 #### 現状決まっている部品を列挙していく
 - メインセンサ : フォトトランジスタ [TEMT7100X01](https://jp.rs-online.com/web/p/phototransistors/7000767) 赤外線 LED [SIR19-21C/TR8](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
 - サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/) 赤外線 LED [SIR19-21C/TR8 (メインセンサと同じ)](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
