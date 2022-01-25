@@ -161,6 +161,15 @@ QFP はよく見る足が外に出たパッケージ、QFN は足が出てない
 QFN にすればサイズ縮小できるし、条件に合った IC も見つかりやすいから良いんだけど、リフローする IC は一気にリフローする必要があるから、燃えたところだけ直すとかそういうことがやりにくい。
 初めてなんだから回路は修正しやすいほうが良い。絶対 QFP がいいやろ。
 
+DRV8874 データシート 7.3.1 に推奨抵抗値が書いてある。
+IPROPI に発生する電流は以下の式で与えられる。
+Iipropi = (ILS1 + ILS2) * Aipropi
+ILS はローサイド FET のドレイン電流。Aipropi は比例定数。おおよそ 450uA/A とされている。
+モータを通す最大電流は 4.34A なので、最大の Iipropi は 1.953mA となる。ここに抵抗と ADC を繋ぐことでマイコンで処理することができるようになる。（抵抗が電流を電圧に変換するための抵抗になる。）
+***途中略***
+Vref の抵抗値は 33k, 33k で良い気がしてきた。（合計 66k ohm になるように選定。）結局 Itrip の値は Ripropi の値で決めればいいと思う。
+
+
 ###### Power MOSFET<br>
 FET の耐圧（D-S 間電圧）と流したいドレイン電流（ID 電流）で大体の規格が絞れる。<br>
 そこから、[ON 抵抗](https://www.rohm.co.jp/electronics-basics/transistors/tr_what9)と[スイッチング速度]()から、損失の大きさを計算してそれに耐えるものを選ぶ。<br>
@@ -297,10 +306,11 @@ Complement は「補集合」の意味。つまり否定。
 - コントローラ : [ロータリコードスイッチ](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMB16R?qs=DRP5hA1CHApmGlVxOtUknA%3D%3D)もし在庫なくなっちゃったら[こっち](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMA16R?qs=xRR2c4tI8%252BMRurGPbsuWKA%3D%3D)
 - スイッチ : ただのプッシュスイッチくらいを回路に書くなら、まだ push switch 表記でいい気がする。
 - フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
-- ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！
+- ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！トランスデューサ式なので、ダイオードを並列接続して逆起電力を逃がす。圧電トランスデューサとか出てきたからもしかしたら圧電ブザー。PWM 周波数を変えて音色を変える必要が出てきそう。
 - 発振器 : [ASTMLPA-16.000MHZ-LJ-E-T](https://www.digikey.jp/ja/products/detail/abracon-llc/ASTMLPA-16-000MHZ-LJ-E-T/5425114)
 - レギュレータ(5.0V) : [NCV7805BDTRKG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BDTRKG/1792758)
-- レギュレータ(3.3V) : [NCP1117LPST33T3G](https://www.digikey.jp/ja/products/detail/onsemi/NCP1117LPST33T3G/2194024)
+- レギュレータ(3.3V) : []()
+- LED : [フルカラー LED APTF1616LSEEZGKQBKC](https://www.digikey.jp/ja/products/detail/kingbright/APTF1616LSEEZGKQBKC/5803664) [白 LED SMLEN3WBC8W1](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SMLEN3WBC8W1/9448213) [赤 LED](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SML-311UTT86/637032)
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
