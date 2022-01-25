@@ -262,6 +262,12 @@ I2C:SDA SCL の二本線のみで制御することが可能だが、一般的�
 
 操作スイッチ系チャタリング対策に、0.1uF + 15kOhm のローパスフィルタを通すことにした。チャタリング周波数から 0.1uF のコンデンサが決まり、チャタリング時間から必要な時定数にメドを付けて抵抗値を決める。尚、復習として、RC 秒経った時の実効値は、最大値のおおよそ 63% となっている。チャタリングの周波数は 50MHz で、チャタリング継続時間は最大 1ms として計算。
 
+ブザーの話。
+電流 90mA 必要。FET で駆動したい。
+FET の抵抗はぶっちゃけテキトーで良い気がする。
+ゲート抵抗は「立ち上がり時間」に影響する。ブザーの駆動くらいなら立ち上がり時間がエグくても大丈夫でしょ。FET は使い慣れてる 2N7002 でいいと思う。
+ブザーに並列するダイオードは逆電圧で耐えるもののうち、逆回復時間が短く、リーク電流が小さいものを選んだ。
+
 ##### CPU
 先輩が STM32F405RGT6 を束買いしているので、とりあえずこれにするのはアリ。
 クロック数とメモリと機能的に、ロボトレにいい塩梅で使えそうなのがこの CPU らしい。
@@ -311,6 +317,7 @@ Complement は「補集合」の意味。つまり否定。
 - レギュレータ(5.0V) : [NCV7805BDTRKG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BDTRKG/1792758)
 - レギュレータ(3.3V) : []()
 - LED : [フルカラー LED APTF1616LSEEZGKQBKC](https://www.digikey.jp/ja/products/detail/kingbright/APTF1616LSEEZGKQBKC/5803664) [白 LED SMLEN3WBC8W1](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SMLEN3WBC8W1/9448213) [赤 LED](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SML-311UTT86/637032)
+- ブザー駆動 FET : [2N7002T](https://www.digikey.jp/ja/products/detail/onsemi/2N7002T/1830658) ブザー用ダイオード : [RB751S40-AU_R1_000A1](https://www.digikey.jp/ja/products/detail/panjit-international-inc/RB751S40-AU-R1-000A1/14660575)
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
