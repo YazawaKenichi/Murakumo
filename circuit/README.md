@@ -161,6 +161,15 @@ QFP はよく見る足が外に出たパッケージ、QFN は足が出てない
 QFN にすればサイズ縮小できるし、条件に合った IC も見つかりやすいから良いんだけど、リフローする IC は一気にリフローする必要があるから、燃えたところだけ直すとかそういうことがやりにくい。
 初めてなんだから回路は修正しやすいほうが良い。絶対 QFP がいいやろ。
 
+DRV8874 データシート 7.3.1 に推奨抵抗値が書いてある。
+IPROPI に発生する電流は以下の式で与えられる。
+Iipropi = (ILS1 + ILS2) * Aipropi
+ILS はローサイド FET のドレイン電流。Aipropi は比例定数。おおよそ 450uA/A とされている。
+モータを通す最大電流は 4.34A なので、最大の Iipropi は 1.953mA となる。ここに抵抗と ADC を繋ぐことでマイコンで処理することができるようになる。（抵抗が電流を電圧に変換するための抵抗になる。）
+***途中略***
+Vref の抵抗値は 33k, 33k で良い気がしてきた。（合計 66k ohm になるように選定。）結局 Itrip の値は Ripropi の値で決めればいいと思う。
+
+
 ###### Power MOSFET<br>
 FET の耐圧（D-S 間電圧）と流したいドレイン電流（ID 電流）で大体の規格が絞れる。<br>
 そこから、[ON 抵抗](https://www.rohm.co.jp/electronics-basics/transistors/tr_what9)と[スイッチング速度]()から、損失の大きさを計算してそれに耐えるものを選ぶ。<br>
@@ -228,6 +237,9 @@ MOUSER で FET を調べてみる。<br>
 - センサを右にあるやつと左にあるやつに分割して、左右それぞれの和で PID 制御する方法。
 - 白を読み取っているセンサの角度からモータの出力をする方法。（ステアリング切らない限り、実はムズイらしい。）
 
+サイドセンサの話。
+S7136 の Cathode がデューティー比 1/16 の点滅、データシートの推奨電力的に Vf 1.3V, If 20mA の実効値を出せるように計算すると抵抗値は 65Ohm になる。ただこの抵抗の抵抗の両端の電位差は 5.2V になってしまうので電源は 5.5V で引き出す必要がある。
+
 ##### IMU
 まずは先輩方が使用している ICM-20648 を使用することにしてみる。
 データシート用語
@@ -252,6 +264,12 @@ I2C:SDA SCL の二本線のみで制御することが可能だが、一般的�
 - 記憶したコースを走れるように、何回目のコース記録を引き出すか指定できるようにしたい。
 
 操作スイッチ系チャタリング対策に、0.1uF + 15kOhm のローパスフィルタを通すことにした。チャタリング周波数から 0.1uF のコンデンサが決まり、チャタリング時間から必要な時定数にメドを付けて抵抗値を決める。尚、復習として、RC 秒経った時の実効値は、最大値のおおよそ 63% となっている。チャタリングの周波数は 50MHz で、チャタリング継続時間は最大 1ms として計算。
+
+ブザーの話。
+電流 90mA 必要。FET で駆動したい。
+FET の抵抗はぶっちゃけテキトーで良い気がする。
+ゲート抵抗は「立ち上がり時間」に影響する。ブザーの駆動くらいなら立ち上がり時間がエグくても大丈夫でしょ。FET は使い慣れてる 2N7002 でいいと思う。
+ブザーに並列するダイオードは逆電圧で耐えるもののうち、逆回復時間が短く、リーク電流が小さいものを選んだ。
 
 ##### CPU
 先輩が STM32F405RGT6 を束買いしているので、とりあえずこれにするのはアリ。
@@ -286,6 +304,8 @@ OSC_IN 4Hz ~ 26MHz 周波数インプット。
 Complement は「補集合」の意味。つまり否定。
 インデックスは、「一回転」を判断するためのマーキング。使わないから正直未接続でいい。
 
+[裕ちゃん](https://www.mouser.jp/ProductDetail/Texas-Instruments/LP38690DT-33-NOPB?qs=1FNqv8aZn1RDCTlgvtVtOw%3D%3D)
+
 #### 現状決まっている部品を列挙していく
 - メインセンサ : フォトトランジスタ [TEMT7100X01](https://jp.rs-online.com/web/p/phototransistors/7000767) 赤外線 LED [SIR19-21C/TR8](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
 - サブセンサ : [S7136](https://akizukidenshi.com/catalog/g/gI-02425/) 赤外線 LED [SIR19-21C/TR8 (メインセンサと同じ)](https://www.digikey.jp/ja/products/detail/everlight-electronics-co-ltd/SIR19-21C-TR8/2675916?s=N4IgTCBcDaIAQGUCSAlAjATgLRjQYQHoAVFADhAF0BfIA)
@@ -295,7 +315,12 @@ Complement は「補集合」の意味。つまり否定。
 - コントローラ : [ロータリコードスイッチ](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMB16R?qs=DRP5hA1CHApmGlVxOtUknA%3D%3D)もし在庫なくなっちゃったら[こっち](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMA16R?qs=xRR2c4tI8%252BMRurGPbsuWKA%3D%3D)
 - スイッチ : ただのプッシュスイッチくらいを回路に書くなら、まだ push switch 表記でいい気がする。
 - フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
-- ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！
+- ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！トランスデューサ式なので、ダイオードを並列接続して逆起電力を逃がす。圧電トランスデューサとか出てきたからもしかしたら圧電ブザー。PWM 周波数を変えて音色を変える必要が出てきそう。
+- 発振器 : [ASTMLPA-16.000MHZ-LJ-E-T](https://www.digikey.jp/ja/products/detail/abracon-llc/ASTMLPA-16-000MHZ-LJ-E-T/5425114)
+- レギュレータ(5.0V) : [NCV7805BD2TG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BD2TG/1484134)
+- レギュレータ(3.3V) : [LT1963EST-3.3#PBF](https://www.digikey.jp/ja/products/detail/analog-devices-inc/LT1963EST-3-3-PBF/961390)
+- LED : [フルカラー LED APTF1616LSEEZGKQBKC](https://www.digikey.jp/ja/products/detail/kingbright/APTF1616LSEEZGKQBKC/5803664) [白 LED SMLEN3WBC8W1](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SMLEN3WBC8W1/9448213) [赤 LED SML-311UTT86](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SML-311UTT86/637032)
+- ブザー駆動 FET : [2N7002T](https://www.digikey.jp/ja/products/detail/onsemi/2N7002T/1830658) ブザー用ダイオード : [RB751S40-AU_R1_000A1](https://www.digikey.jp/ja/products/detail/panjit-international-inc/RB751S40-AU-R1-000A1/14660575)
 
 タスク
 - [x] CPU STM32H7 シリーズにしない理由を聞いてみる。裕ちゃんにマイコン選びを教えてもらう。在庫の関係上 446 か 405 になることは確定。
