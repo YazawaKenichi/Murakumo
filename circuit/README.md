@@ -314,7 +314,6 @@ Complement は「補集合」の意味。つまり否定。
 - マイコン : [STM32F405RGTx](https://www.st.com/resource/en/datasheet/dm00037051.pdf)
 - コントローラ : [ロータリコードスイッチ](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMB16R?qs=DRP5hA1CHApmGlVxOtUknA%3D%3D)もし在庫なくなっちゃったら[こっち](https://www.mouser.jp/ProductDetail/CTS-Electronic-Components/220AMA16R?qs=xRR2c4tI8%252BMRurGPbsuWKA%3D%3D)
 - スイッチ : ただのプッシュスイッチくらいを回路に書くなら、まだ push switch 表記でいい気がする。
-- フルカラー LED : [ASMG-PT00-00001](https://docs.broadcom.com/doc/ASMG-PT00-DS100)
 - ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！トランスデューサ式なので、ダイオードを並列接続して逆起電力を逃がす。圧電トランスデューサとか出てきたからもしかしたら圧電ブザー。PWM 周波数を変えて音色を変える必要が出てきそう。
 - 発振器 : [ASTMLPA-16.000MHZ-LJ-E-T](https://www.digikey.jp/ja/products/detail/abracon-llc/ASTMLPA-16-000MHZ-LJ-E-T/5425114)
 - レギュレータ(5.0V) : [NCV7805BD2TG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BD2TG/1484134)
