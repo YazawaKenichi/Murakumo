@@ -317,7 +317,7 @@ Complement は「補集合」の意味。つまり否定。
 - ブザー : [TE044003-4](https://www.digikey.jp/ja/products/detail/db-unlimited/TE044003-4/13541886) データシートがないからどうやって使うのか全く分からんけど作ってから知ればいい！脳筋！トランスデューサ式なので、ダイオードを並列接続して逆起電力を逃がす。圧電トランスデューサとか出てきたからもしかしたら圧電ブザー。PWM 周波数を変えて音色を変える必要が出てきそう。
 - 発振器 : [ASTMLPA-16.000MHZ-LJ-E-T](https://www.digikey.jp/ja/products/detail/abracon-llc/ASTMLPA-16-000MHZ-LJ-E-T/5425114)
 - レギュレータ(5.0V) : [NCV7805BD2TG](https://www.digikey.jp/ja/products/detail/onsemi/NCV7805BD2TG/1484134)
-- レギュレータ(3.3V) : [LT1963EST-3.3#PBF](https://www.digikey.jp/ja/products/detail/analog-devices-inc/LT1963EST-3-3-PBF/961390)
+- レギュレータ(3.3V) : [S-19246E33H-V5T2U](https://www.digikey.jp/ja/products/detail/ablic-u-s-a-inc/S-19246E33H-V5T2U/13182985)
 - LED : [フルカラー LED APTF1616LSEEZGKQBKC](https://www.digikey.jp/ja/products/detail/kingbright/APTF1616LSEEZGKQBKC/5803664) [白 LED SMLEN3WBC8W1](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SMLEN3WBC8W1/9448213) [赤 LED SML-311UTT86](https://www.digikey.jp/ja/products/detail/rohm-semiconductor/SML-311UTT86/637032)
 - ブザー駆動 FET : [2N7002T](https://www.digikey.jp/ja/products/detail/onsemi/2N7002T/1830658) ブザー用ダイオード : [RB751S40-AU_R1_000A1](https://www.digikey.jp/ja/products/detail/panjit-international-inc/RB751S40-AU-R1-000A1/14660575)
 
