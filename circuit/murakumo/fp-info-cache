@@ -1,4 +1,4 @@
-19336260204187944
+19367485453177645
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -50791,6 +50791,69 @@ One digit LED 7 segment SA39-11 SC39-11 SA39-12 SC39-12
 0
 10
 10
+FFC
+Molex_502231-1500_1x15-1SH_P0.5mm_Vertical
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 6.05mm Height, Vertical, Surface Mount, ZIF, 15 Circuits (https://www.molex.com/pdm_docs/sd/5022311500_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm vertical
+0
+17
+16
+FFC
+Molex_502231-2400_1x24-1SH_P0.5mm_Vertical
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 6.05mm Height, Vertical, Surface Mount, ZIF, 24 Circuits (https://www.molex.com/pdm_docs/sd/5022312400_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm vertical
+0
+26
+25
+FFC
+Molex_502231-3300_1x33-1SH_P0.5mm_Vertical
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 6.05mm Height, Vertical, Surface Mount, ZIF, 33 Circuits (https://www.molex.com/pdm_docs/sd/5022313300_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm vertical
+0
+36
+34
+FFC
+Molex_502244-1530_1x15-1MP_P0.5mm_Horizontal
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 2.33mm Height, Right Angle, Surface Mount, ZIF, Bottom Contact Style, 15 Circuits (http://www.molex.com/pdm_docs/sd/5022441530_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm right angle
+0
+19
+16
+FFC
+Molex_502244-2430_1x24-1MP_P0.5mm_Horizontal
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 2.33mm Height, Right Angle, Surface Mount, ZIF, Bottom Contact Style, 24 Circuits (http://www.molex.com/pdm_docs/sd/5022441530_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm right angle
+0
+28
+25
+FFC
+Molex_502244-3330_1x33-1MP_P0.5mm_Horizontal
+Molex 0.50mm Pitch Easy-On Type FFC/FPC Connector, For LVDS, 2.33mm Height, Right Angle, Surface Mount, ZIF, Bottom Contact Style, 33 Circuits (http://www.molex.com/pdm_docs/sd/5022441530_sd.pdf)
+molex FFC/FPC connector Pitch 0.5mm right angle
+0
+39
+34
+FFC
+Molex_0545480671_01x06_P0.5mm
+
+
+0
+8
+7
+FFC
+Molex_0545480771_01x07_P0.5mm
+
+
+0
+9
+8
+FFC
+Molex_0545480871_01x08_P0.5mm
+
+
+0
+10
+9
 Ferrite_THT
 LairdTech_28C0236-0JW-10
 Ferrite, vertical, LairdTech 28C0236-0JW-10, https://assets.lairdtech.com/home/brandworld/files/28C0236-0JW-10.pdf, JW Miller core https://www.bourns.com/products/magnetic-products/j.w.-miller-through-hole-ferrite-beads-emi-filters
@@ -51743,6 +51806,13 @@ heatsink
 0
 2
 1
+ICM-20648
+QFN40P300X300X95-24N
+
+
+0
+24
+24
 Inductor_SMD
 L_6.3x6.3_H3
 Choke, SMD, 6.3x6.3mm 3mm height
@@ -77209,6 +77279,20 @@ https://www.farnell.com/cad/316865.pdf?_ga=2.37208032.177107060.1530611323-24901
 0
 48
 48
+Switch
+220AMB16R
+
+
+0
+6
+5
+Switch
+SSAJ120100
+
+
+0
+5
+4
 Symbol
 CE-Logo_8.5x6mm_SilkScreen
 CE marking
@@ -78168,6 +78252,13 @@ Logo WEEE
 0
 0
 0
+TEMT7100X01
+TEMT7100X01
+
+
+0
+2
+2
 TerminalBlock
 TerminalBlock_Altech_AK300-2_P5.00mm
 Altech AK300 terminal block, pitch 5.0mm, 45 degree angled, see http://www.mouser.com/ds/2/16/PCBMETRC-24178.pdf
@@ -83489,6 +83580,13 @@ soiya
 0
 0
 original
+APTF1616LSEEZGKQBKC
+
+
+0
+4
+4
+original
 PinHeader_3x04_P2.54mm_Vertical
 
 
@@ -83510,12 +83608,33 @@ Regulator
 3
 3
 original
-SOD323F
+SOD-123FL
 
 
 0
 2
 2
+original
+SOD-323F
+
+
+0
+2
+2
+original
+SOD-523
+
+
+0
+2
+2
+original
+SOT-89
+
+
+0
+4
+3
 original
 Socket_DIP_14pin
 
@@ -83542,8 +83661,8 @@ TSSOP_16-Pin
 
 
 0
-16
-16
+17
+17
 original
 TSSOP_28-Pin
 
@@ -83551,3 +83670,17 @@ TSSOP_28-Pin
 0
 28
 28
+osc
+ASTMLPA-16.000MHz-LJ-E-T
+
+
+0
+4
+4
+sens
+S7136
+
+
+0
+4
+4
