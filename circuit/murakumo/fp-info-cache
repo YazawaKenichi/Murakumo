@@ -1,4 +1,4 @@
-19367485453177645
+19388850628802057
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -2414,6 +2414,34 @@ Gauge Massstab 100mm SilkScreenTop Type 2
 0
 0
 0
+Capacitor
+865090168010
+
+
+0
+2
+2
+Capacitor
+AVE106M16A12T-F
+
+
+0
+2
+2
+Capacitor
+ECASD91B107M012K00
+
+
+0
+2
+2
+Capacitor
+EEE-1AA221XP
+
+
+0
+2
+2
 Capacitor_SMD
 CP_Elec_3x5.3
 SMT capacitor, aluminium electrolytic, 3x5.3, Cornell Dubilier Electronics 
@@ -50834,6 +50862,13 @@ molex FFC/FPC connector Pitch 0.5mm right angle
 39
 34
 FFC
+Molex_0545480571_01x05_P0.5mm
+
+
+0
+7
+6
+FFC
 Molex_0545480671_01x06_P0.5mm
 
 
@@ -50854,6 +50889,13 @@ Molex_0545480871_01x08_P0.5mm
 0
 10
 9
+FTSH
+SAMTEC_FTSH-105-01-L-D-K
+
+
+0
+10
+10
 Ferrite_THT
 LairdTech_28C0236-0JW-10
 Ferrite, vertical, LairdTech 28C0236-0JW-10, https://assets.lairdtech.com/home/brandworld/files/28C0236-0JW-10.pdf, JW Miller core https://www.bourns.com/products/magnetic-products/j.w.-miller-through-hole-ferrite-beads-emi-filters
@@ -51813,6 +51855,13 @@ QFN40P300X300X95-24N
 0
 24
 24
+ILG
+ILG_01x02
+
+
+0
+2
+2
 Inductor_SMD
 L_6.3x6.3_H3
 Choke, SMD, 6.3x6.3mm 3mm height
@@ -59863,6 +59912,20 @@ DIL DIP PDIP 2.54mm 7.62mm 300mil
 0
 4
 4
+PA
+PA_01x02
+
+
+0
+2
+2
+PA
+PA_01x03
+
+
+0
+3
+3
 Package_BGA
 Analog_BGA-28_4.0x6.25mm_Layout4x7_P0.8mm_Ball0.45mm_Pad0.4
 Analog BGA-28 4.0mm x 6.25mm package, pitch 0.4mm pad, based on https://www.analog.com/media/en/technical-documentation/data-sheets/8063fa.pdf
@@ -76495,6 +76558,34 @@ rotary encoder
 0
 5
 4
+SH
+SH_01x03
+
+
+0
+5
+4
+SH
+SH_01x04
+
+
+0
+6
+5
+SH
+SH_01x06
+
+
+0
+8
+7
+SKRPABE010
+SKRPABE010
+SKRPABE010 Alps Electronics SMD-mounted tactile switch
+
+0
+4
+2
 SMKJP
 BOARD_Pro_Micro
 
