@@ -2832,13 +2832,13 @@ Text Label 9000 12400 0    50   ~ 0
 DRV2_EN
 Text Label 9000 12300 0    50   ~ 0
 DRV2_PN
-Text Label 9000 13100 0    50   ~ 0
+Text Label 9000 13400 0    50   ~ 0
 Rotary1
 Text Label 9000 13200 0    50   ~ 0
 Rotary2
-Text Label 9000 13300 0    50   ~ 0
+Text Label 9000 13100 0    50   ~ 0
 Rotary4
-Text Label 9000 13400 0    50   ~ 0
+Text Label 9000 13300 0    50   ~ 0
 Rotary8
 Text Label 9000 13000 0    50   ~ 0
 LED_R
