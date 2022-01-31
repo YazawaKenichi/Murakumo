@@ -1,4 +1,4 @@
-update=2022/01/30 12:32:24
+update=2022/01/30 12:31:32
 version=1
 last_client=pcbnew
 [general]
@@ -25,7 +25,7 @@ ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=
-LastNetListRead=SubSensor.net
+LastNetListRead=Main.net
 CopperLayerCount=2
 BoardThickness=1.6
 AllowMicroVias=0
