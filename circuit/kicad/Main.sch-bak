@@ -133,7 +133,7 @@ AR Path="/61F602DC/620093A0" Ref="U?"  Part="1"
 AR Path="/61F60664/620093A0" Ref="U?"  Part="1" 
 F 0 "U3" H 17800 12050 50  0000 C CNN
 F 1 "ICM-20648" H 17800 11950 50  0000 C CNN
-F 2 "ICM-20648:QFN40P300X300X95-24N" H 17800 12000 50  0001 C CNN
+F 2 "Package_DFN_QFN:QFN-24-1EP_3x4mm_P0.4mm_EP1.65x2.65mm" H 17800 12000 50  0001 C CNN
 F 3 "" H 17800 12000 50  0001 C CNN
 	1    17800 12000
 	1    0    0    -1  
@@ -2741,36 +2741,20 @@ Text Label 4800 9350 0    50   ~ 0
 Sensor03
 Text Label 4800 9250 0    50   ~ 0
 Sensor04
-Text Label 8200 7850 2    50   ~ 0
-Sensor05
-Text Label 8200 7750 2    50   ~ 0
-Sensor06
-Text Label 8200 7650 2    50   ~ 0
-Sensor07
-Text Label 8200 7550 2    50   ~ 0
+Text Label 8200 7150 2    50   ~ 0
 Sensor08
 Entry Wire Line
 	8300 7050 8200 7150
 Entry Wire Line
 	8200 7250 8300 7150
 Entry Wire Line
-	8200 7350 8300 7250
-Entry Wire Line
-	8200 7450 8300 7350
-Entry Wire Line
-	8200 7550 8300 7450
-Entry Wire Line
-	8200 7650 8300 7550
-Entry Wire Line
 	8200 7750 8300 7650
 Entry Wire Line
 	8200 7850 8300 7750
-Text Label 8200 7450 2    50   ~ 0
+Text Label 4800 9150 0    50   ~ 0
 Sensor09
-Text Label 8200 7350 2    50   ~ 0
+Text Label 4800 9050 0    50   ~ 0
 Sensor10
-Wire Wire Line
-	7650 7450 8200 7450
 Entry Wire Line
 	8200 8850 8300 8750
 Entry Wire Line
@@ -2778,52 +2762,48 @@ Entry Wire Line
 $Comp
 L Connector_Generic:Conn_01x06 J3
 U 1 1 620097FD
-P 3950 8950
+P 9250 7450
 AR Path="/620097FD" Ref="J3"  Part="1" 
 AR Path="/624FCD7A/620097FD" Ref="J?"  Part="1" 
 AR Path="/61F602DC/620097FD" Ref="J?"  Part="1" 
 AR Path="/61F60664/620097FD" Ref="J?"  Part="1" 
-F 0 "J3" H 3950 8350 50  0000 C CNN
-F 1 "FFC6" H 3950 8450 50  0000 C CNN
-F 2 "FFC:Molex_0545480671_01x06_P0.5mm" H 3950 8950 50  0001 C CNN
-F 3 "~" H 3950 8950 50  0001 C CNN
-	1    3950 8950
-	-1   0    0    -1  
+F 0 "J3" H 9250 6850 50  0000 C CNN
+F 1 "FFC6" H 9250 6950 50  0000 C CNN
+F 2 "FFC:Molex_0545480671_01x06_P0.5mm" H 9250 7450 50  0001 C CNN
+F 3 "~" H 9250 7450 50  0001 C CNN
+	1    9250 7450
+	1    0    0    -1  
 $EndComp
 $Comp
 L power:+3.3V #PWR063
 U 1 1 62009803
-P 4250 8550
+P 8950 7050
 AR Path="/62009803" Ref="#PWR063"  Part="1" 
 AR Path="/624FCD7A/62009803" Ref="#PWR?"  Part="1" 
 AR Path="/61F602DC/62009803" Ref="#PWR?"  Part="1" 
 AR Path="/61F60664/62009803" Ref="#PWR?"  Part="1" 
-F 0 "#PWR063" H 4250 8400 50  0001 C CNN
-F 1 "+3.3V" H 4265 8723 50  0000 C CNN
-F 2 "" H 4250 8550 50  0001 C CNN
-F 3 "" H 4250 8550 50  0001 C CNN
-	1    4250 8550
+F 0 "#PWR063" H 8950 6900 50  0001 C CNN
+F 1 "+3.3V" H 8965 7223 50  0000 C CNN
+F 2 "" H 8950 7050 50  0001 C CNN
+F 3 "" H 8950 7050 50  0001 C CNN
+	1    8950 7050
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4250 8750 4150 8750
 $Comp
 L power:GND #PWR066
 U 1 1 6200980A
-P 4250 9450
+P 8950 7950
 AR Path="/6200980A" Ref="#PWR066"  Part="1" 
 AR Path="/624FCD7A/6200980A" Ref="#PWR?"  Part="1" 
 AR Path="/61F602DC/6200980A" Ref="#PWR?"  Part="1" 
 AR Path="/61F60664/6200980A" Ref="#PWR?"  Part="1" 
-F 0 "#PWR066" H 4250 9200 50  0001 C CNN
-F 1 "GND" H 4255 9277 50  0000 C CNN
-F 2 "" H 4250 9450 50  0001 C CNN
-F 3 "" H 4250 9450 50  0001 C CNN
-	1    4250 9450
+F 0 "#PWR066" H 8950 7700 50  0001 C CNN
+F 1 "GND" H 8955 7777 50  0000 C CNN
+F 2 "" H 8950 7950 50  0001 C CNN
+F 3 "" H 8950 7950 50  0001 C CNN
+	1    8950 7950
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4250 9250 4150 9250
 Text Label 9000 12100 0    50   ~ 0
 DRV1_EN
 Text Label 9000 12200 0    50   ~ 0
@@ -2832,13 +2812,13 @@ Text Label 9000 12400 0    50   ~ 0
 DRV2_EN
 Text Label 9000 12300 0    50   ~ 0
 DRV2_PN
-Text Label 9000 13100 0    50   ~ 0
+Text Label 9000 13400 0    50   ~ 0
 Rotary1
 Text Label 9000 13200 0    50   ~ 0
 Rotary2
-Text Label 9000 13300 0    50   ~ 0
+Text Label 9000 13100 0    50   ~ 0
 Rotary4
-Text Label 9000 13400 0    50   ~ 0
+Text Label 9000 13300 0    50   ~ 0
 Rotary8
 Text Label 9000 13000 0    50   ~ 0
 LED_R
@@ -4011,7 +3991,7 @@ Connection ~ 4250 7200
 Wire Wire Line
 	4250 7200 4250 7300
 Wire Wire Line
-	4250 9250 4250 9450
+	8950 7750 8950 7950
 Wire Wire Line
 	6250 8350 4800 8350
 Wire Wire Line
@@ -4108,21 +4088,21 @@ Wire Wire Line
 	9000 12900 9500 12900
 Wire Wire Line
 	9000 13000 9500 13000
-Text Label 5300 10050 0    50   ~ 0
+Text Label 8800 8250 2    50   ~ 0
 LED_R
-Text Label 5300 9950 0    50   ~ 0
+Text Label 8800 8150 2    50   ~ 0
 LED_G
-Text Label 5300 9850 0    50   ~ 0
+Text Label 5300 9750 0    50   ~ 0
 LED_B
 Wire Wire Line
 	7650 8650 9250 8650
-Text Label 8800 8150 2    50   ~ 0
-Rotary4
-Text Label 8800 8250 2    50   ~ 0
-Rotary2
 Text Label 8800 8350 2    50   ~ 0
+Rotary4
+Text Label 5300 9850 0    50   ~ 0
+Rotary2
+Text Label 5300 10050 0    50   ~ 0
 Rotary1
-Text Label 8800 10150 2    50   ~ 0
+Text Label 5300 9950 0    50   ~ 0
 Rotary8
 Entry Wire Line
 	5300 9850 5200 9950
@@ -4136,9 +4116,9 @@ Wire Wire Line
 	5300 9950 6250 9950
 Wire Wire Line
 	5300 10050 6250 10050
-Text Label 5300 9650 0    50   ~ 0
+Text Label 8800 10150 2    50   ~ 0
 LED_Red
-Text Label 5300 9750 0    50   ~ 0
+Text Label 5300 9650 0    50   ~ 0
 LED_White
 Entry Wire Line
 	5300 9650 5200 9750
@@ -4152,9 +4132,9 @@ Text GLabel 7750 9250 2    50   Input ~ 0
 Encorder2_A
 Text GLabel 7750 9350 2    50   Input ~ 0
 Encorder2_B
-Text Label 8200 7250 2    50   ~ 0
+Text Label 4800 8950 0    50   ~ 0
 Sensor11
-Text Label 8200 7150 2    50   ~ 0
+Text Label 4800 8850 0    50   ~ 0
 Sensor12
 Entry Wire Line
 	4700 9450 4800 9350
@@ -4183,15 +4163,7 @@ Wire Wire Line
 Wire Wire Line
 	7750 10350 7650 10350
 Wire Wire Line
-	4250 8550 4250 8750
-Wire Wire Line
-	4150 8850 6250 8850
-Wire Wire Line
-	4150 8950 6250 8950
-Wire Wire Line
-	4150 9050 6250 9050
-Wire Wire Line
-	4150 9150 6250 9150
+	8950 7050 8950 7250
 Wire Wire Line
 	6150 9450 6250 9450
 Wire Wire Line
@@ -4200,8 +4172,6 @@ Text Notes 3650 9700 1    200  ~ 0
 SensorBar
 Wire Wire Line
 	7650 8850 8200 8850
-Wire Wire Line
-	8200 7550 7650 7550
 Wire Wire Line
 	7650 7650 8200 7650
 Wire Wire Line
@@ -4223,8 +4193,6 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    6950 8750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8200 7350 7650 7350
 Wire Wire Line
 	7650 8150 8800 8150
 Wire Wire Line
@@ -4313,7 +4281,7 @@ AR Path="/61F602DC/62009ABD" Ref="J?"  Part="1"
 AR Path="/61F60664/62009ABD" Ref="J?"  Part="1" 
 F 0 "J8" H 9700 13700 50  0000 C CNN
 F 1 "FFC12" V 9800 13300 50  0000 C CNN
-F 2 "Connector_PinHeader_1.00mm:PinHeader_1x12_P1.00mm_Vertical" H 9700 13100 50  0001 C CNN
+F 2 "FFC:WürthElektronik_687112183722_01x12_P0.5mm" H 9700 13100 50  0001 C CNN
 F 3 "~" H 9700 13100 50  0001 C CNN
 	1    9700 13100
 	1    0    0    -1  
@@ -4448,8 +4416,46 @@ Text Notes 12700 8700 0    50   ~ 0
 Right
 Text Notes 12700 7100 0    50   ~ 0
 Left\n
-Wire Bus Line
-	4700 9350 4700 11000
+Text Label 8200 7850 2    50   ~ 0
+Sensor05
+Text Label 8200 7750 2    50   ~ 0
+Sensor06
+Text Label 8200 7250 2    50   ~ 0
+Sensor07
+Wire Wire Line
+	4800 8850 6250 8850
+Wire Wire Line
+	4800 8950 6250 8950
+Wire Wire Line
+	4800 9050 6250 9050
+Wire Wire Line
+	4800 9150 6250 9150
+Entry Wire Line
+	4700 8950 4800 8850
+Entry Wire Line
+	4700 9050 4800 8950
+Entry Wire Line
+	4700 9150 4800 9050
+Entry Wire Line
+	4700 9250 4800 9150
+Wire Wire Line
+	8950 7250 9050 7250
+Wire Wire Line
+	9050 7750 8950 7750
+Wire Wire Line
+	8200 7650 8200 7600
+Wire Wire Line
+	8200 7600 8400 7600
+Wire Wire Line
+	8400 7600 8400 7650
+Wire Wire Line
+	8400 7650 9050 7650
+Wire Wire Line
+	7650 7550 9050 7550
+Wire Wire Line
+	7650 7450 9050 7450
+Wire Wire Line
+	7650 7350 9050 7350
 Wire Bus Line
 	19750 5950 19750 8850
 Wire Bus Line
@@ -4465,11 +4471,21 @@ Wire Bus Line
 Wire Bus Line
 	8300 5850 19650 5850
 Wire Bus Line
+	8300 5850 8300 11000
+Wire Bus Line
 	8900 8250 8900 11200
+Wire Bus Line
+	4700 8950 4700 11000
 Wire Bus Line
 	5200 8550 5200 11200
 Wire Bus Line
-	8300 5850 8300 11000
-Wire Bus Line
 	8900 11200 8900 13600
+Text Notes 15050 2000 0    50   ~ 0
+20mA
+Text Notes 18100 1500 0    50   ~ 0
+All : 480mA
+Text Notes 12650 6250 0    50   ~ 0
+All:72mA
+Text Notes 6150 12400 0    50   ~ 0
+5V : under 100mA\n3.3V : under 600mA
 $EndSCHEMATC

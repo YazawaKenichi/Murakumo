@@ -1504,7 +1504,7 @@ U 1 1 61F9B022
 P 2900 5250
 F 0 "J4" V 3000 4750 50  0000 C CNN
 F 1 "FFC7" V 3000 5100 50  0000 C CNN
-F 2 "Connector_PinHeader_1.00mm:PinHeader_1x12_P1.00mm_Vertical" H 2900 5250 50  0001 C CNN
+F 2 "FFC:WürthElektronik_687112183722_01x12_P0.5mm" H 2900 5250 50  0001 C CNN
 F 3 "~" H 2900 5250 50  0001 C CNN
 	1    2900 5250
 	-1   0    0    1   
@@ -2315,6 +2315,16 @@ Wire Wire Line
 	9000 3350 9850 3350
 Wire Wire Line
 	9400 3250 9400 3550
+Text Notes 6950 4200 0    50   ~ 0
+4.5A
+Text Notes 10500 4200 0    50   ~ 0
+4.5A
+Text Notes 3250 950  0    50   ~ 0
+9A
+Text Notes 7500 950  0    50   ~ 0
+1A
+Text Notes 5700 950  0    50   ~ 0
+100mA
 Wire Bus Line
 	4500 3550 4500 3750
 Wire Bus Line
