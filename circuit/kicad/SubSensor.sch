@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 5
+Sheet 1 1
 Title ""
 Date ""
 Rev ""
@@ -70,7 +70,7 @@ F 1 "SH3" H 2968 4216 50  0000 C CNN
 F 2 "SH:SH_01x03" H 3050 4450 50  0001 C CNN
 F 3 "~" H 3050 4450 50  0001 C CNN
 	1    3050 4450
-	-1   0    0    1   
+	-1   0    0    -1  
 $EndComp
 Wire Wire Line
 	3250 4550 3550 4550

@@ -2820,11 +2820,11 @@ Text Label 9000 13100 0    50   ~ 0
 Rotary4
 Text Label 9000 13300 0    50   ~ 0
 Rotary8
-Text Label 9000 13000 0    50   ~ 0
+Text Label 9000 12800 0    50   ~ 0
 LED_R
 Text Label 9000 12900 0    50   ~ 0
 LED_G
-Text Label 9000 12800 0    50   ~ 0
+Text Label 9000 13000 0    50   ~ 0
 LED_B
 Entry Wire Line
 	8900 12200 9000 12300
@@ -4456,6 +4456,14 @@ Wire Wire Line
 	7650 7450 9050 7450
 Wire Wire Line
 	7650 7350 9050 7350
+Text Notes 15050 2000 0    50   ~ 0
+20mA
+Text Notes 18100 1500 0    50   ~ 0
+All : 480mA
+Text Notes 12650 6250 0    50   ~ 0
+All:72mA
+Text Notes 6150 12400 0    50   ~ 0
+5V : under 100mA\n3.3V : under 600mA
 Wire Bus Line
 	19750 5950 19750 8850
 Wire Bus Line
@@ -4480,12 +4488,4 @@ Wire Bus Line
 	5200 8550 5200 11200
 Wire Bus Line
 	8900 11200 8900 13600
-Text Notes 15050 2000 0    50   ~ 0
-20mA
-Text Notes 18100 1500 0    50   ~ 0
-All : 480mA
-Text Notes 12650 6250 0    50   ~ 0
-All:72mA
-Text Notes 6150 12400 0    50   ~ 0
-5V : under 100mA\n3.3V : under 600mA
 $EndSCHEMATC
