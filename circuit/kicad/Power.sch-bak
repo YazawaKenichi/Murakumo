@@ -258,17 +258,17 @@ Wire Wire Line
 $Comp
 L Connector_Generic:Conn_01x02 J5
 U 1 1 61F9ADCD
-P 5450 6250
+P 5350 6250
 AR Path="/61F9ADCD" Ref="J5"  Part="1" 
 AR Path="/61EDC519/61F9ADCD" Ref="J?"  Part="1" 
 AR Path="/61F60426/61F9ADCD" Ref="J?"  Part="1" 
 AR Path="/61F60BF1/61F9ADCD" Ref="J?"  Part="1" 
-F 0 "J5" V 5322 6330 50  0000 L CNN
-F 1 "PA2" V 5413 6330 50  0000 L CNN
-F 2 "PA:PA_01x02" H 5450 6250 50  0001 C CNN
-F 3 "~" H 5450 6250 50  0001 C CNN
-	1    5450 6250
-	0    1    1    0   
+F 0 "J5" V 5222 6330 50  0000 L CNN
+F 1 "PA2" V 5313 6330 50  0000 L CNN
+F 2 "PA:PA_01x02" H 5350 6250 50  0001 C CNN
+F 3 "~" H 5350 6250 50  0001 C CNN
+	1    5350 6250
+	0    -1   1    0   
 $EndComp
 Wire Wire Line
 	5850 5350 6350 5350
@@ -823,25 +823,10 @@ F 1 "APTF1616LSEEZGKQBKC" H 1650 6106 50  0000 C CNN
 F 2 "original:APTF1616LSEEZGKQBKC" H 1650 5650 50  0001 C CNN
 F 3 "~" H 1650 5650 50  0001 C CNN
 	1    1650 5700
-	0    1    -1   0   
+	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	1650 5400 1650 5500
-$Comp
-L Device:R R17
-U 1 1 61F9AECB
-P 1350 6250
-AR Path="/61F9AECB" Ref="R17"  Part="1" 
-AR Path="/61EDC519/61F9AECB" Ref="R?"  Part="1" 
-AR Path="/61F60426/61F9AECB" Ref="R?"  Part="1" 
-AR Path="/61F60BF1/61F9AECB" Ref="R?"  Part="1" 
-F 0 "R17" V 1250 6250 50  0000 C CNN
-F 1 "1.2k" V 1450 6250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 1280 6250 50  0001 C CNN
-F 3 "~" H 1350 6250 50  0001 C CNN
-	1    1350 6250
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:R R18
 U 1 1 61F9AED1
@@ -855,21 +840,6 @@ F 1 "1.2k" V 1750 6250 50  0000 C CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 1580 6250 50  0001 C CNN
 F 3 "~" H 1650 6250 50  0001 C CNN
 	1    1650 6250
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R19
-U 1 1 61F9AED7
-P 1950 6250
-AR Path="/61F9AED7" Ref="R19"  Part="1" 
-AR Path="/61EDC519/61F9AED7" Ref="R?"  Part="1" 
-AR Path="/61F60426/61F9AED7" Ref="R?"  Part="1" 
-AR Path="/61F60BF1/61F9AED7" Ref="R?"  Part="1" 
-F 0 "R19" V 1850 6250 50  0000 C CNN
-F 1 "1.5k" V 2050 6250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 1880 6250 50  0001 C CNN
-F 3 "~" H 1950 6250 50  0001 C CNN
-	1    1950 6250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -2337,4 +2307,34 @@ Wire Bus Line
 	7750 2900 7750 3350
 Wire Bus Line
 	3700 3000 3700 5150
+$Comp
+L Device:R R19
+U 1 1 61F9AED7
+P 1950 6250
+AR Path="/61F9AED7" Ref="R19"  Part="1" 
+AR Path="/61EDC519/61F9AED7" Ref="R?"  Part="1" 
+AR Path="/61F60426/61F9AED7" Ref="R?"  Part="1" 
+AR Path="/61F60BF1/61F9AED7" Ref="R?"  Part="1" 
+F 0 "R19" V 1850 6250 50  0000 C CNN
+F 1 "1.2k" V 2050 6250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 1880 6250 50  0001 C CNN
+F 3 "~" H 1950 6250 50  0001 C CNN
+	1    1950 6250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R17
+U 1 1 61F9AECB
+P 1350 6250
+AR Path="/61F9AECB" Ref="R17"  Part="1" 
+AR Path="/61EDC519/61F9AECB" Ref="R?"  Part="1" 
+AR Path="/61F60426/61F9AECB" Ref="R?"  Part="1" 
+AR Path="/61F60BF1/61F9AECB" Ref="R?"  Part="1" 
+F 0 "R17" V 1250 6250 50  0000 C CNN
+F 1 "1.5k" V 1450 6250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 1280 6250 50  0001 C CNN
+F 3 "~" H 1350 6250 50  0001 C CNN
+	1    1350 6250
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

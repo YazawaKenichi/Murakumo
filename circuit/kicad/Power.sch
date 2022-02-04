@@ -811,7 +811,7 @@ F 3 "~" H 9000 3700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:LED_ABGR D5
+L Device:LED_ARGB D5
 U 1 1 61F9AEC4
 P 1650 5700
 AR Path="/61F9AEC4" Ref="D5"  Part="1" 
@@ -823,25 +823,10 @@ F 1 "APTF1616LSEEZGKQBKC" H 1650 6106 50  0000 C CNN
 F 2 "original:APTF1616LSEEZGKQBKC" H 1650 5650 50  0001 C CNN
 F 3 "~" H 1650 5650 50  0001 C CNN
 	1    1650 5700
-	0    1    -1   0   
+	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	1650 5400 1650 5500
-$Comp
-L Device:R R17
-U 1 1 61F9AECB
-P 1350 6250
-AR Path="/61F9AECB" Ref="R17"  Part="1" 
-AR Path="/61EDC519/61F9AECB" Ref="R?"  Part="1" 
-AR Path="/61F60426/61F9AECB" Ref="R?"  Part="1" 
-AR Path="/61F60BF1/61F9AECB" Ref="R?"  Part="1" 
-F 0 "R17" V 1250 6250 50  0000 C CNN
-F 1 "1.2k" V 1450 6250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 1280 6250 50  0001 C CNN
-F 3 "~" H 1350 6250 50  0001 C CNN
-	1    1350 6250
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:R R18
 U 1 1 61F9AED1
@@ -855,21 +840,6 @@ F 1 "1.2k" V 1750 6250 50  0000 C CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 1580 6250 50  0001 C CNN
 F 3 "~" H 1650 6250 50  0001 C CNN
 	1    1650 6250
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R19
-U 1 1 61F9AED7
-P 1950 6250
-AR Path="/61F9AED7" Ref="R19"  Part="1" 
-AR Path="/61EDC519/61F9AED7" Ref="R?"  Part="1" 
-AR Path="/61F60426/61F9AED7" Ref="R?"  Part="1" 
-AR Path="/61F60BF1/61F9AED7" Ref="R?"  Part="1" 
-F 0 "R19" V 1850 6250 50  0000 C CNN
-F 1 "1.5k" V 2050 6250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 1880 6250 50  0001 C CNN
-F 3 "~" H 1950 6250 50  0001 C CNN
-	1    1950 6250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -2337,4 +2307,34 @@ Wire Bus Line
 	7750 2900 7750 3350
 Wire Bus Line
 	3700 3000 3700 5150
+$Comp
+L Device:R R19
+U 1 1 61F9AED7
+P 1950 6250
+AR Path="/61F9AED7" Ref="R19"  Part="1" 
+AR Path="/61EDC519/61F9AED7" Ref="R?"  Part="1" 
+AR Path="/61F60426/61F9AED7" Ref="R?"  Part="1" 
+AR Path="/61F60BF1/61F9AED7" Ref="R?"  Part="1" 
+F 0 "R19" V 1850 6250 50  0000 C CNN
+F 1 "1.2k" V 2050 6250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 1880 6250 50  0001 C CNN
+F 3 "~" H 1950 6250 50  0001 C CNN
+	1    1950 6250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R17
+U 1 1 61F9AECB
+P 1350 6250
+AR Path="/61F9AECB" Ref="R17"  Part="1" 
+AR Path="/61EDC519/61F9AECB" Ref="R?"  Part="1" 
+AR Path="/61F60426/61F9AECB" Ref="R?"  Part="1" 
+AR Path="/61F60BF1/61F9AECB" Ref="R?"  Part="1" 
+F 0 "R17" V 1250 6250 50  0000 C CNN
+F 1 "1.5k" V 1450 6250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 1280 6250 50  0001 C CNN
+F 3 "~" H 1350 6250 50  0001 C CNN
+	1    1350 6250
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

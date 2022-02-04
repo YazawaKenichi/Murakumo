@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source D:\murakumo\circuit\kicad\SubSensor.sch)
-    (date "2022/01/30 12:29:19")
+    (date "2022/02/04 18:29:20")
     (tool "Eeschema (5.1.10)-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block

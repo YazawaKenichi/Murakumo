@@ -2820,11 +2820,11 @@ Text Label 9000 13100 0    50   ~ 0
 Rotary4
 Text Label 9000 13300 0    50   ~ 0
 Rotary8
-Text Label 9000 12800 0    50   ~ 0
+Text Label 9000 13000 0    50   ~ 0
 LED_R
 Text Label 9000 12900 0    50   ~ 0
 LED_G
-Text Label 9000 13000 0    50   ~ 0
+Text Label 9000 12800 0    50   ~ 0
 LED_B
 Entry Wire Line
 	8900 12200 9000 12300
