@@ -4464,8 +4464,6 @@ Text Notes 12650 6250 0    50   ~ 0
 All:72mA
 Text Notes 6150 12400 0    50   ~ 0
 5V : under 100mA\n3.3V : under 600mA
-Text Notes 850  1500 0    500  ~ 0
-Main
 Wire Bus Line
 	19750 5950 19750 8850
 Wire Bus Line
