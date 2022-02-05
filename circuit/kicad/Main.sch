@@ -2774,36 +2774,6 @@ F 3 "~" H 9250 7450 50  0001 C CNN
 	1    9250 7450
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:+3.3V #PWR063
-U 1 1 62009803
-P 8950 7050
-AR Path="/62009803" Ref="#PWR063"  Part="1" 
-AR Path="/624FCD7A/62009803" Ref="#PWR?"  Part="1" 
-AR Path="/61F602DC/62009803" Ref="#PWR?"  Part="1" 
-AR Path="/61F60664/62009803" Ref="#PWR?"  Part="1" 
-F 0 "#PWR063" H 8950 6900 50  0001 C CNN
-F 1 "+3.3V" H 8965 7223 50  0000 C CNN
-F 2 "" H 8950 7050 50  0001 C CNN
-F 3 "" H 8950 7050 50  0001 C CNN
-	1    8950 7050
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR066
-U 1 1 6200980A
-P 8950 7950
-AR Path="/6200980A" Ref="#PWR066"  Part="1" 
-AR Path="/624FCD7A/6200980A" Ref="#PWR?"  Part="1" 
-AR Path="/61F602DC/6200980A" Ref="#PWR?"  Part="1" 
-AR Path="/61F60664/6200980A" Ref="#PWR?"  Part="1" 
-F 0 "#PWR066" H 8950 7700 50  0001 C CNN
-F 1 "GND" H 8955 7777 50  0000 C CNN
-F 2 "" H 8950 7950 50  0001 C CNN
-F 3 "" H 8950 7950 50  0001 C CNN
-	1    8950 7950
-	1    0    0    -1  
-$EndComp
 Text Label 9000 12100 0    50   ~ 0
 DRV1_EN
 Text Label 9000 12200 0    50   ~ 0
@@ -3713,7 +3683,7 @@ Text Notes 4300 7150 0    50   ~ 0
 6.2mA\n
 Text Notes 6850 6750 0    50   ~ 0
 240mA\n
-Text Notes 9450 7450 0    200  ~ 0
+Text Notes 9750 7450 0    200  ~ 0
 Buzzer
 Text Notes 4000 7100 2    200  ~ 0
 Oscillator
@@ -3991,8 +3961,6 @@ Connection ~ 4250 7200
 Wire Wire Line
 	4250 7200 4250 7300
 Wire Wire Line
-	8950 7750 8950 7950
-Wire Wire Line
 	6250 8350 4800 8350
 Wire Wire Line
 	4800 8350 4800 7600
@@ -4163,7 +4131,7 @@ Wire Wire Line
 Wire Wire Line
 	7750 10350 7650 10350
 Wire Wire Line
-	8950 7050 8950 7250
+	9500 7700 9500 7900
 Wire Wire Line
 	6150 9450 6250 9450
 Wire Wire Line
@@ -4466,6 +4434,46 @@ Text Notes 6150 12400 0    50   ~ 0
 5V : under 100mA\n3.3V : under 600mA
 Text Notes 850  1500 0    500  ~ 0
 Main
+Wire Wire Line
+	9500 7050 9500 7250
+$Comp
+L power:+3.3V #PWR063
+U 1 1 62009803
+P 9500 7700
+AR Path="/62009803" Ref="#PWR063"  Part="1" 
+AR Path="/624FCD7A/62009803" Ref="#PWR?"  Part="1" 
+AR Path="/61F602DC/62009803" Ref="#PWR?"  Part="1" 
+AR Path="/61F60664/62009803" Ref="#PWR?"  Part="1" 
+F 0 "#PWR063" H 9500 7550 50  0001 C CNN
+F 1 "+3.3V" H 9515 7873 50  0000 C CNN
+F 2 "" H 9500 7700 50  0001 C CNN
+F 3 "" H 9500 7700 50  0001 C CNN
+	1    9500 7700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR066
+U 1 1 6200980A
+P 9500 7250
+AR Path="/6200980A" Ref="#PWR066"  Part="1" 
+AR Path="/624FCD7A/6200980A" Ref="#PWR?"  Part="1" 
+AR Path="/61F602DC/6200980A" Ref="#PWR?"  Part="1" 
+AR Path="/61F60664/6200980A" Ref="#PWR?"  Part="1" 
+F 0 "#PWR066" H 9500 7000 50  0001 C CNN
+F 1 "GND" H 9505 7077 50  0000 C CNN
+F 2 "" H 9500 7250 50  0001 C CNN
+F 3 "" H 9500 7250 50  0001 C CNN
+	1    9500 7250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9500 7900 8950 7900
+Wire Wire Line
+	8950 7900 8950 7750
+Wire Wire Line
+	9500 7050 8950 7050
+Wire Wire Line
+	8950 7050 8950 7250
 Wire Bus Line
 	19750 5950 19750 8850
 Wire Bus Line
