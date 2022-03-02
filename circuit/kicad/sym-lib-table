@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name Main-rescue)(type Legacy)(uri ${KIPRJMOD}/Main-rescue.lib)(options "")(descr ""))
+  (lib (name Power-rescue)(type Legacy)(uri ${KIPRJMOD}/Power-rescue.lib)(options "")(descr ""))
+  (lib (name SubSensor-rescue)(type Legacy)(uri ${KIPRJMOD}/SubSensor-rescue.lib)(options "")(descr ""))
+)
