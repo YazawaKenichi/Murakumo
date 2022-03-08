@@ -59,12 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define DRV2_EN_Pin GPIO_PIN_13
-#define DRV2_EN_GPIO_Port GPIOC
-#define SW1_Pin GPIO_PIN_14
-#define SW1_GPIO_Port GPIOC
-#define SW2_Pin GPIO_PIN_15
-#define SW2_GPIO_Port GPIOC
+#define DRV2_PN_Pin GPIO_PIN_13
+#define DRV2_PN_GPIO_Port GPIOC
 #define SW3_Pin GPIO_PIN_1
 #define SW3_GPIO_Port GPIOH
 #define SubSens1_Pin GPIO_PIN_2
@@ -81,38 +77,22 @@ void Error_Handler(void);
 #define ICM_MISO_GPIO_Port GPIOB
 #define ICM_MOSI_Pin GPIO_PIN_15
 #define ICM_MOSI_GPIO_Port GPIOB
-#define LED_White_Pin GPIO_PIN_8
-#define LED_White_GPIO_Port GPIOC
-#define LED_B_Pin GPIO_PIN_9
-#define LED_B_GPIO_Port GPIOC
 #define Encorder1_A_Pin GPIO_PIN_8
 #define Encorder1_A_GPIO_Port GPIOA
 #define Encorder1_B_Pin GPIO_PIN_9
 #define Encorder1_B_GPIO_Port GPIOA
-#define LED_G_Pin GPIO_PIN_10
-#define LED_G_GPIO_Port GPIOA
-#define LED_R_Pin GPIO_PIN_11
-#define LED_R_GPIO_Port GPIOA
-#define Rotary4_Pin GPIO_PIN_12
-#define Rotary4_GPIO_Port GPIOA
 #define Buzzer_Pin GPIO_PIN_15
 #define Buzzer_GPIO_Port GPIOA
-#define Rotary2_Pin GPIO_PIN_10
-#define Rotary2_GPIO_Port GPIOC
-#define Rotary8_Pin GPIO_PIN_11
-#define Rotary8_GPIO_Port GPIOC
-#define Rotary1_Pin GPIO_PIN_12
-#define Rotary1_GPIO_Port GPIOC
-#define DRV1_EN_Pin GPIO_PIN_2
-#define DRV1_EN_GPIO_Port GPIOD
+#define DRV1_PN_Pin GPIO_PIN_2
+#define DRV1_PN_GPIO_Port GPIOD
 #define Encorder2_A_Pin GPIO_PIN_4
 #define Encorder2_A_GPIO_Port GPIOB
 #define Encorder2_B_Pin GPIO_PIN_5
 #define Encorder2_B_GPIO_Port GPIOB
-#define DRV1_PN_Pin GPIO_PIN_6
-#define DRV1_PN_GPIO_Port GPIOB
-#define DRV2_PN_Pin GPIO_PIN_7
-#define DRV2_PN_GPIO_Port GPIOB
+#define DRV1_EN_Pin GPIO_PIN_6
+#define DRV1_EN_GPIO_Port GPIOB
+#define DRV2_EN_Pin GPIO_PIN_7
+#define DRV2_EN_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
