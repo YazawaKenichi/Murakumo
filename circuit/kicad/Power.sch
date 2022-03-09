@@ -199,7 +199,7 @@ Connection ~ 6950 4250
 Wire Wire Line
 	4600 5650 4600 5550
 $Comp
-L DRVxxxx:DRV8874 U3
+L Power-rescue:DRV8874-DRVxxxx U3
 U 1 1 61F9ADB5
 P 5400 5350
 AR Path="/61F9ADB5" Ref="U3"  Part="1" 
@@ -538,7 +538,7 @@ Wire Wire Line
 Wire Wire Line
 	8000 5650 8000 5550
 $Comp
-L DRVxxxx:DRV8874 U4
+L Power-rescue:DRV8874-DRVxxxx U4
 U 1 1 61F9AE49
 P 8950 5350
 AR Path="/61F9AE49" Ref="U4"  Part="1" 
@@ -1396,7 +1396,7 @@ F 3 "~" H 4600 1250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Regulator:Regulator_GOI U1
+L Power-rescue:Regulator_GOI-Regulator U1
 U 1 1 61F9AFF7
 P 5200 1100
 F 0 "U1" H 5200 1465 50  0000 C CNN
@@ -2000,7 +2000,7 @@ F 3 "~" H 4350 1000 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Regulator:Regulator_GOI U2
+L Power-rescue:Regulator_GOI-Regulator U2
 U 1 1 61F9B151
 P 7000 1100
 F 0 "U2" H 7000 1465 50  0000 C CNN
@@ -2139,7 +2139,7 @@ Wire Wire Line
 Wire Wire Line
 	7000 1500 7500 1500
 $Comp
-L SKRPABE010:Switch SW3
+L Power-rescue:Switch-SKRPABE010 SW3
 U 1 1 61F9B19F
 P 1250 3950
 F 0 "SW3" V 1204 4098 50  0000 L CNN
@@ -2150,7 +2150,7 @@ F 3 "" H 1250 3950 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L SKRPABE010:Switch SW4
+L Power-rescue:Switch-SKRPABE010 SW4
 U 1 1 61F9B1A5
 P 2000 3950
 F 0 "SW4" V 1954 4098 50  0000 L CNN
@@ -2161,7 +2161,7 @@ F 3 "" H 2000 3950 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L SKRPABE010:Switch SW5
+L Power-rescue:Switch-SKRPABE010 SW5
 U 1 1 61F9B1AB
 P 2750 3950
 F 0 "SW5" V 2704 4098 50  0000 L CNN
