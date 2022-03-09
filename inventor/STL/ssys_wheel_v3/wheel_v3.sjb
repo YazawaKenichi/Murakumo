@@ -1,0 +1,6 @@
+# Product version 10.2
+# Build version 4618
+setVersionVar currentJobCore "wheel_v3";
+setVersionVar stlDirectory "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL";
+setVersionVar stlPath "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/wheel_v3.stl";
+setVersionVar toolpathFile "wheel_v3.cmb";
