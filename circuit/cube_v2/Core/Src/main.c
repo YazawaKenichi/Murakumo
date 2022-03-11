@@ -34,6 +34,17 @@
 /* USER CODE BEGIN PD */
 
 /* Debug Define */
+#define STARTSWITCH 0
+#define MOTOR_DEBUG 0
+#define LED_DEBUG 0
+#define BUZZER_DEBUG 0
+#define ADC_DEBUG 0
+
+#define UART_DEBUG 1
+#define READ_ANALOG_SENSORS 1
+
+#define DEBUG1 1
+
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
@@ -44,7 +55,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define ADC_CONVERTED_DATA_BUFFER_SIZE 4	// ADC Channel Count
+#define COUNTER_PERIOD_MOTOR 839
+#define COUNTER_PERIOD_BUZZER 1679
+
+#define ADC_CONVERTED_DATA_BUFFER_SIZE ((uint32_t) 4)	// ADC Channel Count
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,7 +73,7 @@ TIM_HandleTypeDef htim7;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-uint16_t analog[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};	// Analog Data
+uint16_t analog[ADC_CONVERTED_DATA_BUFFER_SIZE];	// Analog Data
 
 /* USER CODE END PV */
 
@@ -74,16 +88,47 @@ static void MX_TIM6_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
+#if UART_DEBUG
+#endif
+#if PRINTF_DEBUG
 PUTCHAR_PROTOTYPE
 {
 	HAL_UART_Transmit(&huart6, (uint8_t*) &ch, 1, 0xFFFF);
 	return ch;
 }
+#endif
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#if READ_ANALOG_SENSORS
+
+void read_raw()
+{
+
+}
+
+void get_middle()
+{
+
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	// in Timer
+	if(htim->Instance == TIM6)
+	{
+		// 0.1ms
+		read_raw();	// Reading Raw Analog Value
+	}
+	if(htim->Instance == TIM7)
+	{
+		// 1ms
+		get_middle();	// Sorting Raw Analog Value and get Median
+	}
+}
+#endif	// READ_ANALOG_SENSORS
 /* USER CODE END 0 */
 
 /**
@@ -93,6 +138,9 @@ PUTCHAR_PROTOTYPE
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
+	unsigned short int duty;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -122,33 +170,165 @@ int main(void)
   MX_DMA_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
 
-	printf("Push Switch ...\r\n");
-	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))
-	{
+#if STARTSWITCH
+  printf("Pushing Switch for Start...\r\n");
+  while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))
+  {
 	  HAL_Delay(100);
-	}
+  }
+#endif
 
-  printf("Starting Analog Read\r\n");
+#if MOTOR_DEBUG
+  printf("Starging PWM\r\n");
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1) != HAL_OK){ Error_Handler(); };
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2) != HAL_OK){ Error_Handler(); };
+#endif
+
+#if BUZZER_DEBUG
+  printf("Starting Buzzer\r\n");
+  if(HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK){ Error_Handler(); };
+#endif
+
+#if UART_DEBUG
+  char txrx[128] = "Hello, World!\r\n";
+#if PRINTF_DEBUG
+  int i = 0;
+#endif
+
+#elif READ_ANALOG_SENSORS	// UART_DEBUG が無効の時に実行される
+  printf("Starting Analog Timer\r\n");
+  HAL_TIM_Base_Start_IT(&htim6);	// 0.1ms Timer
+  HAL_TIM_Base_Start_IT(&htim7);	// 1ms Timer
+//  printf("Starting Analog Read\r\n");
 //  if(HAL_ADC_Init(&hadc1) != HAL_OK) { Error_Handler(); }
 //  if(HAL_ADCE1_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) { Error_Handler(); }
-//  if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) { Error_Handler(); }
+//  if(HAL_ADC_ConfigChannel(&hadc1, &) != HAL_OK) { Error_Handler(); }
 
-	printf("Starting Analog DMA\r\n");
-	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
+  printf("Starting Analog DMA\r\n");
+  if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+#if LED_DEBUG
+	  printf("LED_DEBUG\r\n");
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+	  HAL_Delay(600);
+
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+	  HAL_Delay(600);
+#endif
+
+#if MOTOR_DEBUG
+	  printf("MOTOR_DEBUG\r\n");
+	  // モータを正転
+	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
+	  // モータを回転
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+
+	  HAL_Delay(2000);
+
+	  // モータの停止
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+
+	  HAL_Delay(2000);
+
+	  // モータを�??転
+	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+
+	  // モータを回転
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+
+	  HAL_Delay(2000);
+
+	  // モータの停止
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+
+	  HAL_Delay(2000);
+
+#endif
+
+#if BUZZER_DEBUG
+	  printf("BUZZER_DEBUG\r\n");
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+
+	  duty = 20;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+	  duty = 0;
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (int) duty * COUNTER_PERIOD_MOTOR / 100);
+	  HAL_Delay(500);
+#endif
+
+#if UART_DEBUG
+	  HAL_UART_Transmit(&huart6, (uint8_t*)txrx, sizeof(txrx), 0xFFFF);
+//	  HAL_UART_Transmit(&huart6, (uint8_t*)txrx, sizeof(txrx), 0xFFFF);
+//	  HAL_UART_Receive(&huart6, (uint8_t*)txrx, sizeof(txrx), 0xFFFF);
+#if PRINTF_DEBUG
+	  printf("Printf Count %d\r\n", i);
+	  if(i >= 10000)
+	  {
+		  i = 0;
+	  }
+	  else
+	  {
+		  i++;
+	  }
+	  HAL_Delay(1000);
+#endif
+#endif
+
+#if ADC_DEBUG
 	  for(int channel = 0; channel < ADC_CONVERTED_DATA_BUFFER_SIZE; channel++)
 	  {
 		  printf("ADC CH%2d Value is %d\r\n", channel, analog[channel]);
 	  }
 
 	  HAL_Delay(500);
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -237,7 +417,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -246,7 +426,6 @@ static void MX_ADC1_Init(void)
   }
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = 2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -254,7 +433,6 @@ static void MX_ADC1_Init(void)
   }
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = 3;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -262,7 +440,6 @@ static void MX_ADC1_Init(void)
   }
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = 4;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -495,9 +672,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+  /* DMA2_Stream4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream4_IRQn);
 
 }
 
@@ -577,10 +754,20 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#if ANALOG_READ_REFERENCE_USECASE
+HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc)	// ADC End then Callback
+{
+	printf("ADC CH1 Value is %d\r\n", analog[0]);
+	printf("ADC CH2 Value is %d\r\n", analog[1]);
+}
+#endif
+
+#if ANALOG_READ_RERO_USECASE
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 {
 	// ADC END Program
 }
+#endif
 
 /* USER CODE END 4 */
 
