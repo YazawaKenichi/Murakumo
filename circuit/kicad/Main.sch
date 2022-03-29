@@ -4183,7 +4183,7 @@ USART_TX
 Wire Wire Line
 	7650 9350 7750 9350
 Text Label 5300 8650 0    50   ~ 0
-DRV1_PN
+DRV1_PH
 Wire Wire Line
 	5300 8650 6250 8650
 Entry Wire Line
@@ -4191,7 +4191,7 @@ Entry Wire Line
 Wire Bus Line
 	4700 11000 8300 11000
 Text Label 5300 10150 0    50   ~ 0
-DRV2_PN
+DRV2_PH
 Wire Wire Line
 	5300 8450 6250 8450
 Entry Wire Line
@@ -4466,6 +4466,14 @@ Wire Wire Line
 	9500 7050 8950 7050
 Wire Wire Line
 	8950 7050 8950 7250
+Text Label 9000 12100 0    50   ~ 0
+DRV1_PH
+Text Label 9000 12200 0    50   ~ 0
+DRV1_EN
+Text Label 9000 12300 0    50   ~ 0
+DRV2_EN
+Text Label 9000 12400 0    50   ~ 0
+DRV2_PH
 Wire Bus Line
 	19750 5950 19750 8850
 Wire Bus Line
@@ -4490,12 +4498,4 @@ Wire Bus Line
 	5200 8550 5200 11200
 Wire Bus Line
 	8900 11200 8900 13600
-Text Label 9000 12100 0    50   ~ 0
-DRV1_PN
-Text Label 9000 12200 0    50   ~ 0
-DRV1_EN
-Text Label 9000 12300 0    50   ~ 0
-DRV2_EN
-Text Label 9000 12400 0    50   ~ 0
-DRV2_PN
 $EndSCHEMATC
