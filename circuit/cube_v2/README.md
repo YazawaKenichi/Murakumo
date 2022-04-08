@@ -74,6 +74,41 @@ for(int i = 0; i < CALIBRATIONSIZE; i++)
 }
 ```
 
+センサ値をソートするプログラム
+``` C
+analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
+
+if(htim->Instance == TIM7)	// TIM7 // 0.1ms
+{
+  // 0.9ms かけて配列を埋める
+  if(sensgettime >= SENSGETCOUNT) // public char sensgettime; #define SENSGETCOUNT 9
+  {
+    sensgettime = 0;
+  }
+  for(char index = 0; CALIBRATIONSIZE > index; index++)
+  {
+    analogbuffers[sensgettime][index] = analograw[index];
+  }
+}
+
+if(htim->Instance == TIM11)  // TIM11 // 1ms
+{
+  for(int index = 0; index < CALIBRATIONSIZE; index++)
+  {
+    // 縦でソートする
+    for(int count = 0; count < SENSGETCOUNT; count++)
+    {
+      for(int alphaindex = 0; alphaindex > count; alphaindex--)
+      {
+        analogbuffer = analogbuffers[alphaindex - 1][index];
+        analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
+        analogbuffers[alphaindex][index] = analogbuffer;
+      }
+    }
+  }
+}
+```
+
 【復習】
 
 マルチプレクサとは、回路選択信号を受け取って回路を選択する。n 回路 n + 1 接点トグルスイッチのようなもの。
