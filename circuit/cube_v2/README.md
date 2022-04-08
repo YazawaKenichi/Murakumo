@@ -43,9 +43,35 @@ for(int i = 0; !HAL_GPIO_ReadPin(GPIOc, GPIO_PIN_14); i++)  // SW1 が押され�
 ```
 
 デューティー比の算出
+必要な要件
+最大値と最小値
+最大値を上回ってしまったら最大値を更新する
+最小値を下回ってしまったら最小値を更新する
 ``` C
+unsigned short int analogl, analogr;  // 最大でも 8000 までしか入らない。
+unsigned short int analograte[CALIBRATIONSIZE] = {0};
+
 // TIM6
-analogl = analog[16]
+// センサの個体差を無視するための計算処理
+// #define USE_LONGSENSOR 1 の時はこの処理ではうまくいかないので注意。
+for(int i = 0; i < CALIBRATIONSIZE; i++)
+{
+//  こうすると for の途中から analograte の値が変に変わる時ができてしまう。for 処理を一旦終わらせてから最小値と最大値を更新する処理をしてもいいと思う。
+//  analogmax[j] = (analogmax[j] < analog[j]) ? analog[j] : analogmax[j]; // 自分に自分を代入するのは効率が悪いだろうか？いつか実験してみたい。
+//  analogmin[j] = (analogmin[j] > analog[j]) ? analog[j] : analobmin[j];
+  analograte[i] = ((analog[i] - analogmin[i]) * 1000) / analogmax[i]; // 最大値と最小値の間で 1000 分割した値出す。
+
+  // こうなったら analograte の総和を取るのもアリ
+  if(i % 2 == 0)
+  {
+    analogl += analograte[i];
+  }
+  else
+  {
+    analogr += analograte[i];
+  }
+  // CALIBRATIONSIZE が既に、使用するセンサの数と一致してくれているので、Long Sensor が未接続状態でもそこまでで総和を出してくれる。
+}
 ```
 
 【復習】
@@ -56,11 +82,7 @@ analogl = analog[16]
 
 でも俺としては、「チャンネルが二つ以上あっても ADC ピンの数はひとつなんだから、二つのチャンネルで ADC を読んでも意味がないのでは？」という疑問がわく。
 
-
-
 ////////////////////////////// 従来のノート //////////////////////////////
-
-
 
 プログラムのノート
 
