@@ -11,6 +11,8 @@ uint16_t analogmax[CALIBRATIONSIZE];
 uint16_t analogmin[CALIBRATIONSIZE];
 uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
 
+uint16_t inittest1[8] = {0};
+
 uint16_t analograte[CALIBRATIONSIZE] = {0};
 uint16_t analogr, analogl;	// Sum Right Analog Sensor, Sum Left Analog Sensor
 int direction;	// = analogr - analogl
@@ -33,14 +35,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		if(analogmax[i] < analogbuf)
 		{
-			analogbuf[i] = analogmax[i];
+			analogmax[i] = analogbuf;
 		}
-		else if(analogmin[i] > analogbuf)
+		if(analogmin[i] > analogbuf)
 		{
-			analogbuf[i] = analogmin[i];
+			analogmin[i] = analogbuf;
 		}
 
-		analograte[i] = ((analogbuf - analogmin[i]) * 1000) / analogmax[i];
+		analograte[i] = ((analogbuf - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
 
 	    if(i % 2 == 0)
 	    {
@@ -123,6 +125,11 @@ int main(void)
 
 	printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
+
+	for(int i = 0; 8 > i; i++)
+	{
+		printf("inittest[&1d] = %d, ", i, inittest1[i]);
+	}
 
 	printf("Push SW2 to Calibration...\r\n");
 	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
