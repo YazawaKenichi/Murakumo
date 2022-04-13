@@ -1,0 +1,7 @@
+session {4/13 6:29:49pm > Yazawa opened job C:/ProgramData/Stratasys/FDMControlCenter/10.2/jobs/Yazawa/Default.sjb.  Insight 10.2 (4618).}
+msg {6:29:50pm > Read 15372 facets in 0:00 from "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/wheel_v4.stl"}
+msg {6:29:50pm > STL comment: STLB ATF 10.3.0.1329}
+msg {6:29:50pm > Bounding box of this STL X, Y, Z:}
+msg {6:29:50pm >       min = (-9.0000, -2.0000, -8.9996)}
+msg {6:29:50pm >       max = (8.9994, 12.0000, 9.0000)}
+msg {6:29:50pm > Done loading STL file after 1 sec.}
