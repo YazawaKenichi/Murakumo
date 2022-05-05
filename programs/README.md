@@ -72,7 +72,62 @@ timer_1ms()
 }
 ```
 <br>
-<br>
+コメントを正しい処理に置き換えることをしてみる。<br>
+```
+char sidesens, sidesensbuf, sidemarker
+timer_0.1ms()
+{
+  sidesens = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) 1 : 0;
+  sidesens += !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) 2 : 0;
+}
+timer_1ms()
+{
+  if(sidesensbuf != sidesens)
+  {
+    // 前回と違う時
+    if(sidemarker == 0)
+    {
+      // サイドマーカがゼロのままなら
+      sidemarker = sidesens;
+      // 下位二ビットに現在の状態を保管
+    }
+    else
+    {
+      // サイドマーカがゼロじゃないとき
+      sidemarker += 2 << sidesens;
+      // 上位二ビットに次の状態を保管
+    }
+    // 
+  }
+  sidesensbuf = sidesens;
+
+  if(sidemarker & 0b11)
+  {
+    if((sidemarker & 0b1100 == 0b1100) || (sidemarker & 0b0011 == 0b0011))
+    {
+      // 交差
+    }
+    else if(sidemarker & 0b11 == 0b01)
+    {
+      motorenable = 0;
+    }
+    else if(sidemarker & 0b11 == 0b10)
+    {
+      // 左読み
+      // 加減速走行
+    }
+  }
+  else
+  {
+    // 両方黒読みしてる時の処理
+  }
+}
+int main()
+{
+  sidesensbuf = 0;
+  sidemarker = 0;
+}
+```
 <br>
 <br>
 <br>
