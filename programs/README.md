@@ -105,7 +105,6 @@ timer_1ms()
 
   if(sidemarker & 0b11 && sidemarker & 0b10000) // チェンジビットが立ってる時
   {
-    sidemarker -= 0b10000 // とりあえずチェンジビットを下す
     if((sidemarker & 0b1100 == 0b1100) || (sidemarker & 0b0011 == 0b0011))
     {
       // 交差
@@ -144,6 +143,8 @@ timer_1ms()
         0b1010  // 上位二ビットと下位二ビットで変化がないので本当はこれもここに来れない。
       */
     }
+      sidemarker = 0; // サイドマーカを初期化する
+
   }
   else
   {
