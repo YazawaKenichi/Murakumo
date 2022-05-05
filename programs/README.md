@@ -229,12 +229,13 @@ int main()
     何回目の変化なのかを記録する。
 ```
 ```
-subsens = 0
+subsens = 0;
 subsens = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) ? 1 : 0; // right
-subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 1 : 0; // left
-if(subsens != subsens)
+subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 2 : 0; // left
+buffer = 1;
+if(subsens != subsensbuf)
 {
-  marker += subsens << changetime;
+  marker += subsens << (2 * changetime);
   if(subsens == 0b00)
   {
     char first = (subsens & 0b0011);
@@ -255,13 +256,17 @@ if(subsens != subsens)
       }
     }
     count = 0;
+    buffer = 0;
   }
   else
   {
     count++;
   }
 }
-subsensbuf = subsens;
+if(buffer)
+{
+	subsensbuf = subsens;
+}
 ```
 <br>
 <br>
