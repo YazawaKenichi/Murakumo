@@ -73,6 +73,7 @@ timer_1ms()
 ```
 <br>
 コメントを正しい処理に置き換えることをしてみる。<br>
+
 ```
 char sidesens, sidesensbuf, sidemarker
 timer_0.1ms()
@@ -128,6 +129,7 @@ int main()
   sidemarker = 0;
 }
 ```
+
 <br>
 <br>
 <br>
