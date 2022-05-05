@@ -275,8 +275,8 @@ int main(void)
 
   /* USER CODE BEGIN Init */
   motorenable = 0;
-  subsensl = 0;
-  subsensr = 0;
+
+  
 
   for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
   {
