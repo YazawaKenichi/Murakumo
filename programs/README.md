@@ -97,25 +97,52 @@ timer_1ms()
       // サイドマーカがゼロじゃないとき
       sidemarker += 2 << sidesens;
       // 上位二ビットに次の状態を保管
+      sidemarker += 0b10000;  // チェンジビットを立てる
     }
     // 
   }
   sidesensbuf = sidesens;
 
-  if(sidemarker & 0b11)
+  if(sidemarker & 0b11 && sidemarker & 0b10000) // チェンジビットが立ってる時
   {
+    sidemarker -= 0b10000 // とりあえずチェンジビットを下す
     if((sidemarker & 0b1100 == 0b1100) || (sidemarker & 0b0011 == 0b0011))
     {
       // 交差
+      /*
+        ここの分岐に入る状態リスト
+        sidemarker
+        0b0011
+        0b0111
+        0b1011
+        0b1100
+        0b1101
+        0b1110
+        0b1111  // 上位二ビットと下位二ビットで変化がないので本当はこれもここに来れない。
+      */
     }
     else if(sidemarker & 0b11 == 0b01)
     {
       motorenable = 0;
+      /*
+        ここの分岐に入る状態リスト
+        sidemarker
+        0b0001
+        0b0101  // 上位二ビットと下位二ビットで変化がないので本当はこれもここに来れない。
+        0b1001  // 現実問題これはありえない
+      */
     }
     else if(sidemarker & 0b11 == 0b10)
     {
       // 左読み
       // 加減速走行
+      /*
+        ここの分岐に入る状態リスト
+        sidemarkder
+        0b0010
+        0b0110  // 現実問題これはありえない
+        0b1010  // 上位二ビットと下位二ビットで変化がないので本当はこれもここに来れない。
+      */
     }
   }
   else
