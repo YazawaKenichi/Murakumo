@@ -157,14 +157,112 @@ int main()
   sidemarker = 0;
 }
 ```
+最終的にはこうなった。
+```
+		// SubSensor Controller
+		subsensl = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 1 : 0;
+		subsensr = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) ? 1 : 0;
+
+		// SubSensor Controller
+		sidesens = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2)) ? 1 : 0;
+		sidesens += !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11)) ? 2 : 0;
+
+		if(sidesensbuf != sidesens)
+		{
+			//
+			if(sidesensbuf != sidesens)
+			{
+				if(sidemarker == 0)
+				{
+					sidemarker = sidesens;
+				}
+				else
+				{
+					sidemarker += 2 << sidesens;
+					sidemarker += 0b10000;
+				}
+			}
+		}
+
+		if((sidemarker & 0b11) && (sidemarker & 0b10000))
+		{
+			if(((sidemarker & 0b1100) == 0b1100) || ((sidemarker & 0b0011) == 0b0011))
+			{
+				// cross
+			}
+			else if((sidemarker & 0b11) == 0b01)
+			{
+				motorenable = 0;
+			}
+			else if((sidemarker & 0b11) == 0b10)
+			{
+				// break accel
+			}
+			sidemarker = 0;
+		}
+		else
+		{
+			// black
+		}
+		sidesensbuf = sidesens;
+```
 うまく挙動しなかった。
 左右のどちらかが白から黒・黒から白に変化することで値（sidemarker）が更新されることは確認した。
 
 もっと別のプログラムを考えてみようと思う。
 ```
-
+サイドセンサが変化した時
+  何回目の変化なのかを記憶する。カウントをインクリメント。
+  今の状態を格納する。カウントを使ってビットシフト。
+  今の状態がゼロゼロの時。
+    二番目のパターンを見る
+      二番目のパターンがイチイチの時
+        交差
+      二番目のパターンがゼロゼロの時
+        一番目のパターンを見る
+          一番目のパターンがゼロイチの時
+            右読み
+          一番目のパターンがイチゼロの時
+            左読み
+      カウントを初期化する。
+  今の状態がゼロゼロではないとき
+    何回目の変化なのかを記録する。
 ```
-
+```
+subsens = 0
+subsens = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) ? 1 : 0; // right
+subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 1 : 0; // left
+if(subsens != subsens)
+{
+  marker += subsens << changetime;
+  if(subsens == 0b00)
+  {
+    char first = (subsens & 0b0011);
+    char second = (subsens & 0b1100) >> 2;
+    if(second == 0b11)
+    {
+      // cross
+    }
+    else if(second == 0b00)
+    {
+      if(first == 0b01)
+      {
+        // right
+      }
+      else if(first == 0b10)
+      {
+        // left
+      }
+    }
+    count = 0;
+  }
+  else
+  {
+    count++;
+  }
+}
+subsensbuf = subsens;
+```
 <br>
 <br>
 <br>
