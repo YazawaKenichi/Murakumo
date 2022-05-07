@@ -38,10 +38,12 @@ static const unsigned int __bits__[] = {
 
 void main()
 {
-    char leftsensor = 0, rightsensor = 0, subsens = 0, subsensbuf = 0, marker = 0, count = 0, first = 0, second = 0, markerstate = 0, buffer = 0;
+    unsigned short int subsens = 0, subsensbuf = 0, marker = 0, count = 0, first = 0, second = 0, markerstate = 0, buffer = 0;
+    unsigned short int leftsensor = 0, rightsensor = 0;
 
     while(1)
     {
+        /*
         printf("leftsensor = ");
         leftsensor = getchar();
         while(getchar() != '\n')
@@ -54,47 +56,68 @@ void main()
         {
             
         }
+        */
+        printf("leftsensor = ");
+        scanf("%hu%*c", &leftsensor);
+        printf("rightsensor = ");
+        scanf("%hu%*c", &rightsensor);
+        printf("leftsensor = 0b%08d, rightsensor = 0b%08d\n", BCD(leftsensor), BCD(rightsensor));
 
-        subsens = rightsensor ? 1 : 0; // right
-        subsens += leftsensor ? 2 : 0; // left
+        subsens = (rightsensor != 0) ? 1 : 0; // right
+        subsens += (leftsensor != 0) ? 2 : 0; // left
         printf("subsens = 0b%08d, subsensbuf = 0b%08d\n", BCD(subsens), BCD(subsensbuf));
 
         if(subsens != subsensbuf)
         {
+            subsensbuf = subsens;
+            printf("if(subsens != subsensbuf)\n");
             marker += subsens << (2 * count);
-            if(subsens == 0b00)
+            printf("marker = 0b%08d, count = %d\n", BCD(marker), count);
+            if(subsens == 0b00 && count != 0)
             {
-                first = (subsens & 0b0011);
-                second = (subsens & 0b1100) >> 2;
-                if(second == 0b11)
-                {
-                    // cross
-                    markerstate = 0b11;
-                }
-                else if(second == 0b00)
+                printf("if(subsens == 0b00 && count != 0)\n");
+                first = (marker & 0b0011);
+                printf("first = 0b%08d, ", BCD(first));
+                second = (marker & 0b1100) >> 2;
+                printf("second = 0b%08d\n", BCD(second));
+                if(second == 0b00)
                 {
                     if(first == 0b01)
                     {
                         // right
+                        printf("right -> stop\n");
                         markerstate = 0b01;
                     }
                     else if(first == 0b10)
                     {
                         // left
+                        printf("left -> curve\n");
                         markerstate = 0b10;
                     }
+                    else
+                    {
+                        // cross
+                        printf("cross\n");
+                        markerstate = 0b11;
+                    }
                 }
+                //else if(second == 0b11)
+                else
+                {
+                    // cross
+                    printf("cross\n");
+                    markerstate = 0b11;
+                }
+                printf("count = 0, buffer = 0, marker = 0\n");
                 count = 0;
                 buffer = 0;
+                marker = 0;
             }
             else
             {
                 count++;
+                printf("count = %d\n", count);
             }
-        }
-        if(buffer)
-        {
-            subsensbuf = subsens;
         }
     }
 }
