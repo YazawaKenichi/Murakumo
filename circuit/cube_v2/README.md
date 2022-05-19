@@ -93,19 +93,21 @@ if(htim->Instance == TIM7)	// TIM7 // 0.1ms
 
 if(htim->Instance == TIM11)  // TIM11 // 1ms
 {
-  for(int index = 0; index < CALIBRATIONSIZE; index++)
-  {
-    // 縦でソートする
-    for(int count = 0; count < SENSGETCOUNT; count++)
-    {
-      for(int alphaindex = 0; alphaindex > count; alphaindex--)
-      {
-        analogbuffer = analogbuffers[alphaindex - 1][index];
-        analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
-        analogbuffers[alphaindex][index] = analogbuffer;
-      }
-    }
-  }
+		for(unsigned char index = CALIBRATIONSIZE - 1; index > 0; index--)	// DownCounter
+		{
+			for(unsigned char count = SENSGETCOUNT - 1; count > 0; count--)	// DownCounter
+			{
+				for(unsigned char alphaindex = count; alphaindex > 0; alphaindex--)	// DownCounter
+				{
+					if(analogbuffers[alphaindex - 1][index] > analogbuffers[alphaindex][index])
+					{
+						uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
+						analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
+						analogbuffers[alphaindex][index] = analogbuffer;
+					}
+				}
+			}
+		}
 }
 ```
 
