@@ -322,3 +322,12 @@ PGain = (AnalogL - AnalogR) * KP
 二度も計算させるのは嫌なので direction * (1000 - commspeed) / 32768 は変数に格納してもいい希ガス。
 この値は -32,768,000 ~ 32,767,000 の値を取るので、型は int 型。
 （int の範囲 -2,147,483,648 ~ 2,147,483,648)
+
+# エンコーダ
+PA8 -> 41 -> Encoder1_A -> EncoderLeft_A (TIM1_CH1)<br>
+PA9 -> 42 -> Encoder1_B -> EncoderLeft_B (TIM1_CH2)<br>
+PB4 -> 56 -> Encoder2_A -> EncoderRight_A (TIM3_CH1)<br>
+PB5 -> 57 -> Encoder2_B -> EncoderRight_B (TIM3_CH2)<br>
+
+
+
