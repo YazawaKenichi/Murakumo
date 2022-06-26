@@ -41,11 +41,11 @@
 
 #define PLAY 1
 #define SUBSENSTIM10 1
-#define D_ANALOG 0
-#define D_MOTOR 0
+#define D_ANALOG 1
+#define D_MOTOR 1
 #define D_SIDESENS 1	//
 #define D_SUBSENSTIM6 0	// Only Process Subsens Controll in TIM6
-#define DISABLEANOTHERTIMERS 1	// Only Use TIM10
+#define DISABLEANOTHERTIMERS 0	// Only Use TIM10
 #define STEP_EXECUTION 0
 
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
@@ -81,7 +81,9 @@ DMA_HandleTypeDef hdma_adc1;
 
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim6;
+TIM_HandleTypeDef htim7;
 TIM_HandleTypeDef htim10;
+TIM_HandleTypeDef htim11;
 
 UART_HandleTypeDef huart6;
 
@@ -135,6 +137,8 @@ static void MX_USART6_UART_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_TIM7_Init(void);
+static void MX_TIM11_Init(void);
 /* USER CODE BEGIN PFP */
 PUTCHAR_PROTOTYPE
 {
@@ -165,7 +169,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  analogr = 0;
 		  for(unsigned char i = 0; i < CALIBRATIONSIZE; i++)
 		  {
-#if analog
 			uint16_t analogbuf = analog[i];
 	//	    analogmax[i] = (analogmax[i] < analogbuf) ? analogbuf : analogmax[i];
 	//	    analogmin[i] = (analogmin[i] > analogbuf) ? analogbuf : analogmin[i];
@@ -179,10 +182,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			}
 
 			analograte[i] = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
-#else
-			uint16_t analogratebuf = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
-			analograte[i] = analogratebuf < 0 ? -analogratebuf : 1000 > analogratebuf ? analogratebuf : 1000;
-#endif
 
 			if(i % 2 == 0)
 			{
@@ -437,6 +436,8 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM4_Init();
   MX_TIM10_Init();
+  MX_TIM7_Init();
+  MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
   printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
@@ -453,13 +454,13 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 	printf("Starting TIM6\r\n");
-//	HAL_TIM_Base_Start_IT(&htim6);	// 1ms // PID
+	HAL_TIM_Base_Start_IT(&htim6);	// 1ms // PID
 	printf("Starting TIM7\r\n");
-//	HAL_TIM_Base_Start_IT(&htim7);	// 0.1ms	// SensorGet
+	HAL_TIM_Base_Start_IT(&htim7);	// 0.1ms	// SensorGet
 	printf("Starting TIM10\r\n");
 	HAL_TIM_Base_Start_IT(&htim10);	// 1ms	// D_Sidesensor
 	printf("Starting TIM11\r\n");
-//	HAL_TIM_Base_Start(&htim11);	// 1ms	// sensor sort
+	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// sensor sort
 
 	printf("Starting Analog Read\r\n");
 	if(HAL_ADC_Init(&hadc1) != HAL_OK) { Error_Handler(); }
@@ -964,9 +965,9 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 0;
+  htim6.Init.Prescaler = 2;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 65535;
+  htim6.Init.Period = 55999;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -981,6 +982,44 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
+
+}
+
+/**
+  * @brief TIM7 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM7_Init(void)
+{
+
+  /* USER CODE BEGIN TIM7_Init 0 */
+
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim7.Instance = TIM7;
+  htim7.Init.Prescaler = 0;
+  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim7.Init.Period = 16799;
+  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+
+  /* USER CODE END TIM7_Init 2 */
 
 }
 
@@ -1000,7 +1039,7 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 1;
+  htim10.Init.Prescaler = 2;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim10.Init.Period = 55999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -1012,6 +1051,37 @@ static void MX_TIM10_Init(void)
   /* USER CODE BEGIN TIM10_Init 2 */
 
   /* USER CODE END TIM10_Init 2 */
+
+}
+
+/**
+  * @brief TIM11 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM11_Init(void)
+{
+
+  /* USER CODE BEGIN TIM11_Init 0 */
+
+  /* USER CODE END TIM11_Init 0 */
+
+  /* USER CODE BEGIN TIM11_Init 1 */
+
+  /* USER CODE END TIM11_Init 1 */
+  htim11.Instance = TIM11;
+  htim11.Init.Prescaler = 2;
+  htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim11.Init.Period = 55999;
+  htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM11_Init 2 */
+
+  /* USER CODE END TIM11_Init 2 */
 
 }
 
