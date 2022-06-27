@@ -289,7 +289,33 @@ mm / pulse で計算してみて、精度が欲しくなったら um / pulse に
 mm / pulse のまま LENGTHPERPULSE を求めると 0.041274 mm / pulse となり、FPU を有効化していないマイコンでは整数で計算する必要があり、1000 倍した um / pulse 単位で計算することになる。
 今回のプログラムでは FPU を有効化していないのでこの um / pulse で計算することにする。
 <br>
-エンコーダ<br>
+### ロータリスイッチを使いたい
+ロータリスイッチで切り替えられるようにする機能たち<br>
+リセットした瞬間に決まるモード 16種類<br>
+リセットする前に決めるモード 16種類<br>
+256 種類のプログラムを実行することが可能。<br>
+リセットした瞬間に決まるモードについてはあまり需要がないかもしれない。<br>
+前提として、SW1（ロータリスイッチ側にあるやつ）が決定。<br>
+SW2（中央のやつ）がストップ・キャンセル
+<table>
+	<tr><th>Rotary_value</th><th>起動後の機能</th><th>リセット時の機能</th></tr>
+	<tr><th>0</th><td>キャリブレーション</td><td>フロントセンサ＋メインセンサ</td></tr>
+	<tr><th>1</th><td>走行方法１（等速走行）（ROM 書き込み有効）</td><td>メインセンサのみ</td></tr>
+	<tr><th>2</th><td>走行方法２（加減速走行）</td><td>フロントセンサのみ</td></tr>
+	<tr><th>3</th><td>走行方法３（加減速走行）</td><td></td></tr>
+	<tr><th>4</th><td></td><td></td></tr>
+	<tr><th>5</th><td>ROM データの表示</td><td></td></tr>
+	<tr><th>6</th><td></td><td></td></tr>
+	<tr><th>7</th><td></td><td></td></tr>
+	<tr><th>8</th><td></td><td></td></tr>
+	<tr><th>9</th><td></td><td></td></tr>
+	<tr><th>A</th><td></td><td></td></tr>
+	<tr><th>B</th><td></td><td></td></tr>
+	<tr><th>C</th><td></td><td></td></tr>
+	<tr><th>D</th><td></td><td></td></tr>
+	<tr><th>E</th><td></td><td></td></tr>
+	<tr><th>F</th><td></td><td></td></tr>
+</table>
 <br>
 <br>
 <br>
