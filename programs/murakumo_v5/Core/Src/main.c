@@ -111,7 +111,7 @@ UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 // analog
-uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};	// Analog Data
+uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE];	// Analog Data
 
 #if ATTACH_LONGSENSOR	// use normal sensor and long sensor
 #define CALIBRATIONSIZE 16
@@ -123,14 +123,14 @@ uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};	// Analog Data
 #endif
 #endif
 
-uint16_t analog[CALIBRATIONSIZE] = {0};
+uint16_t analog[CALIBRATIONSIZE];
 uint16_t analogmax[CALIBRATIONSIZE];
 uint16_t analogmin[CALIBRATIONSIZE];
 uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
 
-uint16_t analograte[CALIBRATIONSIZE] = {0};
+uint16_t analograte[CALIBRATIONSIZE];
 uint16_t analogr, analogl;	// Sum Right Analog Sensor, Sum Left Analog Sensor
-int direction, beforedirection = 0;	// = analogr - analogl
+int direction, beforedirection;	// = analogr - analogl
 unsigned char sensgettime;
 uint8_t calibrationsize;
 
@@ -154,7 +154,7 @@ uint16_t enc1, enc2, enc3;
 #endif
 
 // motor
-uint16_t commonspeed = COMMONSPEED;
+uint16_t commonspeed;
 
 int leftmotor;
 int rightmotor;
@@ -194,7 +194,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 	// ADC END Program
 }
 
-uint8_t rotary_read();
 void led_rgb(char r, char g, char b);
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -485,7 +484,9 @@ int main(void)
 	prelengthl = 0;
 	prelengthr = 0;
 	rotary_value = 0;
+	beforedirection = 0;
 	LENGTHPERPULSE = PI * TIREDIAMETER * PINIONGEAR / SPURGEAR / PULSEPERROTATE;
+	commonspeed = COMMONSPEED;
 #if D_PWM
 	pwmsteptime = 0;
 	pwmstepud = 1;
@@ -531,6 +532,14 @@ int main(void)
 	  HAL_Delay(100);
 	}
 
+	printf("Starting Analog Read\r\n");
+	if(HAL_ADC_Init(&hadc1) != HAL_OK) { Error_Handler(); }
+//  if(HAL_ADCE1_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) { Error_Handler(); }	// never
+//	if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) { Error_Handler(); }
+
+	printf("Starting Analog DMA\r\n");
+	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analograw, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
+
 	printf("Starting TIM4 as PWM Generation\r\n");
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
@@ -546,14 +555,6 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// sensor sort
 #endif
 #endif
-
-	printf("Starting Analog Read\r\n");
-	if(HAL_ADC_Init(&hadc1) != HAL_OK) { Error_Handler(); }
-//  if(HAL_ADCE1_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) { Error_Handler(); }	// never
-//	if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) { Error_Handler(); }
-
-	printf("Starting Analog DMA\r\n");
-	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
 
 #if D_ENCODER
 	printf("LENGTHPERPULSE = %lu\r\n", LENGTHPERPULSE);
