@@ -494,8 +494,8 @@ int main(void)
 
 	for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
 	{
-	  analogmax[i] = 0;
-	  analogmin[i] = 4096;
+		analogmax[i] = 0;
+		analogmin[i] = 4096;
 	}
 
   /* USER CODE END Init */
@@ -560,6 +560,13 @@ int main(void)
 	printf("LENGTHPERPULSE = %lu\r\n", LENGTHPERPULSE);
 #endif
 
+#if USE_ROTARY
+	switch(rotary_value)
+	{
+#endif
+#if USE_ROTARY
+	case 0x :
+#endif
 	printf("Push SW2 to Calibration...\r\n");
 	led_rgb(1, 1, 0);	// Yellow
 	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
@@ -649,12 +656,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+#if !USE_ROTARY
   printf("\r\n==================== while ====================\r\n");
   led_rgb(1, 1, 1);	// White
   while (1)
   {
 	  printf("///// WHILE /////\n\r");
 	  /// main while ///
+#endif
 #if D_ANALOG
 	#if !CSV_FORMAT
 		#if ATTACH_LONGSENSOR
@@ -785,6 +794,9 @@ int main(void)
 
 #if D_SWITCH
 	printf("enter = %d\r\n", enter);
+#endif
+#if USE_ROTARY
+	}	// switch(rotary_value)
 #endif
 
 	HAL_Delay(250);
