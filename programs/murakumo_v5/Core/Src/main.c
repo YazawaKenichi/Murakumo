@@ -458,18 +458,7 @@ int main(void)
   /* USER CODE BEGIN Init */
 	enter = 0;
 	motorenable = 0;
-	subsensbuf = 0;
-	marker = 0;
-	sidedeltacount = 0;
-	markerstate = 0;
-	rightmarkercount = 0;
-	leftmotor = 0;
-	rightmotor = 0;
-	sensgettime = 0;
-	prelengthl = 0;
-	prelengthr = 0;
 	rotary_value = 0;
-	beforedirection = 0;
 	LENGTHPERPULSE = PI * TIREDIAMETER * PINIONGEAR / SPURGEAR / PULSEPERROTATE;
 	commonspeed = COMMONSPEED;
 #if D_PWM
@@ -649,6 +638,7 @@ int main(void)
 			} // switch(rotary_value)
 		}
 	}
+	HAL_Delay(250);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -1337,6 +1327,7 @@ void led_rgb(char r, char g, char b)
 
 void sensor_initialize()
 {
+	sensgettime = 0;
 	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analograw, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
 	HAL_TIM_Base_Start_IT(&htim7);	// SENSORGET SORT
 	HAL_Delay(1000);
@@ -1354,8 +1345,18 @@ void running_initialize()
 	printf("Encoder_Start\r\n");
 	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
 	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+	subsensbuf = 0;
+	marker = 0;
+	sidedeltacount = 0;
+	markerstate = 0;
+	rightmarkercount = 0;
+	prelengthl = 0;
+	prelengthr = 0;
 	printf("SIDESENSOR ENCODER\r\n");
-	HAL_TIM_Base_Start_IT(&htim10);	// ENCODER SWITCH
+	HAL_TIM_Base_Start_IT(&htim10);
+	leftmotor = 0;
+	rightmotor = 0;
+	beforedirection = 0;
 	printf("PWM_Start\r\n");
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
