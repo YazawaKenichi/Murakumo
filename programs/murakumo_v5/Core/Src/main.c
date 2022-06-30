@@ -39,22 +39,24 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
-#define PLAY 0
-#define D_ANALOG 0
+#define PLAY 1
+
+#define D_ANALOG 1
 #define D_MOTOR 0
-#define D_SIDESENS 0	//
-#define D_ENCODER 0	// Debug Encoder
+#define D_SIDESENS 1	//
+#define D_ENCODER 1	// Debug Encoder
 #define D_PWM 0
 #define D_ROTARY 1
 #define D_SWITCH 1
-#define USE_SIDESENSOR 0	// Use SideSensor
-#define USE_ENCODER 0
-#define USE_ROTARY 0
-#define USE_SWITCH 1
-#define DISABLEANOTHERTIMERS 0	// Only Use TIM11
+
 #define STATICMOTORPWM 0
-#define STEP_EXECUTION 0
-#define TIMERINTEGRATED 0
+
+#define USE_MOTOR 1
+#define USE_SIDESENSOR 1	// Use SideSensor
+#define USE_ENCODER 1
+#define USE_ROTARY 1
+#define USE_SWITCH 1
+
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
 #define CSV_FORMAT 0	//
@@ -191,24 +193,42 @@ PUTCHAR_PROTOTYPE
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 {
-	// ADC END Program
+	if(sensgettime >= SENSGETCOUNT)
+	{
+		sensgettime = 0;
+		for(unsigned char index = 0; index < CALIBRATIONSIZE; index++)
+		{
+			for(unsigned char count = 0; count < SENSGETCOUNT; count++)
+			{
+				for(unsigned char alphaindex = 0; alphaindex > count; alphaindex--)
+				{
+					uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
+					analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
+					analogbuffers[alphaindex][index] = analogbuffer;
+				}
+			}
+			analog[index] = analogbuffers[(int) SENSGETCOUNT / 2][index];
+		}
+	}
+	for(unsigned char index = 0; CALIBRATIONSIZE > index; index++)
+	{
+		analogbuffers[sensgettime][index] = analograw[index];
+	}
+	sensgettime++;
 }
 
 void led_rgb(char r, char g, char b);
+void running_initialize();
+void running_finalize();
+void sensor_initialize();
+void sensor_finalize();
+void d_print();
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-#if TIMERINTEGRATED
-	if(htim->Instance == TIM6)	// TIM6	// 2ms
-	{
-#endif
-#if !TIMERINTEGRATED
 	if(htim->Instance == TIM6)
 	{
-#endif
-#if PLAY
-		// Analog Process
-		// https://github.com/YazawaKenichi/Murakumo/blob/main/circuit/cube_v2/README.md
+#if USE_MOTOR
 		if(motorenable)
 		{
 #if !STATICMOTORPWM
@@ -287,12 +307,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pwmsteptime = (pwmstepud == 255) ? pwmsteptime - 1 : pwmsteptime + 1;
 		}
 #endif	// D_PWM
-#endif	// PLAY
-#if !TIMERINTEGRATED
+#endif
 	}	// TIM6
 	if(htim->Instance == TIM10)	// TIM10 // 1ms
 	{
-#endif
 #if USE_SIDESENSOR
 		unsigned char subsens, first, second;
 
@@ -385,15 +403,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		velocityl = lengthl / 1;
 		velocityr = lengthr / 1;
 #endif	// USE_ENCODER
-#if USE_ROTARY
+	}	// TIM10
+
+	if(htim->Instance == TIM11)	// TIM11 // 1ms
+	{
 		uint8_t rotary_value_row;
 		rotary_value_row = (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12)) ? 1 : 0;
 		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)) ? 2 : 0;
 		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12)) ? 4 : 0;
 		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11)) ? 8 : 0;
 		rotary_value = rotary_value_row;
-#endif	// USE_ROTARY
-#if USE_SWITCH
+
 		if(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
 		{
 			enter = 1;
@@ -402,49 +422,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			enter = 0;
 		}
-#endif
-#if !TIMERINTEGRATED
-	}	// TIM10
-	if(htim->Instance == TIM11)	// TIM11 // 1ms
-	{
-#endif
-		for(unsigned char index = 0; index < CALIBRATIONSIZE; index++)
-		{
-			for(unsigned char count = 0; count < SENSGETCOUNT; count++)
-			{
-				for(unsigned char alphaindex = 0; alphaindex > count; alphaindex--)
-				{
-					uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
-					analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
-					analogbuffers[alphaindex][index] = analogbuffer;
-				}
-			}
-			analog[index] = analogbuffers[SENSGETCOUNT / 2][index];
-		}
-#if !TIMERINTEGRATED
 	}
+
 	if(htim->Instance == TIM13)	// TIM13 // 1ms
 	{
-#endif
-		// TIM13
-		// ROTARY
-#if !TIMERINTEGRATED
-	}	// TIM13
-#endif
-#if TIMERINTEGRATED
-	}	// if(htim->Interface == TIM6) // 1ms
-#endif
+	}
+
 	if(htim->Instance == TIM7)	// TIM7 // 0.1ms
 	{
-		if(sensgettime >= SENSGETCOUNT)
-		{
-			sensgettime = 0;
-		}
-		for(unsigned char index = 0; CALIBRATIONSIZE > index; index++)
-		{
-			analogbuffers[sensgettime][index] = analograw[index];
-		}
-		sensgettime++;
 	}
 }
 
@@ -524,293 +509,149 @@ int main(void)
 	printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
 
-
-	printf("Push Switch ...\r\n");
-	led_rgb(1, 0, 0);	// Red
-	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))
-	{
-	  HAL_Delay(100);
-	}
-
 	printf("Starting Analog Read\r\n");
 	if(HAL_ADC_Init(&hadc1) != HAL_OK) { Error_Handler(); }
-//  if(HAL_ADCE1_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) { Error_Handler(); }	// never
-//	if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) { Error_Handler(); }
 
-	printf("Starting Analog DMA\r\n");
-	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analograw, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
-
-	printf("Starting TIM4 as PWM Generation\r\n");
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-	printf("Starting TIM6\r\n");
-	HAL_TIM_Base_Start_IT(&htim6);	// 1ms // PID
-#if !DISABLEANOTHERTIMERS
-	printf("Starting TIM7\r\n");
-	HAL_TIM_Base_Start_IT(&htim7);	// 0.1ms	// SensorGet
-#if !TIMERINTEGRATED
-	printf("Starting TIM10\r\n");
-	HAL_TIM_Base_Start_IT(&htim10);	// 1ms	// D_Sidesensor
 	printf("Starting TIM11\r\n");
-	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// sensor sort
-#endif
-#endif
+	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// ROTARY SWITCH
 
 #if D_ENCODER
-	printf("LENGTHPERPULSE = %lu\r\n", LENGTHPERPULSE);
+	printf("LENGTHPERPULSE = %u\r\n", LENGTHPERPULSE);
 #endif
 
-#if USE_ROTARY
-	switch(rotary_value)
-	{
-#endif
-#if USE_ROTARY
-	case 0x :
-#endif
-	printf("Push SW2 to Calibration...\r\n");
-	led_rgb(1, 1, 0);	// Yellow
-	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
-	{
-		HAL_Delay(100);
-	}
-	printf("Push SW1 to End Calibrating...\r\n");
-	// https://github.com/YazawaKenichi/Murakumo/blob/main/circuit/cube_v2/README.md
-	printf(ESC_MAG);
-	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))
-	{
-		for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
-		{
-			uint16_t analogbuf = analog[j];
-			analogmax[j] = (analogmax[j] < analogbuf) ? analogbuf : analogmax[j];
-			analogmin[j] = (analogmin[j] > analogbuf) ? analogbuf : analogmin[j];
-#if D_ANALOG
-			printf("[%2d] = ", j);
-			printf("%4d,", analogbuf);
-#endif
-		}
-		printf("\r\n");
-	}
-
-#if D_ANALOG
-	printf(ESC_YEL);
-	for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
-	{
-			printf("[%2d] = ", j);
-			printf("%4d,", analogmax[j]);
-	}
-	printf("\r\n");
-	printf(ESC_CYA);
-	for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
-	{
-			printf("[%2d] = ", j);
-			printf("%4d,", analogmin[j]);
-	}
-	printf("\r\n");
-	printf(ESC_DEF);
-	for(unsigned char i = 0; 5 * CALIBRATIONSIZE > i; i++)
-	{
-		printf("v");
-	}
-	printf("\r\n");
-	printf(ESC_YEL);
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-	  printf("[%2d] = ", i * 2);
-	  printf("%4d, ", analogmax[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-	  printf("[%2d] = ", i * 2 - 1);
-	  printf("%4d,", analogmax[i * 2 - 1]);
-	}
-	printf("\r\n");
-	printf(ESC_CYA);
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-	  printf("[%2d] = ", i * 2);
-	  printf("%4d, ", analogmin[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-	  printf("[%2d] = ", i * 2 - 1);
-	  printf("%4d,", analogmin[i * 2 - 1]);
-	}
-	printf("\r\n");
-#endif
-	printf(ESC_DEF);
-
-	printf("Push SW2 to Start...\r\n");
-	led_rgb(1, 1, 0);	// Yellow
-	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
-	{
-		HAL_Delay(100);
-	}
-	led_rgb(1, 1, 1);
-	HAL_Delay(3000);
-	motorenable = 1;
-#if D_ENCODER
-	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-#if !USE_ROTARY
-  printf("\r\n==================== while ====================\r\n");
-  led_rgb(1, 1, 1);	// White
-  while (1)
-  {
-	  printf("///// WHILE /////\n\r");
-	  /// main while ///
-#endif
-#if D_ANALOG
-	#if !CSV_FORMAT
-		#if ATTACH_LONGSENSOR
-			  // use normal sensor and long sensor
-			  printf("\x1b[24C");	// Cursor move right *24
-			  printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
-			  printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
-		#else	// ATTACH_LONGSENSOR
-			#if !USE_LONGSENSOR
-				  // only use normal sensor
-				  printf("\x1b[24C");	// Cursor move right *24
-				  printf(ESC_RED);
-				  printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
-				  printf(ESC_DEF);
-				  printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
-			#else	// !USE_LONGSENSOR
-				  // only use long sensor
-				  printf("\x1b[24C");	// Cursor move right *24
-				  printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
-				  printf(ESC_RED);
-				  printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
-				  printf(ESC_DEF);
-			#endif	// !USE_LONGSENSOR
-		#endif	// ATTACH_LONGSENSOR
-		printf("\r\n");
-	#else	// !CSV_FORMAT
-		  for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-		  {
-			  printf("[%2d] = ", i * 2);
-			  printf("%4d,", analograte[i * 2]);
-		  }
-		  for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-		  {
-			  printf("[%2d] = ", i * 2 - 1);
-			  printf("%4d,", analograte[i * 2 - 1]);
-		  }
-		  printf("analograte\r\n");
-		  printf(ESC_CYA);
-		  for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-		  {
-			  printf("[%2d] = ", i * 2);
-			  printf("%4d,", analog[i * 2]);
-		  }
-		  for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-		  {
-			  printf("[%2d] = ", i * 2 - 1);
-			  printf("%4d,", analog[i * 2 - 1]);
-		  }
-		  printf("analog\r\n");
-		  printf(ESC_RED);
-		  for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-		  {
-			  printf("[%2d] = ", i * 2);
-			  printf("%4d,", analogmax[i * 2]);
-		  }
-		  for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-		  {
-			  printf("[%2d] = ", i * 2 - 1);
-			  printf("%4d,", analogmax[i * 2 - 1]);
-		  }
-		  printf("analogmax\r\n");
-		  printf(ESC_BLU);
-		  for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-		  {
-			  printf("[%2d] = ", i * 2);
-			  printf("%4d,", analogmin[i * 2]);
-		  }
-		  for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-		  {
-			  printf("[%2d] = ", i * 2 - 1);
-			  printf("%4d,", analogmin[i * 2 - 1]);
-		  }
-		  printf("analogmin\r\n");
-		  printf(ESC_GRE);
-		  printf("leftmotor = %5d, rightmotor = %5d,", leftmotor, rightmotor);
-		  printf("analogl = %5d, analogr = %5d, direction = %5d", analogl, analogr, direction);
-		  printf("\r\n");
-		  printf(ESC_DEF);
-		  printf("\r\n");
-	#endif	// !CSV_FORMAT
-#endif	// D_ANALOG
-
-#if D_SIDESENS
-	  printf("0b%c%c%c%c%c%c%c%c\r\n", markerstate & 128 ? '1' : '0' , markerstate &  64 ? '1' : '0' , markerstate &  32 ? '1' : '0' , markerstate &  16 ? '1' : '0' , markerstate &   8 ? '1' : '0' , markerstate &   4 ? '1' : '0' , markerstate &   2 ? '1' : '0' , markerstate &   1 ? '1' : '0');
-	  printf("marker = %5d, sidedeltacount = %5d\r\n", marker, sidedeltacount);
-	  printf("rightmarkercount = %5d\r\n", rightmarkercount);
-	  printf("leftmotor = %5d, rightmotor = %5d\r\n", leftmotor, rightmotor);
-#endif
-
-#if D_MOTOR
-#if D_ANALOG
-	printf(" analogl = %5d, analogr = %5d, direction = %6d\r\n", analogl, analogr, analogl - analogr);
-#endif	// D_ANALOG
-	printf(" MotL = ");
-	if(leftmotor < 0)
+	led_rgb(1, 1, 1);	// White
+	while (1)
 	{
-	  printf("-");
-	}
-	else
-	{
-	  printf(" ");
-	}
-	printf("%5d, MotR = ", leftmotor);
-	if(rightmotor < 0)
-	{
-	  printf("-");
-	}
-	else
-	{
-	  printf(" ");
-	}
-	printf("%5d\r\n", rightmotor);
-	printf("\r\n");
-#endif	// D_MOTOR
-
-#if D_ENCODER
-	printf("encl = %d, encr = %d \r\ndencl = %d, dencr = %d\r\n", encl, encr, dencl, dencr);
-	printf("lengthl = %d, lengthr = %d \r\nvelocityl = %d, velocityr = %d\r\n", lengthl, lengthr, velocityl, velocityr);
-#endif
-
-#if D_PWM
-	printf("pwmstepoutput = %5d, pwmsteptime = %5d, pwmstepud = %d\r\n", pwmstepoutput, pwmsteptime, pwmstepud);
-#endif
-
-#if D_ROTARY
-	printf("rotary_value = %d\r\n", rotary_value);
-#endif
-
+		printf("///// WHILE /////\n\r");
 #if D_SWITCH
-	printf("enter = %d\r\n", enter);
+		printf("enter = %d\r\n", enter);
 #endif
-#if USE_ROTARY
-	}	// switch(rotary_value)
+#if D_ROTARY
+		printf("rotary_value = %d\r\n", rotary_value);
 #endif
+		if(enter)
+		{
+			switch(rotary_value)
+			{
+				case 0x0:
+					led_rgb(1, 1, 0);	// Yellow
 
-	HAL_Delay(250);
+					sensor_initialize();
 
-	  /// main while ///
+					while(enter)
+					{
+						for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
+						{
+							uint16_t analogbuf = analog[j];
+							analogmax[j] = (analogmax[j] < analogbuf) ? analogbuf : analogmax[j];
+							analogmin[j] = (analogmin[j] > analogbuf) ? analogbuf : analogmin[j];
+#if D_ANALOG
+							printf("[%2d] = ", j);
+							printf("%4d", analogbuf);
+							if(j != CALIBRATIONSIZE - 1)
+							{
+								printf(", ");
+							}
+							else
+							{
+								printf("\r\n");
+							}
+#endif
+						}
+						HAL_Delay(250);
+					}
+					sensor_finalize();
+#if D_ANALOG
+					printf(ESC_YEL);
+					for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
+					{
+							printf("[%2d] = ", j);
+							printf("%4d,", analogmax[j]);
+					}
+					printf("\r\n");
+					printf(ESC_CYA);
+					for(unsigned char j = 0; CALIBRATIONSIZE > j; j++)
+					{
+							printf("[%2d] = ", j);
+							printf("%4d,", analogmin[j]);
+					}
+					printf("\r\n");
+					printf(ESC_DEF);
+					for(unsigned char i = 0; 5 * CALIBRATIONSIZE > i; i++)
+					{
+							printf("v");
+					}
+					printf("\r\n");
+					printf(ESC_YEL);
+					for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+					{
+							printf("[%2d] = ", i * 2);
+							printf("%4d, ", analogmax[i * 2]);
+					}
+					for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+					{
+							printf("[%2d] = ", i * 2 - 1);
+							printf("%4d,", analogmax[i * 2 - 1]);
+					}
+					printf("\r\n");
+					printf(ESC_CYA);
+					for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+					{
+							printf("[%2d] = ", i * 2);
+							printf("%4d, ", analogmin[i * 2]);
+					}
+					for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+					{
+							printf("[%2d] = ", i * 2 - 1);
+							printf("%4d,", analogmin[i * 2 - 1]);
+					}
+					printf("\r\n");
+					printf(ESC_DEF);
+#endif
+					break;
+				case 0x1:
+					running_initialize();
 
+					while(enter)
+					{
+						d_print();
+						HAL_Delay(250);
+					}
+
+					running_finalize();
+					break;
+				case 0x2:
+					running_initialize();
+
+					while(enter)
+					{
+						d_print();
+						HAL_Delay(250);
+					}
+
+					running_finalize();
+					break;
+				case 0x3:
+					running_initialize();
+
+					while(enter)
+					{
+						d_print();
+						HAL_Delay(250);
+					}
+
+					running_finalize();
+					break;
+			} // switch(rotary_value)
+		}
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	}
-#if D_ENCODER
-	HAL_TIM_Encoder_Stop(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Stop(&htim3, TIM_CHANNEL_ALL);
-#endif
   /* USER CODE END 3 */
 }
 
@@ -1492,6 +1333,151 @@ void led_rgb(char r, char g, char b)
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, (r) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LED_R ON
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, (g) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LED_G ON
 	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (b) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LED_B ON
+}
+
+void sensor_initialize()
+{
+	if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analograw, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) { Error_Handler(); }
+	HAL_TIM_Base_Start_IT(&htim7);	// SENSORGET SORT
+	HAL_Delay(1000);
+}
+
+void sensor_finalize()
+{
+	HAL_TIM_Base_Stop_IT(&htim7);
+	HAL_ADC_Stop_DMA(&hadc1);
+}
+
+void running_initialize()
+{
+	sensor_initialize();
+	printf("Encoder_Start\r\n");
+	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+	printf("SIDESENSOR ENCODER\r\n");
+	HAL_TIM_Base_Start_IT(&htim10);	// ENCODER SWITCH
+	printf("PWM_Start\r\n");
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+	printf("PID\r\n");
+	HAL_TIM_Base_Start_IT(&htim6);	// PID
+#if PLAY
+	motorenable = 1;
+#endif
+}
+
+void running_finalize()
+{
+	motorenable = 0;
+	sensor_finalize();
+	HAL_TIM_Base_Stop_IT(&htim6);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_Base_Stop_IT(&htim10);
+	HAL_TIM_Encoder_Stop(&htim3, TIM_CHANNEL_ALL);
+	HAL_TIM_Encoder_Stop(&htim1, TIM_CHANNEL_ALL);
+}
+
+void d_print()
+{
+#if D_ANALOG
+#if !CSV_FORMAT
+#if ATTACH_LONGSENSOR
+	// use normal sensor and long sensor
+	printf("\x1b[24C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
+#else	// ATTACH_LONGSENSOR
+#if !USE_LONGSENSOR
+	// only use normal sensor
+	printf("\x1b[24C");	// Cursor move right *24
+	printf(ESC_RED);
+	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
+	printf(ESC_DEF);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
+#else	// !USE_LONGSENSOR
+	// only use long sensor
+	printf("\x1b[24C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
+	printf(ESC_RED);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
+	printf(ESC_DEF);
+#endif	// !USE_LONGSENSOR
+#endif	// ATTACH_LONGSENSOR
+	printf("\r\n");
+#else	// !CSV_FORMAT
+	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+	{
+		printf("[%2d] = ", i * 2);
+		printf("%4d,", analograte[i * 2]);
+	}
+	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+	{
+		printf("[%2d] = ", i * 2 - 1);
+		printf("%4d,", analograte[i * 2 - 1]);
+	}
+	printf("analograte\r\n");
+	printf(ESC_CYA);
+	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+	{
+		printf("[%2d] = ", i * 2);
+		printf("%4d,", analog[i * 2]);
+	}
+	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+	{
+		printf("[%2d] = ", i * 2 - 1);
+		printf("%4d,", analog[i * 2 - 1]);
+	}
+	printf("analog\r\n");
+	printf(ESC_RED);
+	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+	{
+		printf("[%2d] = ", i * 2);
+		printf("%4d,", analogmax[i * 2]);
+	}
+	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+	{
+		printf("[%2d] = ", i * 2 - 1);
+		printf("%4d,", analogmax[i * 2 - 1]);
+	}
+	printf("analogmax\r\n");
+	printf(ESC_BLU);
+	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
+	{
+		printf("[%2d] = ", i * 2);
+		printf("%4d,", analogmin[i * 2]);
+	}
+	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
+	{
+		printf("[%2d] = ", i * 2 - 1);
+		printf("%4d,", analogmin[i * 2 - 1]);
+	}
+	printf("analogmin\r\n");
+	printf(ESC_GRE);
+	printf("leftmotor = %5d, rightmotor = %5d,", leftmotor, rightmotor);
+	printf("analogl = %5d, analogr = %5d, direction = %5d", analogl, analogr, direction);
+	printf("\r\n");
+	printf(ESC_DEF);
+	printf("\r\n");
+#endif	// !CSV_FORMAT
+#endif	// D_ANALOG
+
+#if D_ENCODER
+	printf("encl = %d, encr = %d \r\ndencl = %d, dencr = %d\r\n", encl, encr, dencl, dencr);
+	printf("lengthl = %d, lengthr = %d \r\nvelocityl = %d, velocityr = %d\r\n", lengthl, lengthr, velocityl, velocityr);
+#endif
+
+#if D_PWM
+	printf("pwmstepoutput = %5d, pwmsteptime = %5d, pwmstepud = %d\r\n", pwmstepoutput, pwmsteptime, pwmstepud);
+#endif
+
+#if D_ROTARY
+	printf("rotary_value = %d\r\n", rotary_value);
+#endif
+
+#if D_SWITCH
+	printf("enter = %d\r\n", enter);
+#endif
 }
 
 /* USER CODE END 4 */
