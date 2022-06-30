@@ -49,7 +49,7 @@
 #define D_SWITCH 1
 #define USE_SIDESENSOR 0	// Use SideSensor
 #define USE_ENCODER 0
-#define USE_ROTARY 1
+#define USE_ROTARY 0
 #define USE_SWITCH 1
 #define DISABLEANOTHERTIMERS 0	// Only Use TIM11
 #define STATICMOTORPWM 0
