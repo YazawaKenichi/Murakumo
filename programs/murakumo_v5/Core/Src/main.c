@@ -56,15 +56,23 @@
 #define USE_ENCODER 1
 #define USE_ROTARY 1
 #define USE_SWITCH 1
+#define USE_FLASH 0
 
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
 #define CSV_FORMAT 0	//
 
+#define SECOND 1
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#if USE_FLASH
+#define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_1
+#define BACKUP_FLASH_SECTOR_SIZE (1024 * 16)
+#endif
+
 #define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
 #define SENSGETCOUNT 9
 
@@ -74,12 +82,29 @@
 #define ENCODERPERIOD 1 // ms
 #define PINIONGEAR 41
 #define SPURGEAR 64
+#define COURSELENGTH 60
 
-#define COMMONSPEED 700	// 700 // 570
-#define KPL 30	// 25
-#define KPR 30	// 25
-#define KDL 8	// 10
-#define KDR 8	// 10
+#define COMMONSPEED1 450	// 700 // 570
+#define KPL1 25	// 30 // 25
+#define KPR1 25	// 30 // 25
+#define KDL1 10	// 8  // 10
+#define KDR1 10	// 8  // 10
+#define KIL1 0
+#define KIR1 0
+#define COMMONSPEED2 450	// 700 // 570
+#define KPL2 25	// 30 // 25
+#define KPR2 25	// 30 // 25
+#define KDL2 10	// 8  // 10
+#define KDR2 10	// 8  // 10
+#define KIL2 0
+#define KIR2 0
+#define COMMONSPEED3 450	// 700 // 570
+#define KPL3 25	// 30 // 25
+#define KPR3 25	// 30 // 25
+#define KDL3 10	// 8  // 10
+#define KDR3 10	// 8  // 10
+#define KIL3 0
+#define KIR3 0
 #define PWMMAX 3360
 
 #if D_PWM
@@ -138,9 +163,17 @@ uint8_t calibrationsize;
 
 unsigned char subsensbuf, marker, sidedeltacount, markerstate, rightmarkercount;	// 0 ~ 255(2^8-1)
 unsigned short int encl, encr, encl_row, encr_row, dencl, dencr;	// 0 ~ 65535(2^16-1)
-int lengthl, lengthr, prelengthl, prelengthr, velocityl, velocityr;
+uint8_t lengthl, lengthr, prelengthl, prelengthr, velocityl, velocityr;
 unsigned int LENGTHPERPULSE;	// (um / pulse)
-// int velocity[][]
+
+#if SECOND
+// uint8_t velocity[COURSELENGTH * 1000];
+#endif
+
+#if USE_FLASH
+static uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE] __attribute__ ((aligned(4)));
+extern char _backup_flash_star;
+#endif
 
 #if D_PWM
 #define PWM_STEP_AMPLITUDE 3360		// (288 + 1024 * 3) // PWM Pulse Amplitude
@@ -222,6 +255,11 @@ void running_initialize();
 void running_finalize();
 void sensor_initialize();
 void sensor_finalize();
+#if USE_FLASH
+uint8_t Flash_clear();
+uint8_t* Flash_load();
+uint8_t Flash_store();
+#endif
 void d_print();
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -337,7 +375,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 						}
 						else if(rightmarkercount == 1)
 						{
-							motorenable = 0;
 						}
 					}
 					else if(first == 0b10)
@@ -400,8 +437,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		lengthl = LENGTHPERPULSE * dencl;	// um
 		lengthr = LENGTHPERPULSE * dencr;	// um
 
-		velocityl = lengthl / 1;
-		velocityr = lengthr / 1;
+		velocityl = lengthl / ENCODERPERIOD / 1000;
+		velocityr = lengthr / ENCODERPERIOD / 1000;
+		velocity[i] = (velocityl + velocityr) / 2;
 #endif	// USE_ENCODER
 	}	// TIM10
 
@@ -604,9 +642,20 @@ int main(void)
 					break;
 				case 0x1:
 					running_initialize();
+					int lengthsum;
+					lengthsum = 0;
 
 					while(enter)
 					{
+						if(rightmarkercount >= 1)
+						{
+							lengthsum += (lengthl + lengthr) / 2;
+							if(lengthsum >= 200)
+							{
+								motorenable = 0;
+								enter = 0;
+							}
+						}
 						d_print();
 						HAL_Delay(250);
 					}
@@ -1481,6 +1530,56 @@ void d_print()
 #endif
 }
 
+#if USE_FLASH
+uint8_t Flash_clear()
+{
+	HAL_FLASH_Unlock();
+
+	FLASH_EraseInitTypeDef EraseInitStruct;
+	EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+	EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM;
+	EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+	EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+
+uint8_t* Flash_load()
+{
+    memcpy(work_ram, &_backup_flash_start, BACKUP_FLASH_SECTOR_SIZE);
+    return work_ram;
+}
+
+uint8_t Flash_store()
+{
+    if (!Flash_clear()) return false;
+
+    uint32_t *p_work_ram = (uint32_t*)work_ram;
+
+    HAL_FLASH_Unlock();
+
+    HAL_StatusTypeDef result;
+    const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE / sizeof(uint32_t);
+
+    for (size_t i=0; i<write_cnt; i++)
+    {
+        result = HAL_FLASH_Program(
+                    FLASH_TYPEPROGRAM_WORD,
+                    (uint32_t)(&_backup_flash_start) + sizeof(uint32_t) * i,
+                    p_work_ram[i]
+                );
+        if (result != HAL_OK) break;
+    }
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK;
+}
+#endif
 /* USER CODE END 4 */
 
 /**
