@@ -426,6 +426,9 @@ STM32F446 Nucleo-64 を用いて ROM 書き込みの実験をしてみた。<br>
 [実際のプログラムがこちら](https://github.com/YazawaKenichi/Murakumo/tree/main/programs)<br>
 そしてデータの読み書きに成功。<br>
 ![image](https://user-images.githubusercontent.com/37500115/178116614-a8fce56c-45c4-47e2-85e9-6e30888a02c8.png)<br>
+read していたデータを一度 write で書き込んで...<br>
+リセットしてみる（read... で値が表示されていない）<br>
+リセット後も write した値が保持されている証拠に、同じ値が read されている。<br>
 <br>
 <br>
 <br>
