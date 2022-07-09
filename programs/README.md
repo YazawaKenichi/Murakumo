@@ -422,8 +422,10 @@ void loadFlash(uint32_t address, uint64_t *data, uint32_t size)
     memcpy(data, (uint64_t*)address, size);
 }
 ```
-データの読み書きに成功。<br>
-![image](https://user-images.githubusercontent.com/37500115/178114779-4b36d578-c44d-4e1a-8172-daa0fbce0293.png)<br>
+STM32F446 Nucleo-64 を用いて ROM 書き込みの実験をしてみた。<br>
+[実際のプログラムがこちら](https://github.com/YazawaKenichi/Murakumo/tree/main/programs)<br>
+そしてデータの読み書きに成功。<br>
+![image](https://user-images.githubusercontent.com/37500115/178116614-a8fce56c-45c4-47e2-85e9-6e30888a02c8.png)<br>
 <br>
 <br>
 <br>
