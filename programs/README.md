@@ -343,10 +343,12 @@ TIM7 (0.1ms) : sensget sort<br>
 数式<br>
 (右折半径) + ((トレッド) / 2) : (右折半径) - ((トレッド) / 2) = (左速度) : (右速度)<br>
 右折半径を R<br>
-トレッド / 2 を T<br>
+トレッドを T<br>
 左速度をVl<br>
 右速度をVr<br>
 とすると。<br>
+R = (T / 2) * ((Vr + Vl) / (Vr - Vl))<br>
+右折で正、左折で負。<br>
 <br>
 Flash ROM を消して書き込んで読み込む。<br>
 まずは関数の作成。<br>
@@ -420,6 +422,8 @@ void loadFlash(uint32_t address, uint64_t *data, uint32_t size)
     memcpy(data, (uint64_t*)address, size);
 }
 ```
+データの読み書きに成功。<br>
+![image](https://user-images.githubusercontent.com/37500115/178114779-4b36d578-c44d-4e1a-8172-daa0fbce0293.png)<br>
 <br>
 <br>
 <br>
