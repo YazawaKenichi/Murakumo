@@ -348,6 +348,8 @@ TIM7 (0.1ms) : sensget sort<br>
 右速度をVr<br>
 とすると。<br>
 <br>
+Flash ROM を消して書き込んで読み込む。<br>
+まずは関数の作成。<br>
 ```
 // TARGET_SECTOR を変更したら start_address と end_address も変更する必要がある。
 #define TARGET_SECTOR FLASH_SECTOR7;	// 読み書きするセクタを指定
