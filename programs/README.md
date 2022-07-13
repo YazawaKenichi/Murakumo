@@ -430,7 +430,15 @@ read していたデータを一度 write で書き込んで...<br>
 リセットしてみる（read... で値が表示されていない）<br>
 リセット後も write した値が保持されている証拠に、同じ値が read されている。<br>
 <br>
-<br>
+### IMU を載せた。<br>
+[ICM-20648](https://3cfeqx1hf82y3xcoull08ihx-wpengine.netdna-ssl.com/wp-content/uploads/2021/07/DS-000179-ICM-20648-v1.5.pdf)<br>
+project.ioc で SPI2 を有効化する。マイコンはマスター側なので Full-Duplex Master を選択する。<br>
+Frame Format は知らん。大体 Motorola らしい。<br>
+datasheet の 6.5 SPI INTERFACE に SPI 通信の方法が載っている。<br>
+データは MSB (最上位ビット) が最初に送信され。LSB (最下位ビット) が最後に送信される。<br>
+つまりマイコン側から見れば、MSB を最初に受信して、LSB を最後に受信することがわかる。<br>
+このことから project.ioc ファイルの、Parameter Settings の First Bit の設定は MSB First で良さそう。<br>
+同じ項目から、SPI Data format は 8bit であることがわかる。<br>
 <br>
 <br>
 <br>
