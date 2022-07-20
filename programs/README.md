@@ -337,10 +337,108 @@ TIM11 (1ms) : ROTARY, SWITCH	// 常に有効にしておく<br>
 TIM7 (0.1ms) : sensget sort<br>
 キャリブレーションするときと走る時に有効にする。<br>
 割り込み周期が速すぎる場合は周期を遅くするか、そもそもソートしなくてもいいかも。<br>
+
+### エンコーダの読み取り値から左右のモータの速度差を出して旋回半径を求める。
+この辺の処理はロボット外でやってもいい。<br>
+数式<br>
+(右折半径) + ((トレッド) / 2) : (右折半径) - ((トレッド) / 2) = (左速度) : (右速度)<br>
+右折半径を R<br>
+トレッドを T<br>
+左速度をVl<br>
+右速度をVr<br>
+とすると。<br>
+R = (T / 2) * ((Vr + Vl) / (Vr - Vl))<br>
+右折で正、左折で負。<br>
 <br>
+Flash ROM を消して書き込んで読み込む。<br>
+まずは関数の作成。<br>
+```
+// TARGET_SECTOR を変更したら start_address と end_address も変更する必要がある。
+#define TARGET_SECTOR FLASH_SECTOR7;	// 読み書きするセクタを指定
+const uint32_t start_address = 0x08060000	// Sector7 Start Address
+const uint32_t end_address = 0x0807FFFF	// Sector7 End Address
+
+// TARGET_SECTOR に指定したセクタを削除する。
+void eraseFlash(void)
+{
+    // FLASH_EraseInitTypeDef は削除のための設定をまとめた構造体
+	FLASH_EraseInitTypeDef erase;	// インスタンスの生成
+    // セクタを選択して削除するか、全削除するか選択する。
+	erase.TypeErase = FLASH_TYPEERASE_SECTORS;	// セクタを選ぶ
+    // 削除するセクタの指定。
+    erase.Sector = TARGET_SECTOR;   // #define TARGET_SECTOR FLASH_SECTORx
+    // 削除したい 1 セクタ分を指定する。
+    erase.NbSectors = 1;
+    // マイコンの電圧を指定する。
+    erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    // 
+    uint32_t pageError = 0;
+
+    // セクタを削除する。
+    // HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef * pEraseInit, uint32_t *SectorError); で定義されている。
+    // uint32_t *SectorError には削除が失敗した場合にそのセクタのポインタが入る。
+    // 問題なく削除できた場合は 0xFFFF が入る。
+    HAL_FLASHEx_Erase(&erase, &pageError);
+    /*
+    if(pageError == 0xFFFF)
+    {
+        printf("Erase Collect!\r\n");
+    }
+    */
+}
+
+// 使う時は writeFlash(start_address, (uint64_t*)maze_data, sizeof(MAZE_DATA));
+void writeFlash(uint32_t address, uint64_t *data, uint32_t size)
+{
+    // FLASH のアンロック
+    HAL_FLASH_Unlock();
+    // セクタの削除
+    eraseFlash();
+
+    // address から address + size まで add を移動する。
+    for(uint32_t add = address; add < (address + size); add++)
+    {
+        // バイトを書き込む。
+        // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data); で定義される。
+        // uint32_t TypeProgram で何バイト書き込むのかを設定する。
+        // #define FLASH_TYPEPROGRAM_BYTE ((uint32_t)0x00U)
+        // #define FLASH_TYPEPROGRAM_HALFWORD ((uint32_t)0x01U)
+        // #define FLASH_TYPEPROGRAM_WORD ((uint32_t)0x02U)
+        // #define FLASH_TYPEPROGRAM_DOUBLEWORD ((uint32_t)0x03U)   // 数字の末尾に U を付けると符号なし整数(unsigned)を意味する。
+        // uint32_t Address に uint64_t Data を書き込む。
+        HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, add, *data);
+        // データポインタを加算する。つまり data に渡された配列または構造体の、次の要素に移る。
+        data++;
+    }
+    
+    // ライトプロテクトを有効化。
+    HAL_FLASH_Lock();
+}
+
+// 使う時は loadFlash(start_address, (uint64_t*)maze_data, sizeof(MAZE_DATA));
+void loadFlash(uint32_t address, uint64_t *data, uint32_t size)
+{
+    // データをコピーする。
+    memcpy(data, (uint64_t*)address, size);
+}
+```
+STM32F446 Nucleo-64 を用いて ROM 書き込みの実験をしてみた。<br>
+[実際のプログラムがこちら](https://github.com/YazawaKenichi/Murakumo/blob/main/programs/FLASH_test_F446.c)<br>
+そしてデータの読み書きに成功。<br>
+![image](https://user-images.githubusercontent.com/37500115/178116614-a8fce56c-45c4-47e2-85e9-6e30888a02c8.png)<br>
+read していたデータを一度 write で書き込んで...<br>
+リセットしてみる（read... で値が表示されていない）<br>
+リセット後も write した値が保持されている証拠に、同じ値が read されている。<br>
 <br>
-<br>
-<br>
+### IMU を載せた。<br>
+[ICM-20648](https://3cfeqx1hf82y3xcoull08ihx-wpengine.netdna-ssl.com/wp-content/uploads/2021/07/DS-000179-ICM-20648-v1.5.pdf)<br>
+project.ioc で SPI2 を有効化する。マイコンはマスター側なので Full-Duplex Master を選択する。<br>
+Frame Format は知らん。大体 Motorola らしい。<br>
+datasheet の 6.5 SPI INTERFACE に SPI 通信の方法が載っている。<br>
+データは MSB (最上位ビット) が最初に送信され。LSB (最下位ビット) が最後に送信される。<br>
+つまりマイコン側から見れば、MSB を最初に受信して、LSB を最後に受信することがわかる。<br>
+このことから project.ioc ファイルの、Parameter Settings の First Bit の設定は MSB First で良さそう。<br>
+同じ項目から、SPI Data format は 8bit であることがわかる。<br>
 <br>
 <br>
 <br>
