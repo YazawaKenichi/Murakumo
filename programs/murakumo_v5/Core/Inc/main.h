@@ -70,6 +70,8 @@ void Error_Handler(void);
 #define SubSens1_GPIO_Port GPIOB
 #define SubSens2_Pin GPIO_PIN_11
 #define SubSens2_GPIO_Port GPIOB
+#define SPI2_nCS_Pin GPIO_PIN_12
+#define SPI2_nCS_GPIO_Port GPIOB
 #define LED_Red_Pin GPIO_PIN_13
 #define LED_Red_GPIO_Port GPIOB
 #define LED_White_Pin GPIO_PIN_8

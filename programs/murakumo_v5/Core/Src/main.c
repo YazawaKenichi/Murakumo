@@ -23,6 +23,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include <string.h>
+#include <stdint.h>
+#include "ICM20648.h"
 
 /* USER CODE END Includes */
 
@@ -56,7 +59,9 @@
 #define USE_ENCODER 1
 #define USE_ROTARY 1
 #define USE_SWITCH 1
-#define USE_FLASH 0
+#define USE_FLASH 1
+#define USE_IMU 1
+#define USE_BUZZER 0
 
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
@@ -69,8 +74,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #if USE_FLASH
-#define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_1
+#define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_11
 #define BACKUP_FLASH_SECTOR_SIZE (1024 * 16)
+#define ENC_SIZE 128
 #endif
 
 #define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
@@ -83,6 +89,8 @@
 #define PINIONGEAR 41
 #define SPURGEAR 64
 #define COURSELENGTH 60
+#define TREAD 103000
+#define RMIN 100000	// MINIMUM RADIUS
 
 #define COMMONSPEED1 450	// 700 // 570
 #define KPL1 25	// 30 // 25
@@ -91,11 +99,11 @@
 #define KDR1 10	// 8  // 10
 #define KIL1 0
 #define KIR1 0
-#define COMMONSPEED2 450	// 700 // 570
-#define KPL2 25	// 30 // 25
-#define KPR2 25	// 30 // 25
-#define KDL2 10	// 8  // 10
-#define KDR2 10	// 8  // 10
+#define COMMONSPEED2 3000	// 700 // 570
+#define KPL2 40	// 30 // 25
+#define KPR2 40	// 30 // 25
+#define KDL2 0	// 8  // 10
+#define KDR2 0	// 8  // 10
 #define KIL2 0
 #define KIR2 0
 #define COMMONSPEED3 450	// 700 // 570
@@ -105,7 +113,8 @@
 #define KDR3 10	// 8  // 10
 #define KIL3 0
 #define KIR3 0
-#define PWMMAX 3360
+
+#define PWMMAX 1000 // 3360
 
 #if D_PWM
 #define STATICPWM
@@ -125,7 +134,12 @@
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
+I2C_HandleTypeDef hi2c1;
+
+SPI_HandleTypeDef hspi2;
+
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim6;
@@ -137,6 +151,17 @@ TIM_HandleTypeDef htim13;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
+#if USE_FLASH
+typedef struct
+{
+	uint8_t sencl[ENC_SIZE];
+	uint8_t sencr[ENC_SIZE];
+	uint32_t common_speed2[ENC_SIZE];
+	uint32_t common_speed3[ENC_SIZE];
+//	uint16_t second[ENC_SIZE];
+} FlashBuffer;
+#endif
+
 // analog
 uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE];	// Analog Data
 
@@ -161,6 +186,8 @@ int direction, beforedirection;	// = analogr - analogl
 unsigned char sensgettime;
 uint8_t calibrationsize;
 
+uint8_t kpl, kpr, kdl, kdr, kil, kir;
+
 unsigned char subsensbuf, marker, sidedeltacount, markerstate, rightmarkercount;	// 0 ~ 255(2^8-1)
 unsigned short int encl, encr, encl_row, encr_row, dencl, dencr;	// 0 ~ 65535(2^16-1)
 uint8_t lengthl, lengthr, prelengthl, prelengthr, velocityl, velocityr;
@@ -171,8 +198,10 @@ unsigned int LENGTHPERPULSE;	// (um / pulse)
 #endif
 
 #if USE_FLASH
-static uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE] __attribute__ ((aligned(4)));
-extern char _backup_flash_star;
+const uint32_t start_address = 0x080E0000;
+const uint32_t end_address = 0x080FFFFF;
+FlashBuffer flash_buffer;
+uint8_t course_state_time;
 #endif
 
 #if D_PWM
@@ -217,48 +246,23 @@ static void MX_TIM3_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_TIM11_Init(void);
 static void MX_TIM13_Init(void);
+static void MX_SPI2_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-PUTCHAR_PROTOTYPE
-{
-	HAL_UART_Transmit(&huart6, (uint8_t*) &ch, 1, 0xFFFF);
-	return ch;
-}
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
-{
-	if(sensgettime >= SENSGETCOUNT)
-	{
-		sensgettime = 0;
-		for(unsigned char index = 0; index < CALIBRATIONSIZE; index++)
-		{
-			for(unsigned char count = 0; count < SENSGETCOUNT; count++)
-			{
-				for(unsigned char alphaindex = 0; alphaindex > count; alphaindex--)
-				{
-					uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
-					analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
-					analogbuffers[alphaindex][index] = analogbuffer;
-				}
-			}
-			analog[index] = analogbuffers[(int) SENSGETCOUNT / 2][index];
-		}
-	}
-	for(unsigned char index = 0; CALIBRATIONSIZE > index; index++)
-	{
-		analogbuffers[sensgettime][index] = analograw[index];
-	}
-	sensgettime++;
-}
-
+PUTCHAR_PROTOTYPE;
 void led_rgb(char r, char g, char b);
 void running_initialize();
 void running_finalize();
 void sensor_initialize();
 void sensor_finalize();
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle);
+uint32_t power(uint8_t, uint8_t);
 #if USE_FLASH
-uint8_t Flash_clear();
-uint8_t* Flash_load();
-uint8_t Flash_store();
+void eraseFlash(void);
+void writeFlash(uint32_t, uint8_t*, uint32_t);
+void loadFlash(uint32_t, uint8_t*, uint32_t);
 #endif
 void d_print();
 
@@ -297,9 +301,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				  analogr += analograte[i];
 				}
 			}
+			switch(rotary_value)
+			{
+				case 0x1:
+					break;
+				case 0x2:
+					commonspeed = flash_buffer.common_speed2[course_state_time];
+					break;
+				case 0x3:
+					commonspeed = flash_buffer.common_speed3[course_state_time];
+					break;
+				case 0xE:
+					break;
+				default:
+					commonspeed = 0;
+					break;
+			}
 			direction = (analogl - analogr);	// difference
-			leftmotor = commonspeed - direction / CALIBRATIONSIZE / 2 * KPL - (direction - beforedirection) * KDL;
-			rightmotor = commonspeed + direction / CALIBRATIONSIZE / 2 * KPR + (direction - beforedirection) * KDR;
+			leftmotor = commonspeed - direction / CALIBRATIONSIZE / 2 * kpl - (direction - beforedirection) * kdl;
+			rightmotor = commonspeed + direction / CALIBRATIONSIZE / 2 * kpr + (direction - beforedirection) * kdr;
 			beforedirection = direction;
 #else	// !STATICMOTORPWM
 			leftmotor = -COMMONSPEED;
@@ -381,6 +401,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					{
 						// left -> curve
 						markerstate = 0b10;
+#if USE_FLASH
+						course_state_time++;
+						if(course_state_time >= ENC_SIZE)
+						{
+							motorenable = 0;
+						}
+#endif
 					}
 					else
 					{
@@ -434,12 +461,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		encl = encl_row;
 		encr = encr_row;
 
+#if USE_FLASH
+		flash_buffer.sencl[course_state_time] += dencl;
+		flash_buffer.sencr[course_state_time] += dencr;
+#endif
+
+		/*
 		lengthl = LENGTHPERPULSE * dencl;	// um
 		lengthr = LENGTHPERPULSE * dencr;	// um
 
 		velocityl = lengthl / ENCODERPERIOD / 1000;
 		velocityr = lengthr / ENCODERPERIOD / 1000;
-		velocity[i] = (velocityl + velocityr) / 2;
+		*/
 #endif	// USE_ENCODER
 	}	// TIM10
 
@@ -451,6 +484,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12)) ? 4 : 0;
 		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11)) ? 8 : 0;
 		rotary_value = rotary_value_row;
+
+#if USE_BUZZER
+		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 1406 * rotary_value_row / 16);
+#endif
 
 		if(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))
 		{
@@ -494,11 +531,15 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+#if USE_FLASH
+	FlashBuffer readrom;
+#endif
+
 	enter = 0;
 	motorenable = 0;
 	rotary_value = 0;
 	LENGTHPERPULSE = PI * TIREDIAMETER * PINIONGEAR / SPURGEAR / PULSEPERROTATE;
-	commonspeed = COMMONSPEED;
+	commonspeed = 0;
 #if D_PWM
 	pwmsteptime = 0;
 	pwmstepud = 1;
@@ -532,6 +573,9 @@ int main(void)
   MX_TIM10_Init();
   MX_TIM11_Init();
   MX_TIM13_Init();
+  MX_SPI2_Init();
+  MX_I2C1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
@@ -542,9 +586,38 @@ int main(void)
 	printf("Starting TIM11\r\n");
 	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// ROTARY SWITCH
 
+#if USE_BUZZER
+	printf("Starting TIM2 (Buzzer)\r\n");
+	if(HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+#endif
+
+#if USE_IMU
+	printf("Starting SPI2 (IMU)\r\n");
+	uint8_t wai, ret;
+	ret = IMU_init(&wai);
+	printf("who_am_i = %d\r\n", wai);
+	if(ret == 1)
+	{
+		printf("SPI INIT COLLECT!\r\n");
+	}
+	else
+	{
+		printf("SPI INIT FAILURE x_x \r\n");
+	}
+#if D_IMU
+	printf("inertial offset\r\n");
+	printf("ax = %4d, ay = %4d, az = %4d\r\n", inertial_offset.accel.x, inertial_offset.accel.y, inertial_offset.accel.z);
+	printf("gx = %4d, gy = %4d, gz = %4d\r\n", inertial_offset.gyro.x, inertial_offset.gyro.y, inertial_offset.gyro.z);
+#endif
+#endif
+
 #if D_ENCODER
 	printf("LENGTHPERPULSE = %u\r\n", LENGTHPERPULSE);
 #endif
+
 
   /* USER CODE END 2 */
 
@@ -558,7 +631,7 @@ int main(void)
 		printf("enter = %d\r\n", enter);
 #endif
 #if D_ROTARY
-		printf("rotary_value = %d\r\n", rotary_value);
+		printf("rotary_value = %x\r\n", rotary_value);
 #endif
 		if(enter)
 		{
@@ -639,30 +712,49 @@ int main(void)
 					printf("\r\n");
 					printf(ESC_DEF);
 #endif
-					break;
+					break;	// case 0x00:
 				case 0x1:
+					commonspeed = COMMONSPEED1;
+					kpl = KPL1;
+					kpr = KPR1;
+					kdl = KDL1;
+					kdr = KDR1;
+					kil = KIL1;
+					kir = KIR1;
 					running_initialize();
-					int lengthsum;
-					lengthsum = 0;
 
 					while(enter)
 					{
-						if(rightmarkercount >= 1)
-						{
-							lengthsum += (lengthl + lengthr) / 2;
-							if(lengthsum >= 200)
-							{
-								motorenable = 0;
-								enter = 0;
-							}
-						}
 						d_print();
 						HAL_Delay(250);
 					}
 
 					running_finalize();
+#if USE_FLASH
+					for(int i = 0; i < ENC_SIZE; i++)
+					{
+						flash_buffer.common_speed2[i] = (TREAD / 2) * (flash_buffer.sencl[i] + flash_buffer.sencr[i]) / (flash_buffer.sencl[i] - flash_buffer.sencr[i]);
+						flash_buffer.common_speed2[i] = COMMONSPEED1 + (COMMONSPEED2 - COMMONSPEED1) * (flash_buffer.common_speed2[course_state_time] - RMIN) / ((power(2, 8 * (sizeof(flash_buffer.common_speed2[0]))) - 1) - RMIN);
+						flash_buffer.common_speed3[i] = (TREAD / 2) * (flash_buffer.sencl[i] + flash_buffer.sencr[i]) / (flash_buffer.sencl[i] - flash_buffer.sencr[i]);
+						flash_buffer.common_speed3[i] = COMMONSPEED1 + (COMMONSPEED3 - COMMONSPEED1) * (flash_buffer.common_speed3[course_state_time] - RMIN) / ((power(2, 8 * (sizeof(flash_buffer.common_speed3[0]))) - 1) - RMIN);
+					}
+					for(int i = 0; i < ENC_SIZE; i++)
+					{
+					}
+					writeFlash(start_address, (uint8_t*)&flash_buffer, sizeof(FlashBuffer));
+#endif
 					break;
 				case 0x2:
+					commonspeed = COMMONSPEED2;
+					kpl = KPL2;
+					kpr = KPR2;
+					kdl = KDL2;
+					kdr = KDR2;
+					kil = KIL2;
+					kir = KIR2;
+#if USE_FLASH
+					loadFlash(start_address, (uint8_t*)&flash_buffer, sizeof(FlashBuffer));
+#endif
 					running_initialize();
 
 					while(enter)
@@ -674,6 +766,13 @@ int main(void)
 					running_finalize();
 					break;
 				case 0x3:
+					commonspeed = COMMONSPEED3;
+					kpl = KPL3;
+					kpr = KPR3;
+					kdl = KDL3;
+					kdr = KDR3;
+					kil = KIL3;
+					kir = KIR3;
 					running_initialize();
 
 					while(enter)
@@ -683,6 +782,55 @@ int main(void)
 					}
 
 					running_finalize();
+					break;
+				case 0xE:
+					HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
+					HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+					while(enter)
+					{
+						// MOTOR TEST
+						commonspeed = 3360 * rotary_value / 16;
+						leftmotor = commonspeed;
+						rightmotor = commonspeed;
+						__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, leftmotor);
+						__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, rightmotor);
+						d_print();
+						HAL_Delay(250);
+					}
+					HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
+					HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
+					break;
+				case 0xF:
+#if USE_FLASH
+					// FLASH PRINT
+					loadFlash(start_address, (uint8_t*)&readrom, sizeof(FlashBuffer));
+					for(int i = 0; i < ENC_SIZE; i++)
+					{
+						printf("%2d, %4d, %4d\r\n", i, readrom.sencl[i], readrom.sencr[i]);
+					}
+#endif
+
+					while(enter)
+					{
+						HAL_Delay(250);
+					}
+					break;
+				case 0xD:
+#if USE_IMU
+					// IMU TEST
+					IMU_set_offset();
+					printf("inertial offset\r\n");
+					printf("ax = %4d, ay = %4d, az = %4d\r\n", inertial_offset.accel.x, inertial_offset.accel.y, inertial_offset.accel.z);
+					printf("gx = %4d, gy = %4d, gz = %4d\r\n", inertial_offset.gyro.x, inertial_offset.gyro.y, inertial_offset.gyro.z);
+					while(enter)
+					{
+						printf("////////// IMU ///////////\r\n");
+						IMU_read();
+						printf("ax = %4d, ay = %4d, az = %4d\r\n", inertial.accel.x - inertial_offset.accel.x, inertial.accel.y - inertial_offset.accel.y, inertial.accel.z - inertial_offset.accel.z);
+						printf("gx = %4d, gy = %4d, gz = %4d\r\n", inertial.gyro.x - inertial_offset.gyro.x, inertial.gyro.y - inertial_offset.gyro.y, inertial.gyro.z - inertial_offset.gyro.z);
+						HAL_Delay(250);
+					}
+#endif
 					break;
 			} // switch(rotary_value)
 		}
@@ -908,6 +1056,78 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
   * @brief TIM1 Initialization Function
   * @param None
   * @retval None
@@ -954,6 +1174,55 @@ static void MX_TIM1_Init(void)
   /* USER CODE BEGIN TIM1_Init 2 */
 
   /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 256;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 1485;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -1297,7 +1566,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, DRV2_PH_Pin|LED_White_Pin|LED_B_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_Red_GPIO_Port, LED_Red_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_nCS_Pin|LED_Red_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LED_G_Pin|LED_R_Pin, GPIO_PIN_RESET);
@@ -1326,12 +1595,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED_Red_Pin */
-  GPIO_InitStruct.Pin = LED_Red_Pin;
+  /*Configure GPIO pins : SPI2_nCS_Pin LED_Red_Pin */
+  GPIO_InitStruct.Pin = SPI2_nCS_Pin|LED_Red_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_Red_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED_G_Pin LED_R_Pin */
   GPIO_InitStruct.Pin = LED_G_Pin|LED_R_Pin;
@@ -1401,6 +1670,9 @@ void running_initialize()
 	rightmarkercount = 0;
 	prelengthl = 0;
 	prelengthr = 0;
+#if USE_FLASH
+	course_state_time = 0;
+#endif
 	printf("SIDESENSOR ENCODER\r\n");
 	HAL_TIM_Base_Start_IT(&htim10);
 	leftmotor = 0;
@@ -1522,7 +1794,7 @@ void d_print()
 #endif
 
 #if D_ROTARY
-	printf("rotary_value = %d\r\n", rotary_value);
+	printf("rotary_value = %x\r\n", rotary_value);
 #endif
 
 #if D_SWITCH
@@ -1530,54 +1802,79 @@ void d_print()
 #endif
 }
 
+PUTCHAR_PROTOTYPE
+{
+	HAL_UART_Transmit(&huart6, (uint8_t*) &ch, 1, 0xFFFF);
+	return ch;
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+	if(sensgettime >= SENSGETCOUNT)
+	{
+		sensgettime = 0;
+		for(unsigned char index = 0; index < CALIBRATIONSIZE; index++)
+		{
+			for(unsigned char count = 0; count < SENSGETCOUNT; count++)
+			{
+				for(unsigned char alphaindex = 0; alphaindex > count; alphaindex--)
+				{
+					uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
+					analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
+					analogbuffers[alphaindex][index] = analogbuffer;
+				}
+			}
+			analog[index] = analogbuffers[(int) SENSGETCOUNT / 2][index];
+		}
+	}
+	for(unsigned char index = 0; CALIBRATIONSIZE > index; index++)
+	{
+		analogbuffers[sensgettime][index] = analograw[index];
+	}
+	sensgettime++;
+}
+
+uint32_t power(uint8_t a, uint8_t b)
+{
+	uint32_t r;
+	for(int i = b; i > 0; i--)
+	{
+		r = r * a;
+	}
+
+	return r;
+}
+
 #if USE_FLASH
-uint8_t Flash_clear()
+void eraseFlash(void)
+{
+	FLASH_EraseInitTypeDef erase;
+	erase.TypeErase = FLASH_TYPEERASE_SECTORS;
+	erase.Sector = FLASH_SECTOR_11;
+	erase.NbSectors = 1;
+	erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+	uint32_t pageError = 0;
+
+	HAL_FLASHEx_Erase(&erase, &pageError);
+}
+
+void writeFlash(uint32_t address, uint8_t *data, uint32_t size)
 {
 	HAL_FLASH_Unlock();
+	eraseFlash();
 
-	FLASH_EraseInitTypeDef EraseInitStruct;
-	EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-	EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM;
-	EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-	EraseInitStruct.NbSectors = 1;
+	for(uint32_t add = address; add < (address + size); add++)
+	{
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, add, *data);
+		data++;
+	}
 
-    uint32_t error_sector;
-    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
-
-    HAL_FLASH_Lock();
-    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+	HAL_FLASH_Lock();
 }
 
-uint8_t* Flash_load()
+void loadFlash(uint32_t address, uint8_t *data, uint32_t size)
 {
-    memcpy(work_ram, &_backup_flash_start, BACKUP_FLASH_SECTOR_SIZE);
-    return work_ram;
-}
-
-uint8_t Flash_store()
-{
-    if (!Flash_clear()) return false;
-
-    uint32_t *p_work_ram = (uint32_t*)work_ram;
-
-    HAL_FLASH_Unlock();
-
-    HAL_StatusTypeDef result;
-    const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE / sizeof(uint32_t);
-
-    for (size_t i=0; i<write_cnt; i++)
-    {
-        result = HAL_FLASH_Program(
-                    FLASH_TYPEPROGRAM_WORD,
-                    (uint32_t)(&_backup_flash_start) + sizeof(uint32_t) * i,
-                    p_work_ram[i]
-                );
-        if (result != HAL_OK) break;
-    }
-
-    HAL_FLASH_Lock();
-
-    return result == HAL_OK;
+	memcpy(data, (uint64_t*)address, size);
 }
 #endif
 /* USER CODE END 4 */
