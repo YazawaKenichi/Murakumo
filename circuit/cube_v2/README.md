@@ -93,21 +93,186 @@ if(htim->Instance == TIM7)	// TIM7 // 0.1ms
 
 if(htim->Instance == TIM11)  // TIM11 // 1ms
 {
-  for(int index = 0; index < CALIBRATIONSIZE; index++)
-  {
-    // 縦でソートする
-    for(int count = 0; count < SENSGETCOUNT; count++)
-    {
-      for(int alphaindex = 0; alphaindex > count; alphaindex--)
-      {
-        analogbuffer = analogbuffers[alphaindex - 1][index];
-        analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
-        analogbuffers[alphaindex][index] = analogbuffer;
-      }
-    }
-  }
+		for(unsigned char index = CALIBRATIONSIZE - 1; index > 0; index--)	// DownCounter
+		{
+			for(unsigned char count = SENSGETCOUNT - 1; count > 0; count--)	// DownCounter
+			{
+				for(unsigned char alphaindex = count; alphaindex > 0; alphaindex--)	// DownCounter
+				{
+					if(analogbuffers[alphaindex - 1][index] > analogbuffers[alphaindex][index])
+					{
+						uint16_t analogbuffer = analogbuffers[alphaindex - 1][index];
+						analogbuffers[alphaindex - 1][index] = analogbuffers[alphaindex][index];
+						analogbuffers[alphaindex][index] = analogbuffer;
+					}
+				}
+			}
+		}
 }
 ```
+
+```analogbuffers[][]``` の中身。
+<table>
+  <tr>
+    <th>index \ alphaindex</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>sens_i</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+つまり ```alphaindex``` はそのままのセンサの値が入っている。```index``` はセンサの位置の値が入っている。
+```alphaindex``` を捜査して ```index``` 番目のセンサの値をソートする。
+```count``` には
 
 【復習】
 
