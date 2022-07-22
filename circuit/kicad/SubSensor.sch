@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 5
+Sheet 1 1
 Title ""
 Date ""
 Rev ""
@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L S7136:S7136 U1
+L SubSensor-rescue:S7136-S7136 U1
 U 1 1 61F6138D
 P 4100 4500
 F 0 "U1" H 4100 4815 50  0000 C CNN
