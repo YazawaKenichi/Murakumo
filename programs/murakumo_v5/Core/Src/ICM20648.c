@@ -115,3 +115,15 @@ void IMU_read()
 	inertial.gyro.z = ((int16_t)read_byte(GYRO_ZOUT_H) << 8) | ((int16_t)read_byte(GYRO_ZOUT_L));
 }
 
+void Inertial_Integral(Inertial *a)
+{
+	IMU_read();
+	a->accel.x += inertial.accel.x;
+	a->accel.y += inertial.accel.y;
+	a->accel.z += inertial.accel.z;
+	a->gyro.x += inertial.gyro.x;
+	a->gyro.y += inertial.gyro.y;
+	a->gyro.z += inertial.gyro.z;
+}
+
+

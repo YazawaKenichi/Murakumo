@@ -48,6 +48,7 @@ uint8_t IMU_init(uint8_t*);
 void IMU_set_offset();
 void IMU_fin();
 void IMU_read();
+void Inertial_Integral(Inertial*);
 
 //extern volatile int16_t 	xa, ya, za;
 //extern volatile int16_t 	xg, yg, zg;
