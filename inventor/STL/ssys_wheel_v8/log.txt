@@ -1,0 +1,46 @@
+session {6/7 9:25:44pm > Yazawa opened job C:/ProgramData/Stratasys/FDMControlCenter/10.2/jobs/Yazawa1/Default.sjb.  Insight 10.2 (4618).}
+msg {9:25:45pm > Read 13168 facets in 0:00 from "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/wheel_v8.stl"}
+msg {9:25:45pm > STL comment: STLB ATF 10.3.0.1329}
+msg {9:25:45pm > Bounding box of this STL X, Y, Z:}
+msg {9:25:45pm >       min = (-9.5000, -2.0000, -9.4985)}
+msg {9:25:45pm >       max = (9.5000, 11.0000, 9.4985)}
+msg {9:25:45pm > Done loading STL file after 1 sec.}
+msg {9:26:03pm > 	Slice height:	0.2540}
+msg {9:26:03pm > Done slicing.}
+msg {9:26:03pm > Supports removed}
+msg {9:26:03pm > 	Support style:	SMART}
+msg {9:26:04pm > Inspecting part curves}
+msg {9:26:04pm > Generating supports}
+msg {9:26:04pm > Done generating supports.}
+msg {9:26:05pm > Done writing boundary curves.}
+msg {9:26:05pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v8/wheel_v8.sjb}
+msg {9:26:05pm > 	Part fill style:	One contour /  rasters}
+msg {9:26:05pm > 	Part interior style:	Sparse - high density}
+msg {9:26:05pm > 	Contour width:	0.5080}
+msg {9:26:05pm > 	Part raster width:	0.5080}
+msg {9:26:07pm > Done generating toolpaths.}
+msg {9:26:07pm > CMB moved to envelope center.}
+msg {9:26:07pm > Toolpath Information}
+msg {9:26:07pm > 	Est. build time:	32 min }
+msg {9:26:07pm > 	Model material:	2.204 cm³}
+msg {9:26:07pm > 	Support material:	1.260 cm³}
+msg {9:26:07pm > Done writing CMB file.}
+msg {9:26:07pm > Job Summary}
+msg {9:26:07pm > 	Full job path:	C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v8/wheel_v8.sjb}
+msg {9:26:07pm > 	Toolpath file name:	wheel_v8.cmb}
+msg {9:26:07pm > 	Modeler:		Fortus 250mc}
+msg {9:26:07pm > 	Est. build time:	32 min }
+msg {9:26:07pm > 	Model material:	2.204 cm³,	T14,	ABS P430}
+msg {9:26:07pm > 	Support material:	1.260 cm³,	T16,	ABS SR30}
+msg {9:26:07pm > 	Slice height:	0.2540}
+msg {9:26:07pm > 	Part fill style:	One contour /  rasters}
+msg {9:26:07pm > 	Part interior style:	Sparse - high density}
+msg {9:26:07pm > 	Visible surface style:	Enhanced}
+msg {9:26:07pm > 	Support style:	SMART}
+msg {9:26:07pm > 	Contour width:	0.5080}
+msg {9:26:07pm > 	Number of contours:	6.3500}
+msg {9:26:07pm > 	Part interior contours:	0.5080}
+msg {9:26:07pm > 	Part raster width:	0.5080}
+msg {9:26:07pm > 	Application:	Insight 10.2, Build version: 4618}
+msg {9:26:07pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v8/wheel_v8.sjb,  approximate build time 32 min }
+session {6/9 9:52:23am > Yazawa closed job.}

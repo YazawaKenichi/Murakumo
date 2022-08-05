@@ -5,3 +5,41 @@ msg {6:29:50pm > Bounding box of this STL X, Y, Z:}
 msg {6:29:50pm >       min = (-9.0000, -2.0000, -8.9996)}
 msg {6:29:50pm >       max = (8.9994, 12.0000, 9.0000)}
 msg {6:29:50pm > Done loading STL file after 1 sec.}
+msg {6:30:25pm > 	Slice height:	0.2540}
+msg {6:30:26pm > Done slicing.}
+msg {6:30:26pm > Supports removed}
+msg {6:30:26pm > 	Support style:	SMART}
+msg {6:30:26pm > Inspecting part curves}
+msg {6:30:27pm > Generating supports}
+msg {6:30:27pm > Done generating supports.}
+msg {6:30:28pm > Done writing boundary curves.}
+msg {6:30:28pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v4/wheel_v4.sjb}
+msg {6:30:28pm > 	Part fill style:	One contour /  rasters}
+msg {6:30:28pm > 	Part interior style:	Sparse - high density}
+msg {6:30:28pm > 	Contour width:	0.5080}
+msg {6:30:28pm > 	Part raster width:	0.5080}
+msg {6:30:29pm > Done generating toolpaths.}
+msg {6:30:30pm > CMB moved to envelope center.}
+msg {6:30:30pm > Toolpath Information}
+msg {6:30:30pm > 	Est. build time:	25 min }
+msg {6:30:30pm > 	Model material:	1.118 cm³}
+msg {6:30:30pm > 	Support material:	0.914 cm³}
+msg {6:30:30pm > Done writing CMB file after 1 sec.}
+msg {6:30:30pm > Job Summary}
+msg {6:30:30pm > 	Full job path:	C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v4/wheel_v4.sjb}
+msg {6:30:30pm > 	Toolpath file name:	wheel_v4.cmb}
+msg {6:30:30pm > 	Modeler:		Fortus 250mc}
+msg {6:30:30pm > 	Est. build time:	25 min }
+msg {6:30:30pm > 	Model material:	1.118 cm³,	T14,	ABS P430}
+msg {6:30:30pm > 	Support material:	0.914 cm³,	T16,	ABS SR30}
+msg {6:30:30pm > 	Slice height:	0.2540}
+msg {6:30:30pm > 	Part fill style:	One contour /  rasters}
+msg {6:30:30pm > 	Part interior style:	Sparse - high density}
+msg {6:30:30pm > 	Visible surface style:	Enhanced}
+msg {6:30:30pm > 	Support style:	SMART}
+msg {6:30:30pm > 	Contour width:	0.5080}
+msg {6:30:30pm > 	Number of contours:	6.3500}
+msg {6:30:30pm > 	Part interior contours:	0.5080}
+msg {6:30:30pm > 	Part raster width:	0.5080}
+msg {6:30:30pm > 	Application:	Insight 10.2, Build version: 4618}
+msg {6:30:30pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_wheel_v4/wheel_v4.sjb,  approximate build time 25 min }
