@@ -283,7 +283,7 @@ void running_finalize();
 void sensor_initialize();
 void sensor_finalize();
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle);
-#ifdef __MATH_H__
+#ifdef __MAIN_H
 double power(double, double);
 #endif
 #if USE_ENCODER
@@ -1988,7 +1988,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle) {
 	sensgettime++;
 }
 
-#ifdef __MATH_H__
+#ifdef __MAIN_H
 double power(double a, double b) {
 	double r;
 	r = 1;
