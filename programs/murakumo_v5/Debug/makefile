@@ -55,7 +55,7 @@ main-build: murakumo_v5.elf secondary-outputs
 
 # Tool invocations
 murakumo_v5.elf: $(OBJS) $(USER_OBJS) D:\murakumo\programs\murakumo_v5\STM32F405RGTX_FLASH.ld
-	arm-none-eabi-gcc -o "murakumo_v5.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\murakumo\programs\murakumo_v5\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="murakumo_v5.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "murakumo_v5.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\murakumo\programs\murakumo_v5\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="murakumo_v5.map" -Wl,--gc-sections -static -L"D:\murakumo\programs\murakumo_v5" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
