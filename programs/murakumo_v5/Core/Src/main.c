@@ -51,31 +51,31 @@
 #define PLAY 1
 
 #define D_ANALOG 0
+#define D_ANALOGRATE 0
 #define D_MOTOR 0
 #define D_SIDESENS 0	//
 #define D_ENCODER 0	// Debug Encoder
 #define D_PWM 0
 #define D_ROTARY 0
 #define D_SWITCH 0
-#define D_IMU 0
+#define D_IMU 1
 #define D_LED 0
 #define D_VELOCITY_CONTROL_TIMER 0
 
-#define USE_ANALOG 1
-#define USE_MOTOR 1
-#define USE_SIDESENSOR 1	// Use SideSensor
-#define USE_ENCODER 1
+#define USE_ANALOG 0
+#define USE_MOTOR 0
+#define USE_SIDESENSOR 0	// Use SideSensor
+#define USE_ENCODER 0
 #define USE_ROTARY 1
 #define USE_SWITCH 1
 #define USE_LED 1
 #define USE_FLASH 0
-#define USE_IMU 0
+#define USE_IMU 1
 #define USE_BUZZER 0
-#define USE_VELOCITY_CONTROL 1
+#define USE_VELOCITY_CONTROL 0
 
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
-#define CSV_FORMAT 0	//
 
 #define SECOND 1
 
@@ -102,9 +102,9 @@
 // LENGTHPUEPULSE = PI * TIREDIAMETER / PULSEPERROTATE
 
 #define COMMONSPEED1 0	// 700 // 570
-#define KP1 5	// 30 // 25
-#define KD1 2	// 8  // 10
-#define KI1 0
+#define KP1 6.4f	// 30 // 25
+#define KD1 13.75f	// 8  // 10
+#define KI1 0	// 0.0005f
 #define COMMONSPEED2 100	// 700 // 570
 #define KP2 5	// 30 // 25
 #define KD2 2	// 8  // 10
@@ -124,7 +124,7 @@
 #define VELOCITY_CONTROL_RELATIVE 1
 
 #if USE_VELOCITY_CONTROL
-#define VELOCITY_TARGET 30	//65.973f 	// MAX 35579 // mm/s
+#define VELOCITY_TARGET 750	//65.973f 	// MAX 35579 // mm/s
 #define VELOCITY_MAX 35579
 #if VELOCITY_CONTROL_RELATIVE
 #define VKP 20	// 27.5f
@@ -178,6 +178,8 @@ typedef struct {
 	uint32_t common_speed3[ENC_SIZE];
 //	uint16_t second[ENC_SIZE];
 	Inertial inertial[ENC_SIZE];
+	uint16_t analogmin[CALIBRATIONSIZE];
+	uint16_t analogmin[CALIBRATIONSIZE];
 } FlashBuffer;
 #endif
 
@@ -201,7 +203,7 @@ uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
 
 uint16_t analograte[CALIBRATIONSIZE];
 uint16_t analogr, analogl;	// Sum Right Analog Sensor, Sum Left Analog Sensor
-int direction, beforedirection;	// = analogr - analogl
+int direction, beforedirection, sdirection;	// = analogr - analogl
 unsigned char sensgettime;
 uint8_t calibrationsize;
 
@@ -313,23 +315,7 @@ double low_pass_filter(double val, double pre_val, double gamma);
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim->Instance == TIM6) {
-#if D_LED
-		HAL_TIM_Base_Start_IT(&htim6);	// PID
-
-		if(enter)
-		{
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
-			enter = 0;
-		}
-		else
-		{
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
-			enter = 1;
-		}
-#else
-#if USE_MOTOR
-#if USE_VELOCITY_CONTROL
-#if D_VELOCITY_CONTROL_TIMER
+#if D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
 		if(stoptime < STOPTIME)
 		{
 			stoptime++;
@@ -338,28 +324,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		{
 			motorenable = 0;
 		}
-#endif // D_VELOCITY_CONTROL_TIMER
-#endif	// USE_VELOCITY_CONTROL
+#endif // D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
 
 		if (motorenable) {
-#if !STATICMOTORPWM
 #if USE_ANALOG
 			analogl = 0;
 			analogr = 0;
 			for(unsigned char i = 0; i < CALIBRATIONSIZE; i++)
 			{
-				uint16_t analogbuf = analog[i];
-				//			analogmax[i] = (analogmax[i] < analogbuf) ? analogbuf : analogmax[i];
-				//			analogmin[i] = (analogmin[i] > analogbuf) ? analogbuf : analogmin[i];
-				if(analogmax[i] < analogbuf)
-				{
-					analogmax[i] = analogbuf;
-				}
-				if(analogmin[i] > analogbuf)
-				{
-					analogmin[i] = analogbuf;
-				}
-
 				analograte[i] = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
 
 				if(i % 2 == 0)
@@ -394,23 +366,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			}
 			// ( direction > 0 ) is ( analogl > analogr ) i.e. left is black, right is white.
 			// When ( direction > 0 ) , must turn right.
-			// 白読みで 0 付�?
-			// 右が白読みで正
 			direction = (analogl - analogr);	// difference
-#endif // USE_ANALOG
-#if USE_ANALOG
+			sdirection = sdirection + direction;	// Integral
 
-#if USE_VELOCITY_CONTROL
+			if(analogl + analogr <= 700 * CALIBRATIONSIZE)
+			{
+				direction = 0;
+			}
 #if !VELOCITY_CONTROL_RELATIVE
 			// left
-			leftmotor = nextspeed_l + (kp * direction / CALIBRATIONSIZE / 2 + kd * (direction - beforedirection));
-			rightmotor = nextspeed_r - (kp * direction / CALIBRATIONSIZE / 2 + kd * (direction - beforedirection));
+			leftmotor = nextspeed_l + (kp * direction + kd * (direction - beforedirection)) / CALIBRATIONSIZE / 2;
+			rightmotor = nextspeed_r - (kp * direction + kd * (direction - beforedirection)) / CALIBRATIONSIZE / 2;
 #else	// VELOCITY_CONTROL_RELATIVE
-			commonspeed = nextspeed;
-#endif
-#endif	// D_VELOCITY_CONTOROL
-			leftmotor = commonspeed + (kp * direction / CALIBRATIONSIZE / 2 + kd * (direction - beforedirection));
-			rightmotor = commonspeed - (kp * direction / CALIBRATIONSIZE / 2 + kd * (direction - beforedirection));
+			leftmotor = commonspeed + (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / CALIBRATIONSIZE / 2;
+			rightmotor = commonspeed - (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / CALIBRATIONSIZE / 2;
+#endif	// VELOCITY_CONTROL_RELAT
 #endif	// USE_ANALOG
 #if !USE_ANALOG && USE_VELOCITY_CONTROL
 #if !VELOCITY_CONTROL_RELATIVE
@@ -424,7 +394,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 #if USE_ANALOG
 			beforedirection = direction;
 #endif	// USE_ANALOG
-#else	// !STATICMOTORPWM
+#if STATICMOTORPWM	// !STATICMOTORPWM
 			leftmotor = COMMONSPEED1;
 			rightmotor = COMMONSPEED1;
 #endif	// !STATICMOTORPWM
@@ -433,6 +403,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			leftmotor = 0;
 			rightmotor = 0;
 		}
+#if USE_MOTOR
+
 		if (leftmotor < 0) {
 			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
 			leftmotor = leftmotor * -1;
@@ -452,8 +424,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 #endif
 
 #if !D_PWM
+#if USE_MOTOR
 		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, leftmotor);
 		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, rightmotor);
+#endif
 #else
 #if !STATICPWM
 		if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))	// SW1
@@ -473,7 +447,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, COMMONSPEED1);
 #endif	// STATICPWM
 #endif	// D_PWM
-#endif	// !     D_LED
 	}	// TIM6
 	if (htim->Instance == TIM10)	// TIM10 // 1ms
 	{
@@ -501,6 +474,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 					} else if (first == 0b10) {
 						// left -> curve
 						markerstate = 0b10;
+						sdirection = 0;
 #if USE_FLASH
 						course_state_time++;
 						if (course_state_time >= ENC_SIZE) {
@@ -565,7 +539,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		s_velocity_error = s_velocity_error + velocity_error;
 		// PI
 		velocity_next = VKP * velocity_error + VKI * s_velocity_error;
-		nextspeed = velocity_next * (double)PWMMAX / (double)VELOCITY_MAX;
+		commonspeed = velocity_next * (double)PWMMAX / (double)VELOCITY_MAX;
 #endif	// VELOCITY_CONTROL_RELATIVE
 #endif	// USE_VELOCITY_CONTROL
 
@@ -742,7 +716,7 @@ int main(void)
 #endif
 
 #if D_ENCODER
-	printf("LENGTHPERPULSE = %u\r\n", LENGTHPERPULSE);
+	printf("LENGTHPERPULSE = %f\r\n", LENGTHPERPULSE);
 #endif
 
   /* USER CODE END 2 */
@@ -772,30 +746,45 @@ int main(void)
 #endif
 
 				sensor_initialize();
+#if USE_LED
+				timtim = 0;
+#endif
 
 				while (enter) {
-					for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
-						uint16_t analogbuf = analog[j];
-						analogmax[j] =
-								(analogmax[j] < analogbuf) ?
-										analogbuf : analogmax[j];
-						analogmin[j] =
-								(analogmin[j] > analogbuf) ?
-										analogbuf : analogmin[j];
+#if USE_LED
+					if(timtim % 10 == 0)
+					{
+						set_led(0b01);
+					}
+					if(timtim % 10 == 5)
+					{
+						set_led(0b00);
+					}
+					timtim = timtim + 1;
+					if(timtim >= 600)
+					{
+						timtim = 0;
+					}
+					HAL_Delay(100);
+#endif
+
 #if D_ANALOG
+					for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
 						printf("[%2d] = ", j);
-						printf("%4d", analogbuf);
+//						printf("%4d", analogbuf);
 						if (j != CALIBRATIONSIZE - 1) {
 							printf(", ");
 						} else {
 							printf("\r\n");
 						}
-#endif
+						HAL_Delay(250);
 					}
-					HAL_Delay(250);
+#endif
 				}
+
 				sensor_finalize();
 #if D_ANALOG
+#if !USE_FLASH
 				printf(ESC_YEL);
 				for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
 					printf("[%2d] = ", j);
@@ -834,6 +823,46 @@ int main(void)
 				}
 				printf("\r\n");
 				printf(ESC_DEF);
+#else
+				printf(ESC_YEL);
+				for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
+					printf("[%2d] = ", j);
+					printf("%4d,", flashbuffer.analogmax[j]);
+				}
+				printf("\r\n");
+				printf(ESC_CYA);
+				for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
+					printf("[%2d] = ", j);
+					printf("%4d,", flashbuffer.analogmin[j]);
+				}
+				printf("\r\n");
+				printf(ESC_DEF);
+				for (unsigned char i = 0; 5 * CALIBRATIONSIZE > i; i++) {
+					printf("v");
+				}
+				printf("\r\n");
+				printf(ESC_YEL);
+				for (unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++) {
+					printf("[%2d] = ", i * 2);
+					printf("%4d, ", flashbuffer.analogmax[i * 2]);
+				}
+				for (unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--) {
+					printf("[%2d] = ", i * 2 - 1);
+					printf("%4d,", flashbuffer.analogmax[i * 2 - 1]);
+				}
+				printf("\r\n");
+				printf(ESC_CYA);
+				for (unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++) {
+					printf("[%2d] = ", i * 2);
+					printf("%4d, ", flashbuffer.analogmin[i * 2]);
+				}
+				for (unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--) {
+					printf("[%2d] = ", i * 2 - 1);
+					printf("%4d,", flashbuffer.analogmin[i * 2 - 1]);
+				}
+				printf("\r\n");
+				printf(ESC_DEF);
+#endif	// USE_FLASH
 #endif
 				break;	// case 0x00:
 			case 0x1:
@@ -1728,6 +1757,7 @@ void running_initialize() {
 	leftmotor = 0;
 	rightmotor = 0;
 	beforedirection = 0;
+	sdirection = 0;
 	printf("PWM_Start\r\n");
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
@@ -1751,97 +1781,59 @@ void running_finalize() {
 void d_print() {
 	printf("////////// d_print //////////\r\n");
 
-#if D_ANALOG
-#if !CSV_FORMAT
-#if ATTACH_LONGSENSOR
-	// use normal sensor and long sensor
-	printf("\x1b[24C");	// Cursor move right *24
-	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
-	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
-#else	// ATTACH_LONGSENSOR
-#if !USE_LONGSENSOR
+#if D_ANALOG || D_ANALOGRATE
+#if CALIBRATIONSIZE != 16
+#if (CALIBRATIONSIZE == 4)
+	printf(ESC_DEF);
+#endif
+#if CALIBRATIONSIZE == 12
+	printf(ESC_RED);
+#endif
+#else
+	printf(ESC_DEF);
+#endif
+
+#if !D_ANALOGRATE
 	// only use normal sensor
-	printf("\x1b[24C");	// Cursor move right *24
+	printf("\x1b[23C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15],
+			analog[13]);
+#else
+	printf("\x1b[23C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analograte[12], analograte[14], analograte[15],
+			analograte[13]);
+#endif	// D_ANALOGRATE
+
+#if CALIBRATIONSIZE == 4
 	printf(ESC_RED);
-	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3],
-			analog[2]);
+#endif
+#if (CALIBRATIONSIZE == 12)
 	printf(ESC_DEF);
+#endif
+
+#if !D_ANALOGRATE
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
-			analog[9], analog[8], analog[15], analog[14], analog[7], analog[6],
-			analog[1], analog[0], analog[13], analog[12], analog[11],
-			analog[10]);
-#else	// !USE_LONGSENSOR
-	// only use long sensor
-	printf("\x1b[24C");	// Cursor move right *24
-	printf("%4d, %4d | %4d, %4d\r\n", analog[5], analog[4], analog[3], analog[2]);
-	printf(ESC_RED);
-	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[9], analog[8], analog[15], analog[14], analog[7], analog[6], analog[1], analog[0], analog[13], analog[12], analog[11], analog[10]);
-	printf(ESC_DEF);
-#endif	// !USE_LONGSENSOR
-#endif	// ATTACH_LONGSENSOR
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
+			analog[1]);
+#else
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
+			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analograte[1]);
+#endif	// D_ANALOGRATE
 	printf("\r\n");
-#else	// !CSV_FORMAT
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-		printf("[%2d] = ", i * 2);
-		printf("%4d,", analograte[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-		printf("[%2d] = ", i * 2 - 1);
-		printf("%4d,", analograte[i * 2 - 1]);
-	}
-	printf("analograte\r\n");
-	printf(ESC_CYA);
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-		printf("[%2d] = ", i * 2);
-		printf("%4d,", analog[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-		printf("[%2d] = ", i * 2 - 1);
-		printf("%4d,", analog[i * 2 - 1]);
-	}
-	printf("analog\r\n");
-	printf(ESC_RED);
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-		printf("[%2d] = ", i * 2);
-		printf("%4d,", analogmax[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-		printf("[%2d] = ", i * 2 - 1);
-		printf("%4d,", analogmax[i * 2 - 1]);
-	}
-	printf("analogmax\r\n");
-	printf(ESC_BLU);
-	for(unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++)
-	{
-		printf("[%2d] = ", i * 2);
-		printf("%4d,", analogmin[i * 2]);
-	}
-	for(unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--)
-	{
-		printf("[%2d] = ", i * 2 - 1);
-		printf("%4d,", analogmin[i * 2 - 1]);
-	}
-	printf("analogmin\r\n");
-	printf(ESC_GRE);
-	printf("leftmotor = %5d, rightmotor = %5d,", leftmotor, rightmotor);
-	printf("analogl = %5d, analogr = %5d, direction = %5d", analogl, analogr, direction);
-	printf("\r\n");
-	printf(ESC_DEF);
-	printf("\r\n");
-#endif	// !CSV_FORMAT
+
 #endif	// D_ANALOG
 
 #if D_ENCODER
+/*
 	printf("encoder_l = %d, encoder_r = %d \r\ndvl = %d, dvr = %d\r\n",
 			encoder_l, encoder_r, dvl, dvr);
 	printf("lengthl = %d, lengthr = %d \r\nvelocityl = %d, velocityr = %d\r\n",
 			lengthl, lengthr, velocityl, velocityr);
+*/
+	printf("TIM1->CNT = %5d, TIM3->CNT = %5d\r\nencoder_l = %5d, encoder_r = %5d\r\n", TIM1->CNT, TIM3->CNT, encoder_l, encoder_r);
 #endif
 
 #if D_PWM
@@ -1859,9 +1851,7 @@ void d_print() {
 #if D_IMU
 #endif
 
-#if USE_VELOCITY_CONTROL
-//	printf("encoder_l = %5d, encoder_r = %5d\r\n", encoder_l, encoder_r);
-//	printf("velocity_l = %5.3f, velocity_r = %5.3f\r\n", velocity_l, velocity_r);
+#if D_VELOCITY_CONTROL
 #if !VELOCITY_CONTROL_RELATIVE
 	printf("velocity_error = %5.3f, s_velocity_error = %5.3f\r\n",
 			velocity_error_l, s_velocity_error_l);
@@ -1873,7 +1863,8 @@ void d_print() {
 	printf("encoder = %3.1f\r\nLENGTHPERPULSE = %f\r\nvelocity = %5.3f\r\nvelocity_error = %5.3f, s_velocity_error = %5.3f\r\nvelocity_next = %5.3f\r\nnextspeed = %5.3f\r\n",
 			(encoder_l + encoder_r) / (double)2.0f, LENGTHPERPULSE, (velocity_l + velocity_r) / (double)2.0f, velocity_error, s_velocity_error, velocity_next, nextspeed);
 #endif	// VELOCITY_CONTROL_RELARIVE
-#endif
+#endif	// D_VELOCITY_CONTROL
+
 #if D_MOTOR
 	printf("leftmotor = %5.3f, rightmotor = %5.3f\r\n", leftmotor, rightmotor);
 #endif
@@ -1925,6 +1916,7 @@ double low_pass_filter(double val, double pre_val, double gamma) {
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle) {
+	// sort
 	if (sensgettime >= SENSGETCOUNT) {
 		sensgettime = 0;
 		for (unsigned char index = 0; index < CALIBRATIONSIZE; index++) {
@@ -1938,8 +1930,18 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle) {
 				}
 			}
 			analog[index] = analogbuffers[(int) SENSGETCOUNT / 2][index];
+			// get maxvalue and minimumvalue
+			uint16_t analogbuf;
+			analogbuf = analog[index];
+			analogmax[index] =
+					(analogmax[index] < analogbuf) ?
+							analogbuf : analogmax[index];
+			analogmin[index] =
+					(analogmin[index] > analogbuf) ?
+							analogbuf : analogmin[index];
 		}
 	}
+	// sensorget
 	for (unsigned char index = 0; CALIBRATIONSIZE > index; index++) {
 		analogbuffers[sensgettime][index] = analograw[index];
 	}
