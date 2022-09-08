@@ -1,7 +1,8 @@
-ICM20648.c:12:9:read_byte	24	static
-ICM20648.c:29:6:write_byte	24	static
-ICM20648.c:44:9:IMU_init	24	static
-ICM20648.c:95:6:IMU_fin	4	static
-ICM20648.c:102:6:IMU_set_offset	8	static
-ICM20648.c:108:6:IMU_read	16	static
-ICM20648.c:118:6:Inertial_Integral	16	static
+ICM20648.c:16:9:read_byte	24	static
+ICM20648.c:33:6:write_byte	24	static
+ICM20648.c:48:9:IMU_init	24	static
+ICM20648.c:104:6:IMU_fin	4	static
+ICM20648.c:111:6:IMU_set_offset	8	static
+ICM20648.c:117:6:IMU_read	16	static
+ICM20648.c:127:6:Inertial_Integral	16	static
+ICM20648.c:138:6:Coordinate_Init	16	static

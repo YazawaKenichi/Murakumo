@@ -28,34 +28,34 @@ endif
 
 -include ../makefile.defs
 
-BUILD_ARTIFACT_NAME := murakumo_v5
+BUILD_ARTIFACT_NAME := murakumo_special
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-murakumo_v5.elf \
+murakumo_special.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-murakumo_v5.list \
+murakumo_special.list \
 
 OBJCOPY_BIN += \
-murakumo_v5.bin \
+murakumo_special.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: murakumo_v5.elf secondary-outputs
+main-build: murakumo_special.elf secondary-outputs
 
 # Tool invocations
-murakumo_v5.elf: $(OBJS) $(USER_OBJS) D:\murakumo\programs\murakumo_v5\STM32F405RGTX_FLASH.ld
-	arm-none-eabi-gcc -o "murakumo_v5.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\murakumo\programs\murakumo_v5\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="murakumo_v5.map" -Wl,--gc-sections -static -L"D:\murakumo\programs\murakumo_v5" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+murakumo_special.elf: $(OBJS) $(USER_OBJS) D:\murakumo\programs\murakumo_special\STM32F405RGTX_FLASH.ld
+	arm-none-eabi-gcc -o "murakumo_special.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\murakumo\programs\murakumo_special\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="murakumo_special.map" -Wl,--gc-sections -static -L"D:\murakumo\programs\murakumo_special" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -64,13 +64,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-murakumo_v5.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "murakumo_v5.list"
+murakumo_special.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "murakumo_special.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-murakumo_v5.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "murakumo_v5.bin"
+murakumo_special.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "murakumo_special.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

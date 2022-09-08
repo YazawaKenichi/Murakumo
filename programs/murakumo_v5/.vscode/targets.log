@@ -8,7 +8,7 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # This program built for i386-pc-mingw32
  
 
-# Make �f�[�^�x�[�X�o�� Wed Aug 10 17:12:23 2022
+# Make �f�[�^�x�[�X�o�� Thu Aug 25 21:55:33 2022
 
 # �ϐ�
 
@@ -29,13 +29,13 @@ HOMEDRIVE = C:
 # �����ϐ�
 ^D = $(patsubst %/,%,$(dir $^))
 # makefile �ϐ�
-CURDIR := d:/murakumo/programs/murakumo_special
+CURDIR := d:/murakumo/programs/murakumo_v5
 # �f�t�H���g
 SHELL := C:/Program Files/Git/usr/bin/sh.exe
 # ���ϐ�
 WINDIR = C:\WINDOWS
 # ���ϐ�
-VSCODE_NLS_CONFIG = {"locale":"ja","availableLanguages":{"*":"ja"},"_languagePackId":"4c21b062861233a1c11fa44b2144208f.ja","_translationsConfigFile":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\4c21b062861233a1c11fa44b2144208f.ja\\tcf.json","_cacheRoot":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\4c21b062861233a1c11fa44b2144208f.ja","_resolvedLanguagePackCoreLocation":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\4c21b062861233a1c11fa44b2144208f.ja\\da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\4c21b062861233a1c11fa44b2144208f.ja\\corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"ja","availableLanguages":{"*":"ja"},"_languagePackId":"e6c586e25df759b7fd1d7a26b78d86d4.ja","_translationsConfigFile":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\e6c586e25df759b7fd1d7a26b78d86d4.ja\\tcf.json","_cacheRoot":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\e6c586e25df759b7fd1d7a26b78d86d4.ja","_resolvedLanguagePackCoreLocation":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\e6c586e25df759b7fd1d7a26b78d86d4.ja\\da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"C:\\Users\\tonfa\\AppData\\Roaming\\Code\\clp\\e6c586e25df759b7fd1d7a26b78d86d4.ja\\corrupted.info","_languagePackSupport":true}
 # ���ϐ�
 ONEDRIVE = C:\Users\tonfa\OneDrive
 # ���ϐ�
@@ -63,7 +63,8 @@ USERPROFILE = C:\Users\tonfa
 # ���ϐ�
 ALLUSERSPROFILE = C:\ProgramData
 # ���ϐ�
-NUMBER_OF_PROCESSORS = 4
+NUMBER_OF_PROCE 
+SSORS = 4
 # ���ϐ�
 ELECTRON_RUN_AS_NODE = 1
 # �f�t�H���g
@@ -71,7 +72,7 @@ ELECTRON_RUN_AS_NODE = 1
 # �����ϐ�
 %F = $(notdir $%)
 # ���ϐ�
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_10796_ITVBVCWIXYKXOYPU
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_8536_BGBFCDXIFPBIWEZA
 # ���ϐ�
 COMPUTERNAME = YAZAWA-WINDOWS1
 # ���ϐ�
@@ -89,7 +90,7 @@ VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # ���ϐ�
 VSCODE_CODE_CACHE_PATH = C:\Users\tonfa\AppData\Roaming\Code\CachedData\da76f93349a72022ca4670c1b84860304616aaa2
 # ���ϐ�
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # ���ϐ�
 COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
 # ���ϐ�
@@ -175,7 +176,7 @@ LANG = C
 # ���ϐ�
 PROCESSOR_LEVEL = 6
 # ���ϐ�
-VSCODE_PID = 10796
+VSCODE_PID = 8536
 # ���ϐ�
 USERDOMAIN_ROAMINGPROFILE = YAZAWA-WINDOWS1
 # �ϐ��Z�b�g�̃n�b�V���e�[�u���̏��:
@@ -189,7 +190,7 @@ USERDOMAIN_ROAMINGPROFILE = YAZAWA-WINDOWS1
 
 # C:\WINDOWS\System32\WindowsPowerShell\v1.0\ (key C:/WINDOWS/System32/WindowsPowerShell/v1.0/, mtime 1624242374): 34 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\WINDOWS\System32\Wbem (key C:/WINDOWS/System32/Wbem, mtime 1635838977): 174 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
-# . (key d:/murakumo/programs/murakumo_special, mtime 1653647604): 16 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
+# . (key d:/murakumo/programs/murakumo_v5, mtime 1653647604): 16 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\Program Files\Git\mingw64\bin (key C:/Program Files/Git/mingw64/bin, mtime 1635836779): 112 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\Program Files\nodejs\ (key C:/Program Files/nodejs/, mtime 1627619303): 11 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\WINDOWS\System32\OpenSSH\: ��Ԃ𒲂ׂ��܂���ł���.
@@ -198,9 +199,9 @@ USERDOMAIN_ROAMINGPROFILE = YAZAWA-WINDOWS1
 # C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin (key C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin, mtime 1639902420): 58 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\Program Files (x86)\Vim\vim82 (key C:/Program Files (x86)/Vim/vim82, mtime 1622728738): 56 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 # C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1635836779): 8 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
-# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1659967474): 2992 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
+# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1661428191): 2993 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C����.
 
-# 3890 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C���� (12 �̃f�B���N�g����).
+# 3891 �̃t�@�C��, 0 �̓K�p�s�\�t�@�C���� (12 �̃f�B���N�g����).
 
 # �Öك��[��
 
@@ -250,7 +251,10 @@ GNUmakefile:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # �t�@�C���n�b�V���e�[�u���̏��:
-# Load=5/1024=0%, Rehash=0, Collisions=0/16=0%
+# Load=5/1024=0%, Rehash 
+make.exe: *** �^�[�Q�b�g `all' �� make ���郋�[��������܂���.  ���~.
+
+=0, Collisions=0/16=0%
 # VPATH �T���p�X
 
 # `vpath' �T���p�X�͂���܂���
@@ -262,8 +266,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Make �f�[�^�x�[�X�I�� Wed Aug 10 17:12:23 2022
+# Make �f�[�^�x�[�X�I�� Thu Aug 25 21:55:33 2022
 
  
-make.exe: *** �^�[�Q�b�g `all' �� make ���郋�[��������܂���.  ���~.
-

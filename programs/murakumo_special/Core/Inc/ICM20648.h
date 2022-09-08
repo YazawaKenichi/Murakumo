@@ -42,19 +42,27 @@ typedef struct
 	Coordinate gyro;
 } Inertial;
 
+typedef struct
+{
+	Coordinate position;
+	Coordinate theta;
+} Displacement;
+
 uint8_t read_byte(uint8_t);
 void write_byte(uint8_t, uint8_t);
 uint8_t IMU_init(uint8_t*);
 void IMU_set_offset();
 void IMU_fin();
 void IMU_read();
-void Inertial_Integral(Inertial*);
+void Inertial_Integral(Displacement*);
+void Coordinate_Init(Coordinate*);
 
 //extern volatile int16_t 	xa, ya, za;
 //extern volatile int16_t 	xg, yg, zg;
 
 extern volatile Inertial inertial;
 extern volatile Inertial inertial_offset;
+extern volatile Displacement displacement;
 
 #endif
 

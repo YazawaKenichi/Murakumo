@@ -1,13 +1,17 @@
-//ICM_20648.c Ver.1.2
+//ICM_20648.c Ver.1.3
 #include "ICM20648.h"
 
 #define USE_NCS 1
+#define INIT_ZERO 1
 
 //volatile int16_t xa, ya, za;
 //volatile int16_t xg, yg, zg;
 
 volatile Inertial inertial;
+volatile Displacement displacement;
 volatile Inertial inertial_offset;
+
+Coordinate COORDINATE_ZERO;
 
 uint8_t read_byte( uint8_t reg )
 {
@@ -47,11 +51,16 @@ uint8_t IMU_init(uint8_t* wai)
 	uint8_t who_am_i,ret;
 	ret = 0;
 
-	inertial.accel.x = 0;
-	inertial.accel.y = 0;
-	inertial.accel.z = 0;
-	inertial.gyro = inertial.accel;
-	inertial_offset = inertial;
+	COORDINATE_ZERO.x = 0;
+	COORDINATE_ZERO.y = 0;
+	COORDINATE_ZERO.z = 0;
+
+#if	INIT_ZERO
+	inertial.accel = COORDINATE_ZERO;
+	inertial.gyro = COORDINATE_ZERO;
+	displacement.position = COORDINATE_ZERO;
+	displacement.theta = COORDINATE_ZERO;
+#endif
 
 	/*
 	xg = 0;
@@ -115,15 +124,22 @@ void IMU_read()
 	inertial.gyro.z = ((int16_t)read_byte(GYRO_ZOUT_H) << 8) | ((int16_t)read_byte(GYRO_ZOUT_L));
 }
 
-void Inertial_Integral(Inertial *a)
+void Inertial_Integral(Displacement *a)
 {
 	IMU_read();
-	a->accel.x += inertial.accel.x;
-	a->accel.y += inertial.accel.y;
-	a->accel.z += inertial.accel.z;
-	a->gyro.x += inertial.gyro.x;
-	a->gyro.y += inertial.gyro.y;
-	a->gyro.z += inertial.gyro.z;
+	a->position.x += inertial.accel.x;
+	a->position.y += inertial.accel.y;
+	a->position.z += inertial.accel.z;
+	a->theta.x += inertial.gyro.x;
+	a->theta.y += inertial.gyro.y;
+	a->theta.z += inertial.gyro.z;
+}
+
+void Coordinate_Init(Coordinate *a)
+{
+	a->x = 0;
+	a->y = 0;
+	a->z = 0;
 }
 
 
