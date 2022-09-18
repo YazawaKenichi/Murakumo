@@ -79,6 +79,8 @@
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
 
+#define USE_SLOWSTART 0
+
 #define SECOND 1
 
 #define D_VELOCITY_CONTROL_IN_WHILE 0
@@ -152,69 +154,76 @@
 #define COMMONSPEEDE 100
 #define COMMONSPEEDF 100
 #else
-#define VELOCITY_TARGET1 1000	//65.973f 	// MAX 8340 // mm/s
-#define VELOCITY_TARGET2 1000
-#define VELOCITY_TARGET3 1000	
-#define VELOCITY_TARGET4 1000	
-#define VELOCITY_TARGET5 1000	
-#define VELOCITY_TARGET6 1000	
-#define VELOCITY_TARGET7 1000	
-#define VELOCITY_TARGET8 1000
-#define VELOCITY_TARGET9 1000
-#define VELOCITY_TARGETA 1000
-#define VELOCITY_TARGETB 1000
-#define VELOCITY_TARGETC 1000
-#define VELOCITY_TARGETD 1000
-#define VELOCITY_TARGETE 1000
-#define VELOCITY_TARGETF 1000
+#define VELOCITY_TARGET1 100
+#define VELOCITY_TARGET2 100
+#define VELOCITY_TARGET3 100
+#define VELOCITY_TARGET4 100
+#define VELOCITY_TARGET5 100
+#define VELOCITY_TARGET6 100
+#define VELOCITY_TARGET7 100
+#define VELOCITY_TARGET8 100
+#define VELOCITY_TARGET9 100
+#define VELOCITY_TARGETA 100
+#define VELOCITY_TARGETB 100
+#define VELOCITY_TARGETC 100
+#define VELOCITY_TARGETD 100
+#define VELOCITY_TARGETE 100
+#define VELOCITY_TARGETF 100
 #endif
 
-#define KP1 1.80f	// 30 // 25
+/*
+#define KP1 2.8f	// 30 // 25
 #define KD1 0	// 8  // 10
 #define KI1 0	// 0.0005f
-#define KP2 1.84f
-#define KD2 0
+#define KP2 2.8f
+#define KD2 3.4f
 #define KI2 0
-#define KP3 1.87f
-#define KD3 0
-#define KI3 0
-#define KP4 1.91f
-#define KD4 0
-#define KI4 0
-#define KP5 1.94f
-#define KD5 0
-#define KI5 0
-#define KP6 1.98f
-#define KD6 0
-#define KI6 0
-#define KP7 2.01f
-#define KD7 0
-#define KI7 0
-#define KP8 2.05f
-#define KD8 0
-#define KI8 0
-#define KP9 2.09f
-#define KD9 0
-#define KI9 0
-#define KPA 2.12f
-#define KDA 0
-#define KIA 0
-#define KPB 2.16f
-#define KDB 0
-#define KIB 0
-#define KPC 2.19f
-#define KDC 0
-#define KIC 0
-#define KPD 2.23f
-#define KDD 0
-#define KID 0
-#define KPE 2.26f
-#define KDE 0
-#define KIE 0
-#define KPF 2.30f
-#define KDF 0
-#define KIF 0
-
+*/
+#define	KP1	0
+#define	KD1	0
+#define	KI1	0
+#define	KP2	1.83f
+#define	KD2	0
+#define	KI2	0
+#define	KP3	3.66f
+#define	KD3	0
+#define	KI3	0
+#define	KP4	5.49f
+#define	KD4	0
+#define	KI4	0
+#define	KP5	7.31f
+#define	KD5	0
+#define	KI5	0
+#define	KP6	9.14f
+#define	KD6	0
+#define	KI6	0
+#define	KP7	10.97f
+#define	KD7	0
+#define	KI7	0
+#define	KP8	12.8f
+#define	KD8	0
+#define	KI8	0
+#define	KP9	14.63f
+#define	KD9	0
+#define	KI9	0
+#define	KPA	16.46f
+#define	KDA	0
+#define	KIA	0
+#define	KPB	18.29f
+#define	KDB	0
+#define	KIB	0
+#define	KPC	20.11f
+#define	KDC	0
+#define	KIC	0
+#define	KPD	21.94f
+#define	KDD	0
+#define	KID	0
+#define	KPE	23.77f
+#define	KDE	0
+#define	KIE	0
+#define	KPF	25.6f
+#define	KDF	0
+#define	KIF	0
 #if USE_VELOCITY_CONTROL
 #define VELOCITY_MAX 8340
 #if VELOCITY_CONTROL_RELATIVE
@@ -286,7 +295,7 @@ typedef enum
 	a_course,
 	b_course,
 	mini_course,
-	pid_tuning
+	pid_tuning,
 } PlayMode;
 
 // analog
@@ -362,6 +371,8 @@ uint8_t rv;
 char enter;
 uint16_t timtim;
 
+uint8_t calibrationsize;
+
 PlayMode playmode;
 
 // flag
@@ -427,7 +438,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 #if USE_ANALOG
 			analogl = 0;
 			analogr = 0;
-			for(unsigned char i = 0; i < CALIBRATIONSIZE; i++)
+			for(unsigned char i = 0; i < calibrationsize; i++)
 			{
 				analograte[i] = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
 
@@ -445,17 +456,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			direction = (analogl - analogr);	// difference
 			sdirection = sdirection + direction;	// Integral
 
-			if(analogl + analogr <= 700 * CALIBRATIONSIZE)
+			if(analogl + analogr <= 700 * calibrationsize)
 			{
 				direction = 0;
 			}
 #if !VELOCITY_CONTROL_RELATIVE
 			// left
-			leftmotor = nextspeed_l + (kp * direction + kd * (direction - beforedirection)) / CALIBRATIONSIZE / 2;
-			rightmotor = nextspeed_r - (kp * direction + kd * (direction - beforedirection)) / CALIBRATIONSIZE / 2;
+			leftmotor = nextspeed_l + (kp * direction + kd * (direction - beforedirection)) / calibrationsize / 2;
+			rightmotor = nextspeed_r - (kp * direction + kd * (direction - beforedirection)) / calibrationsize / 2;
 #else	// VELOCITY_CONTROL_RELATIVE
-			leftmotor = commonspeed + (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / CALIBRATIONSIZE / 2;
-			rightmotor = commonspeed - (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / CALIBRATIONSIZE / 2;
+			leftmotor = commonspeed + (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / calibrationsize / 2;
+			rightmotor = commonspeed - (kp * direction + kd * (direction - beforedirection) + ki * sdirection) / calibrationsize / 2;
 #endif	// VELOCITY_CONTROL_RELAT
 #endif	// USE_ANALOG
 #if !USE_ANALOG && USE_VELOCITY_CONTROL
@@ -688,6 +699,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		velocity_next = VKP * velocity_error + VKI * s_velocity_error;
 		commonspeed = velocity_next * (double)PWMMAX / (double)VELOCITY_MAX;
 
+#if USE_MOTOR
+#if USE_SLOWSTART
+		if(motorenable)
+		{
+			starting_length += (velocity_l + velocity_r) / 2;
+			if(starting_length < THRESHOLD_STARTING_LENGTH)
+			{
+				base_velocity_target = velocity_target;
+				base_p = kp;
+				base_i = ki;
+				base_d = kd;
+				velocity_target = 100;
+			}
+		}
+#endif
+#endif
+
 #if USE_FLASH
 		if(rv == 0x01)
 		{
@@ -768,6 +796,7 @@ int main(void)
 	rv = 0;
 	LENGTHPERPULSE = PI * TIREDIAMETER / PULSEPERROTATE;
 	commonspeed = 0;
+	calibrationsize = CALIBRATIONSIZE;
 #if D_PWM
 	pwmsteptime = 0;
 	pwmstepud = 1;
