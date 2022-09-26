@@ -285,13 +285,6 @@ double LENGTHPERPULSE;	// (um / pulse)
 // uint8_t velocity[COURSELENGTH * 1000];
 #endif
 
-#if USE_FLASH
-const uint32_t start_address = 0x080E0000;
-const uint32_t end_address = 0x080FFFFF;
-FlashBuffer flash_buffer;
-uint8_t course_state_time;
-#endif
-
 #if D_PWM
 #define PWM_STEP_AMPLITUDE 1000		// (288 + 1024 * 3) // PWM Pulse Amplitude
 #define PWM_STEP_OMEGA 100	// PWM Step Omega (unit mrad / s)
@@ -358,6 +351,8 @@ PUTCHAR_PROTOTYPE;
 void led_rgb(char r, char g, char b);
 void set_led(char, char);
 #endif
+void main_init();
+void switch_in_while();
 void running_initialize();
 void running_finalize();
 void sensor_initialize();

@@ -1,0 +1,10 @@
+defs.c:3:9:rotary_read	16	static
+defs.c:13:6:led_rgb	16	static
+defs.c:18:6:set_led	16	static
+defs.c:31:6:d_print	32	static
+defs.c:149:8:low_pass_filter	40	static
+defs.c:153:6:HAL_ADC_ConvCpltCallback	32	static
+defs.c:216:8:sigmoid	40	static
+defs.c:223:6:eraseFlash	32	static
+defs.c:234:6:writeFlash	40	static
+defs.c:246:6:loadFlash	24	static
