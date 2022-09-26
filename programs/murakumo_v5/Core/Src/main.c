@@ -27,11 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
-#include <string.h>
-#include <stdint.h>
-// #include "math.h"
-#include "ICM20648.h"
+#include <defs.h>
 
 /* USER CODE END Includes */
 
@@ -42,216 +38,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#ifdef __GNUC__
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
-
-#define PLAY 1
-
-#define D_ANALOG 0
-#define D_ANALOGRATE 0
-#define D_MOTOR 0
-#define D_SIDESENS 0	//
-#define D_ENCODER 0	// Debug Encoder
-#define D_PWM 0
-#define D_ROTARY 1
-#define D_PLAYMODE 1
-#define D_SWITCH 0
-#define D_IMU 0
-#define D_LED 0
-#define D_VELOCITY_CONTROL 0
-#define D_VELOCITY_CONTROL_TIMER 0
-
-#define USE_ANALOG 1
-#define USE_MOTOR 1
-#define USE_SIDESENSOR 1	// Use SideSensor
-#define USE_ENCODER 1
-#define USE_ROTARY 1
-#define USE_SWITCH 1
-#define USE_LED 1
-#define USE_FLASH 1
-#define USE_IMU 0
-#define USE_BUZZER 0
-#define USE_VELOCITY_CONTROL 1
-
-#define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
-#define USE_LONGSENSOR 0	// only use long sensor
-
-#define USE_SLOWSTART 0
-
-#define SECOND 1
-
-#define D_VELOCITY_CONTROL_IN_WHILE 0
-#define VELOCITY_CONTROL_RELATIVE 1
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#if USE_FLASH
-#define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_11
-#define BACKUP_FLASH_SECTOR_SIZE (1024*16)
-#define COURSE_STATE_SIZE 128
-#endif
-
-#define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
-#define SENSGETCOUNT 9
-
-#define ENCODER_MIDDLE (65536/2)
-
-#ifndef _ARM_MATH_H
-#define PI 3.14159265358979f
-#endif	// __MAIN_H
-#define TIREDIAMETER 21000		// um
-#define PULSEPERROTATE (5250*2)	// Pulse / Rotate
-#define TREAD 100	// mm
-#define RMIN 100	// mm
-#define THRESHOLDRADIUS 500	// mm
-// LENGTHPUEPULSE = PI * TIREDIAMETER / PULSEPERROTATE
-
-#define PWMMAX 1000 // 3360
-
-#if D_PWM
-#define STATICPWM 1
-#endif
-
-#if ATTACH_LONGSENSOR	// use normal sensor and long sensor
-
-#define CALIBRATIONSIZE 16
-#else	// !ATTACH_LONGSENSOR
-#if USE_LONGSENSOR	// only use long sensor
-#define CALIBRATIONSIZE 4
-#else	// !USE_LONGSENSOR
-#define CALIBRATIONSIZE 12
-#endif	// !USE_LONGSENSOR
-#endif	// !ATTACH_LONGSENSOR
-
-/*
- *
- * good parameters
- *
- * 500, 6.4, 13.75, 0
- * 750, 7.68, 16.5, 0
- *
- */
-
-#if !USE_VELOCITY_CONTROL
-#define COMMONSPEED1 0	// 700 // 570
-#define COMMONSPEED2 100
-#define COMMONSPEED3 100
-#define COMMONSPEED4 100
-#define COMMONSPEED5 100
-#define COMMONSPEED6 100
-#define COMMONSPEED7 100
-#define COMMONSPEED8 100
-#define COMMONSPEED9 100
-#define COMMONSPEEDA 100	// 700 // 570
-#define COMMONSPEEDB 100
-#define COMMONSPEEDC 100
-#define COMMONSPEEDD 100
-#define COMMONSPEEDE 100
-#define COMMONSPEEDF 100
-#else
-#define VELOCITY_TARGET1 100
-#define VELOCITY_TARGET2 100
-#define VELOCITY_TARGET3 100
-#define VELOCITY_TARGET4 100
-#define VELOCITY_TARGET5 100
-#define VELOCITY_TARGET6 100
-#define VELOCITY_TARGET7 100
-#define VELOCITY_TARGET8 100
-#define VELOCITY_TARGET9 100
-#define VELOCITY_TARGETA 100
-#define VELOCITY_TARGETB 100
-#define VELOCITY_TARGETC 100
-#define VELOCITY_TARGETD 100
-#define VELOCITY_TARGETE 100
-#define VELOCITY_TARGETF 100
-#endif
-
-/*
-#define KP1 2.8f	// 30 // 25
-#define KD1 0	// 8  // 10
-#define KI1 0	// 0.0005f
-#define KP2 2.8f
-#define KD2 3.4f
-#define KI2 0
-*/
-#define	KP1	0
-#define	KD1	0
-#define	KI1	0
-#define	KP2	1.83f
-#define	KD2	0
-#define	KI2	0
-#define	KP3	3.66f
-#define	KD3	0
-#define	KI3	0
-#define	KP4	5.49f
-#define	KD4	0
-#define	KI4	0
-#define	KP5	7.31f
-#define	KD5	0
-#define	KI5	0
-#define	KP6	9.14f
-#define	KD6	0
-#define	KI6	0
-#define	KP7	10.97f
-#define	KD7	0
-#define	KI7	0
-#define	KP8	12.8f
-#define	KD8	0
-#define	KI8	0
-#define	KP9	14.63f
-#define	KD9	0
-#define	KI9	0
-#define	KPA	16.46f
-#define	KDA	0
-#define	KIA	0
-#define	KPB	18.29f
-#define	KDB	0
-#define	KIB	0
-#define	KPC	20.11f
-#define	KDC	0
-#define	KIC	0
-#define	KPD	21.94f
-#define	KDD	0
-#define	KID	0
-#define	KPE	23.77f
-#define	KDE	0
-#define	KIE	0
-#define	KPF	25.6f
-#define	KDF	0
-#define	KIF	0
-#if USE_VELOCITY_CONTROL
-#define VELOCITY_MAX 8340
-#if VELOCITY_CONTROL_RELATIVE
-#define VKP 20	// 27.5f
-#define VKI 0.2f	// 0.15f
-#else	// VELOCITY_CONTRO_RELATIVE
-// left
-#define VKPL 8.0f
-#define VKIL 0.025	// 0.025f
-// right
-#define VKPR 8.0f
-#define VKIR 0.025	// 0.025f
-#endif	// VELOCITY_CONTROL_RELATIVE
-#if D_VELOCITY_CONTROL_TIMER
-#define STOPTIME 10000 // 13188
-#endif
-#endif	// USE_VELOCITY_CONTROL
-
-#define TURNIF (flash_buffer.radius[course_state_time] >= THRESHOLDRADIUS || flash_buffer.radius[course_state_time] <= -THRESHOLDRADIUS || course_state_time == 0 || course_state_time == flash_buffer.course_state_time_max)
-
-#define ESC_MAG	"\x1b[35m"
-#define ESC_RED "\x1b[31m"
-#define ESC_YEL	"\x1b[33m"
-#define ESC_GRE	"\x1b[32m"
-#define ESC_CYA	"\x1b[36m"
-#define ESC_BLU	"\x1b[34m"
-#define ESC_DEF "\x1b[39m"
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -272,112 +62,6 @@ TIM_HandleTypeDef htim11;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-#if USE_FLASH
-typedef struct {
-	double radius[COURSE_STATE_SIZE];	// radius > 0 => turn right
-	uint16_t analogmin[CALIBRATIONSIZE];
-	uint16_t analogmax[CALIBRATIONSIZE];
-	uint8_t course_state_time_max;
-	/*
-	uint8_t time[COURSE_STATE_SIZE];
-	uint8_t svl[COURSE_STATE_SIZE];
-	uint8_t svr[COURSE_STATE_SIZE];
-	uint32_t common_speed2[COURSE_STATE_SIZE];
-//	uint32_t common_speed3[COURSE_STATE_SIZE];
-//	uint16_t second[COURSE_STATE_SIZE];
-	*/
-} FlashBuffer;
-#endif
-
-typedef enum
-{
-	production,
-	a_course,
-	b_course,
-	mini_course,
-	pid_tuning,
-} PlayMode;
-
-// analog
-uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE];	// Analog Data
-
-uint16_t analog[CALIBRATIONSIZE];
-uint16_t analogmax[CALIBRATIONSIZE];
-uint16_t analogmin[CALIBRATIONSIZE];
-uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
-
-uint16_t analograte[CALIBRATIONSIZE];
-uint16_t analogr, analogl;	// Sum Right Analog Sensor, Sum Left Analog Sensor
-int direction, beforedirection, sdirection;	// = analogr - analogl
-unsigned char sensgettime;
-uint8_t calibrationsize;
-
-double kp, kd, ki;
-
-unsigned char subsensbuf, marker, sidedeltacount, markerstate, rightmarkercount;// 0 ~ 255(2^8-1)
-short int encoder_l, encoder_r;
-double LENGTHPERPULSE;	// (um / pulse)
-
-#if SECOND
-// uint8_t velocity[COURSELENGTH * 1000];
-#endif
-
-#if USE_FLASH
-const uint32_t start_address = 0x080E0000;
-const uint32_t end_address = 0x080FFFFF;
-FlashBuffer flash_buffer;
-uint8_t course_state_time;
-#endif
-
-#if D_PWM
-#define PWM_STEP_AMPLITUDE 1000		// (288 + 1024 * 3) // PWM Pulse Amplitude
-#define PWM_STEP_OMEGA 100	// PWM Step Omega (unit mrad / s)
-uint32_t pwmstepoutput;	// PWM Duty
-uint32_t pwmsteptime;	// PWM Step Time
-char pwmstepud;	// PWM Step upword or downword
-#endif
-
-#if D_ENCODER
-uint16_t d_encoder_left, dd_encoder_left, pre_d_encoder_left, d_encoder_right,
-		dd_encoder_right, pre_d_encoder_right;
-uint16_t enc1, enc2, enc3;
-#endif
-
-#if USE_VELOCITY_CONTROL || D_ENCODER
-double velocity_l, velocity_l_raw;
-double velocity_r, velocity_r_raw;
-#if VELOCITY_CONTROL_RELATIVE
-double velocity_target;
-double velocity, velocity_error, s_velocity_error, velocity_next, velocity_raw;
-double s_velocity_l, s_velocity_r;
-//		short int s_velocity_l, s_velocity_r;
-#else	// VELOCITY_CONTROL_RELATIVE
-		double velocity_error_l, s_velocity_error_l, velocity_next_l, nextspeed_l;
-		double velocity_error_r, s_velocity_error_r, velocity_next_r, nextspeed_r;
-#endif	// VELOCITY_CONTROL_RELATIVE
-#if D_VELOCITY_CONTROL_TIMER
-		uint16_t stoptime;
-	#endif
-#endif
-
-// motor
-short int commonspeed;
-double leftmotor;
-double rightmotor;
-
-// switch
-uint8_t rotary_value;
-uint8_t rv;
-char enter;
-uint16_t timtim;
-
-uint8_t calibrationsize;
-
-PlayMode playmode;
-
-// flag
-uint8_t motorenable;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -396,44 +80,23 @@ static void MX_SPI2_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
-PUTCHAR_PROTOTYPE;
-#if USE_LED
-void led_rgb(char r, char g, char b);
-void set_led(char);
-#endif
-void running_initialize();
-void running_finalize();
-void sensor_initialize();
-void sensor_finalize();
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle);
-#ifndef _ARM_MATH_H
-double power(double, double);
-#endif
-#if USE_ENCODER
-void encoder_initialize();
-void encoder_finalize();
-#endif
-#if USE_FLASH
-void eraseFlash(void);
-void writeFlash(uint32_t, uint8_t*, uint32_t);
-void loadFlash(uint32_t, uint8_t*, uint32_t);
-#endif
-void d_print();
-double low_pass_filter(double val, double pre_val, double gamma);
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim->Instance == TIM6) {
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM6)
+	{	// 1 ms
 #if D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
-		if(stoptime < STOPTIME)
+		if(rightmarkercount >= 1)
 		{
-			stoptime++;
-		}
-		else
-		{
-			motorenable = 0;
+			if(stoptime < STOPTIME)
+			{
+				stoptime += 1;	// 1 ms / roop
+			}
+			else
+			{
+				motorenable = 0;
+			}
 		}
 #endif // D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
-
 		if (motorenable) {
 #if USE_ANALOG
 			analogl = 0;
@@ -441,6 +104,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			for(unsigned char i = 0; i < calibrationsize; i++)
 			{
 				analograte[i] = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
+#if USE_SIGMOID_TRACE
+				analograte[i] = 1000 * sigmoid(analograte[i], (16 - i)/(double)800, 500);
+#endif
 
 				if(i % 2 == 0)
 				{
@@ -451,6 +117,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				  analogr += analograte[i];
 				}
 			}
+
+			if(analogl + analogr >= 980 * calibrationsize)
+			{
+				velocity_target = 0;
+				motorenable = 0;
+				enter = 0;
+			}
+
 			// ( direction > 0 ) is ( analogl > analogr ) i.e. left is black, right is white.
 			// When ( direction > 0 ) , must turn right.
 			direction = (analogl - analogr);	// difference
@@ -520,12 +194,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))	// SW1
 		{
 			pwmstepoutput = PWM_STEP_OMEGA * pwmsteptime / 1000;
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, pwmstepoutput);
-			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, pwmstepoutput);
-			pwmstepud = (PWM_STEP_AMPLITUDE <= pwmstepoutput) ? 255 : (0 >= pwmstepoutput) ? 1 : pwmstepud;
-			pwmsteptime = (pwmstepud == 255) ? pwmsteptime - 1 : pwmsteptime + 1;
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET); HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET); __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, pwmstepoutput); __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, pwmstepoutput); pwmstepud = (PWM_STEP_AMPLITUDE <= pwmstepoutput) ? 255 : (0 >= pwmstepoutput) ? 1 : pwmstepud; pwmsteptime = (pwmstepud == 255) ? pwmsteptime - 1 : pwmsteptime + 1;
 		}
 #else	// !STATICPWM
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
@@ -553,9 +222,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 					if (first == 0b01) {
 						// right -> stop
 						markerstate = 0b01;
-						if (rightmarkercount == 0) {
+						if (rightmarkercount == 0)
+						{
 							rightmarkercount++;
-						} else if (rightmarkercount == 1) {
+							set_led(0b01, 0b01);
+						}
+						else if (rightmarkercount == 1)
+						{
 							enter = 0;
 #if USE_FLASH
 							flash_buffer.radius[course_state_time] = THRESHOLDRADIUS;
@@ -569,7 +242,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 						sdirection = 0;
 #endif
 #if USE_FLASH && USE_VELOCITY_CONTROL
-						if(playmode != pid_tuning)
+#if BASED_ON_LEFT_MAARKER
+						if(!(playmode == pid_tuning || playmode == zero_trace))
 						{
 							switch(rv)	// in TIM10
 							{
@@ -631,10 +305,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 								default:
 									break;
 							}
-						}	// playmode != pid_tuning
+						}	// !(playmode == pid_tuning || playmode == zero_trace)
+#endif	// BASED_ON_LEFT_MARKER
 #if USE_VELOCITY_CONTROL
-						s_velocity_l = 0;
-						s_velocity_r = 0;
+						s_velocity = 0;
 #endif
 						if (course_state_time >= COURSE_STATE_SIZE)
 						{
@@ -670,10 +344,40 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		// error = target - raw
 		// motor = commonspeed + KP * error - KD * d_error + KI * s_error
 
-		velocity_l_raw = (double)encoder_l * LENGTHPERPULSE;
-		velocity_l = low_pass_filter(velocity_l_raw, velocity_l, 0.20f);
-		velocity_r_raw = (double)encoder_r * LENGTHPERPULSE;
-		velocity_r = low_pass_filter(velocity_r_raw, velocity_r, 0.20f);
+		encoder = (double) (encoder_l + encoder_r) / 2;
+		velocity = (double) encoder * LENGTHPERPULSE;
+
+#if D_ENCODER
+		s_encoder_l += encoder_l;
+		s_encoder_r += encoder_r;
+		s_encoder += encoder;
+		s_velocity += velocity;
+#endif
+
+#if USE_MOTOR
+#if USE_SLOWSTART
+		if(slow)
+		{
+			starting_length += velocity;
+			if(starting_length < THRESHOLD_STARTING_LENGTH)
+			{
+				velocity_target = 100;
+				kp = 10;
+				kd = 15;
+				ki = 0;
+			}
+			else
+			{
+				velocity_target = base_velocity_target;
+				kp = base_p;
+				ki = base_i;
+				kd = base_d;
+				slow = 0;
+			}
+		}
+#endif
+#endif
+
 #if USE_VELOCITY_CONTROL
 #if !VELOCITY_CONTROL_RELATIVE
 		velocity_error_l = VELOCITY_TARGET - velocity_l;
@@ -693,52 +397,43 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		nextspeed_r = (VELOCITY_TARGET + velocity_next_r) * PWMMAX / VELOCITY_MAX;
 #else	// VELOCITY_CONTROL_RELATIVE
 		// Here VELOCITY_TARGET is array from Flash ROM.
-		velocity_error = velocity_target - (velocity_l + velocity_r) / (double)2.0f;
-		s_velocity_error = s_velocity_error + velocity_error;
-		// PI
-		velocity_next = VKP * velocity_error + VKI * s_velocity_error;
-		commonspeed = velocity_next * (double)PWMMAX / (double)VELOCITY_MAX;
-
-#if USE_MOTOR
-#if USE_SLOWSTART
-		if(motorenable)
+		if(playmode != zero_trace)
 		{
-			starting_length += (velocity_l + velocity_r) / 2;
-			if(starting_length < THRESHOLD_STARTING_LENGTH)
-			{
-				base_velocity_target = velocity_target;
-				base_p = kp;
-				base_i = ki;
-				base_d = kd;
-				velocity_target = 100;
-			}
+			velocity_error = velocity_target - velocity;
+			s_velocity_error = s_velocity_error + velocity_error;
+			// PI
+			velocity_next = (double)VKP * velocity_error + (double)VKI * s_velocity_error;
+			commonspeed = (double)velocity_next * (double)PWMMAX / (double)VELOCITY_MAX;
 		}
-#endif
-#endif
+		else
+		{
+			commonspeed = 0;
+		}
 
 #if USE_FLASH
 		if(rv == 0x01)
 		{
-			s_velocity_l = s_velocity_l + velocity_l;
-			s_velocity_r = s_velocity_r + velocity_r;
+			s_velocity = velocity;
 		}
 #endif
 #endif	// VELOCITY_CONTROL_RELATIVE
 #endif	// USE_VELOCITY_CONTROL
 #endif	// USE_ENCODER
 #if USE_LED
-		if(timtim % 1000 == 0)
+		uint16_t TIMTIM = 1000;
+
+		if(timtim1 % TIMTIM == 0)	// 1 ms / roop
 		{
-			set_led(0b10);
+			set_led(0b10, 0b10);
 		}
-		if(timtim % 1000 == 500)
+		if(timtim1 % TIMTIM == (int) (TIMTIM / 2))
 		{
-			set_led(0b00);
+			set_led(0b10, 0b00);
 		}
-		timtim = timtim + 1;
-		if(timtim >= 60000)
+		timtim1 = timtim1 + 1;
+		if(timtim1 >= 60000)
 		{
-			timtim = 0;
+			timtim1 = 0;
 		}
 #endif
 	}	// TIM10
@@ -790,11 +485,15 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+#if USE_LED
+  set_led(0b11, 0b00);
+#endif
+
 	enter = 0;
 	motorenable = 0;
 	rotary_value = 0;
 	rv = 0;
-	LENGTHPERPULSE = PI * TIREDIAMETER / PULSEPERROTATE;
+	LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
 	commonspeed = 0;
 	calibrationsize = CALIBRATIONSIZE;
 #if D_PWM
@@ -823,18 +522,18 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	MX_DMA_Init();
-	MX_ADC1_Init();
-	MX_USART6_UART_Init();
-	MX_TIM6_Init();
-	MX_TIM4_Init();
-	MX_TIM1_Init();
-	MX_TIM3_Init();
-	MX_TIM10_Init();
-	MX_TIM11_Init();
-	MX_SPI2_Init();
-	MX_I2C1_Init();
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_USART6_UART_Init();
+  MX_TIM6_Init();
+  MX_TIM4_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
+  MX_TIM10_Init();
+  MX_TIM11_Init();
+  MX_SPI2_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 	printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
@@ -868,6 +567,9 @@ int main(void)
 		case pid_tuning:
 			printf("pid_tuning\r\n");
 			break;
+		case zero_trace:
+			printf("zero_trace\r\n");
+			break;
 		default:
 			printf("unknown;;\r\n");
 			break;
@@ -899,11 +601,17 @@ int main(void)
 	printf("LENGTHPERPULSE = %f\r\n", LENGTHPERPULSE);
 #endif
 
+#if D_MATH
+	printf("M_PI = %f, exp(1) = %f\r\n", M_PI, exp(1));
+	printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
+#endif
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 #if USE_LED
+	set_led(0b11, 0b11);
 	led_rgb(1, 1, 1);	// White
 #endif
 #if D_LED
@@ -921,9 +629,9 @@ int main(void)
 #endif
 
 		if (enter) {
-			switch (rotary_value) {
+			rv = rotary_value;
+			switch (rv) {
 			case 0x00:
-				rv = rotary_value;
 #if USE_LED
 				led_rgb(1, 1, 0);	// Yellow
 #endif
@@ -1008,14 +716,6 @@ int main(void)
 
 				break;	// case 0x00:
 			case 0x01:	// 1
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP1;
 				kd = KD1;
 				ki = KI1;
@@ -1028,7 +728,7 @@ int main(void)
 
 				while (enter) {
 					d_print();
-					HAL_Delay(250);
+					HAL_Delay(500);
 				}
 
 				running_finalize();
@@ -1039,14 +739,6 @@ int main(void)
 #endif
 				break;
 			case 0x02:	// 2
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP2;
 				kd = KD2;	// 0.8f * KD1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
 				ki = KI2;	//0.8f * KI1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
@@ -1065,14 +757,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x03:	// 3
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP3;
 				kd = KD3;	// 0.8f * KD1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
 				ki = KI3;	//0.8f * KI1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
@@ -1091,14 +775,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x04:	// 4
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP4;
 				kd = KD4;
 				ki = KI4;
@@ -1117,14 +793,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x05:	// 5
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP5;
 				kd = KD5;
 				ki = KI5;
@@ -1143,14 +811,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x06:	// 6
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP6;
 				kd = KD6;
 				ki = KI6;
@@ -1169,14 +829,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x07:	// 7
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP7;
 				kd = KD7;
 				ki = KI7;
@@ -1195,14 +847,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x08:	// 8
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP8;
 				kd = KD8;	// 0.8f * KD1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
 				ki = KI8;	//0.8f * KI1 * VELOCITY_TARGET2 / VELOCITY_TARGET1;
@@ -1221,14 +865,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x09:	// 9
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KP9;
 				kd = KD9;
 				ki = KI9;
@@ -1247,14 +883,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0A:	// A
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KPA;
 				kd = KDA;
 				ki = KIA;
@@ -1273,14 +901,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0B:	// B
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KPB;
 				kd = KDB;
 				ki = KIB;
@@ -1299,14 +919,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0C:	// C
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KPC;
 				kd = KDC;
 				ki = KIC;
@@ -1325,14 +937,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0D:	// D
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KPD;
 				kd = KDD;
 				ki = KID;
@@ -1351,14 +955,6 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0E:	// E
-				rv = rotary_value;
-#if USE_FLASH
-				for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-				{
-					analogmax[i] = flash_buffer.analogmax[i];
-					analogmin[i] = flash_buffer.analogmin[i];
-				}
-#endif
 				kp = KPE;
 				kd = KDE;
 				ki = KIE;
@@ -1377,8 +973,7 @@ int main(void)
 				running_finalize();
 				break;
 			case 0x0F:
-				rv = rotary_value;
-				if(playmode != pid_tuning)
+				if(!(playmode == pid_tuning || playmode == zero_trace))
 				{
 					// load flash output
 					loadFlash(start_address, (uint8_t*) &flash_buffer,
@@ -1391,13 +986,6 @@ int main(void)
 				}
 				else
 				{
-#if USE_FLASH
-					for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-					{
-						analogmax[i] = flash_buffer.analogmax[i];
-						analogmin[i] = flash_buffer.analogmin[i];
-					}
-#endif
 					kp = KPF;
 					kd = KDF;
 					ki = KIF;
@@ -1754,7 +1342,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 65535;
+  htim1.Init.Period = 2047;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1804,7 +1392,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 2047;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
@@ -2137,11 +1725,16 @@ void led_rgb(char r, char g, char b) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, (g) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LED_G ON
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (b) ? GPIO_PIN_RESET : GPIO_PIN_SET);// LED_B ON
 }
-
-void set_led(char value)
+void set_led(char mask, char value)
 {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (value & 0b01) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// RIGHT
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, (value & 0b10) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LEFT
+	if(mask & 0b01)
+	{
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (value & 0b01) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// RIGHT
+	}
+	if(mask & 0b10)
+	{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, (value & 0b10) ? GPIO_PIN_RESET : GPIO_PIN_SET);	// LEFT
+	}
 }
 #endif
 
@@ -2159,12 +1752,37 @@ void sensor_finalize() {
 }
 
 void running_initialize() {
+#if USE_LED
+	set_led(0b11, 0b00);
+#endif
+#if USE_FLASH
+	for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
+	{
+		analogmax[i] = flash_buffer.analogmax[i];
+		analogmin[i] = flash_buffer.analogmin[i];
+	}
+#endif
+#if USE_SLOWSTART
+	slow = 1;
+	starting_length = 0;
+	base_velocity_target = velocity_target;
+	base_p = kp;
+	base_i = ki;
+	base_d = kd;
+#endif  // USE_SLOWSTART
 	HAL_Delay(3000);
 	sensor_initialize();
+#if D_ENCODER
+	s_encoder_l = 0;
+	s_encoder_r = 0;
+	left_length = 0;
+	right_length = 0;
+#endif
 #if USE_VELOCITY_CONTROL && D_VELOCITY_CONTROL_TIMER
 	stoptime = 0;
 #endif
-	timtim = 0;
+	timtim1 = 0;
+	timtim2 = 0;
 	encoder_initialize();
 	printf("Encoder_Start\r\n");
 	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
@@ -2252,13 +1870,24 @@ void d_print() {
 #endif	// D_ANALOG
 
 #if D_ENCODER
+	printf("encoder_l = %d, encoder_r = %d \r\n",
+			encoder_l, encoder_r);
 /*
 	printf("encoder_l = %d, encoder_r = %d \r\ndvl = %d, dvr = %d\r\n",
 			encoder_l, encoder_r, dvl, dvr);
 	printf("lengthl = %d, lengthr = %d \r\nvelocityl = %d, velocityr = %d\r\n",
 			lengthl, lengthr, velocityl, velocityr);
 */
+	/*
 	printf("TIM1->CNT = %5d, TIM3->CNT = %5d\r\nencoder_l = %5d, encoder_r = %5d\r\n", TIM1->CNT, TIM3->CNT, encoder_l, encoder_r);
+	*/
+
+	printf("encoder_lr = %7d, %7d\r\nencoder = %7d\r\ns_encoder = %7d\r\ns_velocity = %7.3f\r\n", encoder_l, encoder_r, encoder, s_encoder, s_velocity);
+#endif
+
+#if D_SLOWSTART
+	printf("slow = %1d\r\n", slow);
+	printf("starting_length = %5f\r\n", starting_length);
 #endif
 
 #if D_PWM
@@ -2277,21 +1906,37 @@ void d_print() {
 #endif
 
 #if D_VELOCITY_CONTROL
-#if !VELOCITY_CONTROL_RELATIVE
-	printf("velocity_error = %5.3f, s_velocity_error = %5.3f\r\n",
-			velocity_error_l, s_velocity_error_l);
-	printf("velocity_next = %5.3f\r\n", velocity_next_l);
-	printf("nextspeed = %5.3f\r\n", nextspeed_l);
-	printf("leftmotor = %5.3f, rightmotor = %5.3f\r\n", leftmotor, rightmotor);
-#else
-//	printf("LENGTHPERPULSE = %5.3f\r\n", LENGTHPERPULSE);
-	printf("encoder = %3.1f\r\nLENGTHPERPULSE = %f\r\nvelocity = %5.3f\r\nvelocity_error = %5.3f, s_velocity_error = %5.3f\r\nvelocity_next = %5.3f\r\nnextspeed = %5.3f\r\n",
-			(encoder_l + encoder_r) / (double)2.0f, LENGTHPERPULSE, (velocity_l + velocity_r) / (double)2.0f, velocity_error, s_velocity_error, velocity_next);
-#endif	// VELOCITY_CONTROL_RELARIVE
+	#if !VELOCITY_CONTROL_RELATIVE
+		printf("velocity_error = %5.3f, s_velocity_error = %5.3f\r\n",
+				velocity_error_l, s_velocity_error_l);
+		printf("velocity_next = %5.3f\r\n", velocity_next_l);
+		printf("nextspeed = %5.3f\r\n", nextspeed_l);
+		printf("leftmotor = %5.3f, rightmotor = %5.3f\r\n", leftmotor, rightmotor);
+	#else	// VELOCITY_CONTROL_RELATIVE
+		#if !D_VELOCITY_CONTROL_TIMER
+		//	printf("LENGTHPERPULSE = %5.3f\r\n", LENGTHPERPULSE);
+		/*
+			printf("encoder = %3.1f\r\nLENGTHPERPULSE = %f\r\nvelocity = %5.3f\r\nvelocity_error = %5.3f, s_velocity_error = %5.3f\r\nvelocity_next = %5.3f\r\nnextspeed = %5.3f\r\n",
+					(encoder_l + encoder_r) / (double)2.0f, LENGTHPERPULSE, velocity, velocity_error, s_velocity_error, velocity_next);
+		*/
+		#else	// D_VELOCITY_CONTROL_TIMER
+			printf("rightmarkercount = %1d\r\n", rightmarkercount);
+			printf("stoptime = %11lf\r\n", stoptime);
+		#endif	// D_VELOCITY_CONTROL_TIMER
+	#endif	// VELOCITY_CONTROL_RELARIVE
 #endif	// D_VELOCITY_CONTROL
 
 #if D_MOTOR
 	printf("leftmotor = %5.3f, rightmotor = %5.3f\r\n", leftmotor, rightmotor);
+#endif
+
+#if D_MATH
+#if USE_SIGMOID_TRACE
+	for(int i = 0; i < calibrationsize; i++)
+	{
+		printf("sigmoid = %5.3f\r\n", 1000 * sigmoid(analograte[i], (16 - i)/(double)800, 500));
+	}
+#endif
 #endif
 }	// d_print
 
@@ -2306,8 +1951,7 @@ void encoder_initialize() {
 #if USE_FLASH
 	if(rv == 0x01)
 	{
-		s_velocity_l = 0;
-		s_velocity_r = 0;
+		s_velocity = 0;
 		for(int i = 0; COURSE_STATE_SIZE> i; i++)
 		{
 			flash_buffer.radius[i] = THRESHOLDRADIUS;
@@ -2370,17 +2014,41 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle) {
 	sensgettime++;
 }
 
-#ifndef _ARM_MATH_H
-double power(double a, double b) {
+#ifndef __OBSOLETE_MATH
+double pow(double a, double b) {
 	double r;
 	r = 1;
-	for (int i = b; i > 0; i--) {
-		//	r = r * a;
+	// printf("pow(%5.3f, %5.3f)\r\n", a, b);
+	if(b < 0)
+	{
+		for(int i = -b; i > 0; i--) // xx b != int xx
+		{
+			r = (double) r / a;
+		}
+	}
+	else
+	{
+		for(int i = b; i > 0; i--)
+		{
+			r = (double) r * a;
+		}
 	}
 
 	return r;
 }
+
+double exp(double a)
+{
+	// printf("exponential(%5.3f)\r\n", a);
+	return pow(E, a);
+}
 #endif
+
+double sigmoid(double x, double a, double x0)
+{
+	// printf("pow(%5.3f, %5.3f, %5.3f)\r\n", x, a, x0);
+	return 1 / (double) (1 + exp(-a * (x - x0)));
+}
 
 #if USE_FLASH
 void eraseFlash(void) {
