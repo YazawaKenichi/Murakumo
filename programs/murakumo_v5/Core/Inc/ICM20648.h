@@ -28,7 +28,6 @@ extern SPI_HandleTypeDef hspi2;
 #define GYRO_ZOUT_L 0x38
 #define REG_BANK_SEL 0x7F
 
-
 typedef struct
 {
 	int16_t x;

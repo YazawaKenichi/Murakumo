@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <math.h>
 #include "ICM20648.h"
+#include "velodef.h"
 
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -12,57 +13,26 @@
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif
 
-#define PLAY 1
-
-#define D_ANALOG 0
-#define D_ANALOGRATE 0
-#define D_MOTOR 0
-#define D_SIDESENS 0	//
-#define D_ENCODER 1	// Debug Encoder
-#define D_PWM 0
-#define D_ROTARY 0
-#define D_PLAYMODE 0
-#define D_SWITCH 0
-#define D_IMU 0
-#define D_LED 0
-#define D_VELOCITY_CONTROL 0
-#define D_VELOCITY_CONTROL_TIMER 0
-#define D_MATH 0
-#define D_SLOWSTART 0
-
-#define USE_ANALOG 1
-#define USE_MOTOR 1
-#define USE_SIDESENSOR 1	// Use SideSensor
-#define USE_ENCODER 1
-#define USE_ROTARY 1
-#define USE_SWITCH 1
-#define USE_LED 1
-#define USE_FLASH 1
-#define USE_IMU 0
-#define USE_BUZZER 0
-#define USE_VELOCITY_CONTROL 1
-#define USE_SIGMOID_TRACE 0
-
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
 
-#define USE_SLOWSTART 1
+#define COURSE_START_TIME_PLUSE 1
 
 #define SECOND 1
 
 #define D_VELOCITY_CONTROL_IN_WHILE 0
 #define VELOCITY_CONTROL_RELATIVE 1
 
-#if USE_FLASH
 #define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_11
 #define BACKUP_FLASH_SECTOR_SIZE (1024*16)
-#define COURSE_STATE_SIZE 128
-#endif
+#define COURSE_STATE_SIZE 600	// over ( 60 * 10 * 1,000,000 / SAMPLING_LENGTH )
 
 #define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
 #define SENSGETCOUNT 9
 
 #define ENCODER_MIDDLE (2048/2)
+#define SAMPLING_TIME 1000	// ms
+#define SAMPLING_LENGTH 100000	// [udm]	// 10cm	// 100,000 [udm] = 1 [m]
 
 #ifndef __OBSOLETE_MATH
 #define PI 3.14159265358979f
@@ -114,110 +84,6 @@
 #endif	// !USE_LONGSENSOR
 #endif	// !ATTACH_LONGSENSOR
 
-/*
- *
- * good parameters
- *
- * 500, 6.4, 13.75, 0
- * 750, 7.68, 16.5, 0
- *
- */
-
-#if !USE_VELOCITY_CONTROL
-#define COMMONSPEED1 0	// 700 // 570
-#define COMMONSPEED2 100
-#define COMMONSPEED3 100
-#define COMMONSPEED4 100
-#define COMMONSPEED5 100
-#define COMMONSPEED6 100
-#define COMMONSPEED7 100
-#define COMMONSPEED8 100
-#define COMMONSPEED9 100
-#define COMMONSPEEDA 100	// 700 // 570
-#define COMMONSPEEDB 100
-#define COMMONSPEEDC 100
-#define COMMONSPEEDD 100
-#define COMMONSPEEDE 100
-#define COMMONSPEEDF 100
-#else
-#define VELOCITY_TARGET1 1000
-#define VELOCITY_TARGET2 1000
-#define VELOCITY_TARGET3 1000
-#define VELOCITY_TARGET4 1000
-#define VELOCITY_TARGET5 1000
-#define VELOCITY_TARGET6 1000
-#define VELOCITY_TARGET7 1000
-#define VELOCITY_TARGET8 1000
-#define VELOCITY_TARGET9 1000
-#define VELOCITY_TARGETA 1000
-#define VELOCITY_TARGETB 1000
-#define VELOCITY_TARGETC 1000
-#define VELOCITY_TARGETD 1000
-#define VELOCITY_TARGETE 1000
-#define VELOCITY_TARGETF 1000
-#endif
-/*
-#define KP1 2.8f	// 30 // 25
-#define KD1 0	// 8  // 10
-#define KI1 0	// 0.0005f
-#define KP2 2.8f
-#define KD2 3.4f
-#define KI2 0
-
-// god pid
-#define VELOCITY_TARGET4 1000
-#define KP4 17.5f
-#define KD4 400
-#define KI4 0
-
-*/
-// 5.46f == KP ... great!, 165.71 <= KD <= 170 ... great!
-#define KP1 17.5f
-#define KD1 335.71f
-#define KI1 0
-#define KP2 17.5f
-#define KD2 357.14f
-#define KI2 0
-#define KP3 17.5f
-#define KD3 378.57f
-#define KI3 0
-#define KP4 17.5f
-#define KD4 400
-#define KI4 0
-#define KP5 17.5f
-#define KD5 421.42f
-#define KI5 0
-#define KP6 17.5f
-#define KD6 442.85f
-#define KI6 0
-#define KP7 17.5f
-#define KD7 464.28f
-#define KI7 0
-#define KP8 17.5f
-#define KD8 485.71f
-#define KI8 0
-#define KP9 17.5f
-#define KD9 507.14f
-#define KI9 0
-#define KPA 17.5f
-#define KDA 528.57f
-#define KIA 0
-#define KPB 17.5f
-#define KDB 550
-#define KIB 0
-#define KPC 17.5f
-#define KDC 571.42f
-#define KIC 0
-#define KPD 17.5f
-#define KDD 592.85f
-#define KID 0
-#define KPE 17.5f
-#define KDE 614.28f
-#define KIE 0
-#define KPF 17.5f
-#define KDF 635.71f
-#define KIF 0
-
 #if USE_SLOWSTART
 #define THRESHOLD_STARTING_LENGTH 250000	// um
 #endif
@@ -230,31 +96,22 @@
 #define ESC_BLU	"\x1b[34m"
 #define ESC_DEF "\x1b[39m"
 
-#if USE_FLASH
-typedef struct {
+typedef struct
+{
 	double radius[COURSE_STATE_SIZE];	// radius > 0 => turn right
 	uint16_t analogmin[CALIBRATIONSIZE];
 	uint16_t analogmax[CALIBRATIONSIZE];
-	uint8_t course_state_time_max;
-	/*
-	uint8_t time[COURSE_STATE_SIZE];
-	uint8_t svl[COURSE_STATE_SIZE];
-	uint8_t svr[COURSE_STATE_SIZE];
-	uint32_t common_speed2[COURSE_STATE_SIZE];
-//	uint32_t common_speed3[COURSE_STATE_SIZE];
-//	uint16_t second[COURSE_STATE_SIZE];
-	*/
+	uint16_t course_state_time_max;
 } FlashBuffer;
-#endif
 
 typedef enum
 {
-	production,
-	a_course,
-	b_course,
-	mini_course,
-	pid_tuning,
-	zero_trace
+    calibration,    // 0
+    search,	// 1
+    accel, // 2
+    pid_tuning,	// 3
+    zero_trace,	// 4
+    flash_print = 15
 } PlayMode;
 
 // analog
@@ -300,7 +157,6 @@ uint16_t enc1, enc2, enc3;
 short int s_encoder, s_encoder_l, s_encoder_r;
 #endif
 
-#if USE_VELOCITY_CONTROL || D_ENCODER
 double velocity_l, velocity_l_raw;
 double velocity_r, velocity_r_raw;
 #if VELOCITY_CONTROL_RELATIVE
@@ -323,8 +179,11 @@ double left_length, right_length;
 #endif	// VELOCITY_CONTROL_RELATIVE
 #if D_VELOCITY_CONTROL_TIMER
 		double stoptime;	// ms
-	#endif
 #endif
+
+uint16_t sampling_time;
+double m_velocity;
+double mm_length;
 
 // motor
 short int commonspeed;
@@ -343,6 +202,14 @@ PlayMode playmode;
 uint8_t slow;
 #endif
 
+#if USE_FLASH
+FlashBuffer flash_buffer;
+uint16_t course_state_time;
+#endif
+
+Coordinate my_gyro;
+uint16_t before_igz;
+
 // flag
 uint8_t motorenable;
 
@@ -351,22 +218,32 @@ PUTCHAR_PROTOTYPE;
 void led_rgb(char r, char g, char b);
 void set_led(char, char);
 #endif
-void main_init();
-void switch_in_while();
+
+uint8_t read_sidesens();
+
+void sidesens_function();
+void encoder_set_function();
+void velocity_control_function();
+void slow_start_function();
+void velocity_control_switch_function();
+
+void radius_calc();
+void led_brink();
+
 void running_initialize();
 void running_finalize();
 void sensor_initialize();
 void sensor_finalize();
+
+void playmode_print();
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle);
 #ifndef __OBSOLETE_MATH
 double pow(double, double);
 double exponential(double);
 #endif
 double sigmoid(double, double, double);
-#if USE_ENCODER
 void encoder_initialize();
 void encoder_finalize();
-#endif
 #if USE_FLASH
 void eraseFlash(void);
 void writeFlash(uint32_t, uint8_t*, uint32_t);
