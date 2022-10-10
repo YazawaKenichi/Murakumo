@@ -1,0 +1,6 @@
+# Product version 10.2
+# Build version 4618
+setVersionVar currentJobCore "SideSensor_Mount";
+setVersionVar stlDirectory "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL";
+setVersionVar stlPath "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/SideSensor_Mount.stl";
+setVersionVar toolpathFile "SideSensor_Mount.cmb";
