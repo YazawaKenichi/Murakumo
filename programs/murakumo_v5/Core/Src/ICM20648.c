@@ -1,5 +1,5 @@
 //ICM_20648.c Ver.1.3
-#include "ICM20648.h"
+#include "../Inc/ICM20648.h"
 
 #define USE_NCS 1
 #define INIT_ZERO 1
@@ -54,6 +54,8 @@ uint8_t IMU_init(uint8_t* wai)
 	COORDINATE_ZERO.x = 0;
 	COORDINATE_ZERO.y = 0;
 	COORDINATE_ZERO.z = 0;
+
+	RADPERDEG = ((double) M_PI / (double) 180);
 
 #if	INIT_ZERO
 	inertial.accel = COORDINATE_ZERO;
@@ -134,6 +136,13 @@ void Coordinate_Init(Coordinate *a)
 	a->x = 0;
 	a->y = 0;
 	a->z = 0;
+}
+
+void Coordinate_Set(Coordinate *a, Coordinate *b)
+{
+	a->x = b->x;
+	a->y = b->y;
+	a->z = b->z;
 }
 
 

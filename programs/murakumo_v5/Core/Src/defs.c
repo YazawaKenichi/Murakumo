@@ -1,4 +1,4 @@
-#include <defs.h>
+#include "../Inc/defs.h"
 
 uint8_t rotary_read() {
 	uint8_t _rotaryvalue = 0;
@@ -149,12 +149,14 @@ void d_print() {
 
 #if D_IMU
 	printf("mm_length = %5.3f\r\n", mm_length);
-	printf("my_gyro.z = %5d\r\n", my_gyro.z);
+	printf("inertial.gyro.z = %5d, my_gyro.z = %7.3f\r\n", inertial.gyro.z, my_gyro.z);
 	printf("my_gyro.z / mm_length = %8.5f\r\n", (double) my_gyro.z / (double) mm_length);
 #endif
 
+#if !D_COURSE_SAVING
 	printf("flash_buffer.radius[%4d] = %8.3f\r\n", course_state_time,
 			flash_buffer.radius[course_state_time]);
+#endif
 #endif
 
 #if D_VELOCITY_CONTROL
@@ -309,27 +311,41 @@ void sidesens_function()
 
 	subsens = read_sidesens();
 
-	if (subsens != subsensbuf) {
+	if (subsens != subsensbuf)
+	{
 		subsensbuf = subsens;
 		marker += subsens << (2 * sidedeltacount);
-		if (subsens == 0b00 && sidedeltacount != 0) {
+		if (subsens == 0b00 && sidedeltacount != 0)
+		{
 			first = (marker & 0b0011);
 			second = (marker & 0b1100) >> 2;
-			if (second == 0b00) {
-				if (first == 0b01) {
+			if (second == 0b00)
+			{
+				if (first == 0b01)
+				{
 					// right -> stop
 					markerstate = 0b01;
-					if (rightmarkercount == 0) {
+					if(rightmarkercount == 1 - 1)
+					{
 						rightmarkercount++;
 						set_led(0b01, 0b01);
-					} else if (rightmarkercount == 1) {
-						rightmarkercount++;
-						slow = 1;
-						flash_buffer.course_state_time_max = course_state_time;
 					}
-				} else if (first == 0b10) {
+					else if (rightmarkercount == 2 - 1)
+					{
+						// stop_motion
+						rightmarkercount++;
+						course_state_function();
+						slow = 1;
+					}
+				}
+				else if (first == 0b10)
+				{
 					// left -> curve
 					markerstate = 0b10;
+#if LEFTMARKER_SAMPLING
+					course_state_function();
+#endif
+				markerstate = 0;
 #if USE_ANALOG
 					sdirection = 0;
 #endif
@@ -337,23 +353,27 @@ void sidesens_function()
 #if USE_VELOCITY_CONTROL
 					s_velocity = 0;
 #endif
-					if (course_state_time >= COURSE_STATE_SIZE) {
-						course_state_time = 0;
-						enter = 0;
-					}
 #endif	// USE_FLASH && USE_VELOCITY_CONTROL
-				} else {
+				}
+				else
+				{
 					// cross
 					markerstate = 0b11;
 				}
-			} else {
+			}
+			else
+			{
 				// cross
 				markerstate = 0b11;
 			}
 			sidedeltacount = 0;
 			marker = 0;
+#if !LEFTMARKER_SAMPLING
 			markerstate = 0;
-		} else {
+#endif
+		}
+		else
+		{
 			sidedeltacount++;
 		}
 	}
@@ -413,28 +433,85 @@ void velocity_control_function() {
 void velocity_control_switch_function()
 {
 #if USE_FLASH
+#if !D_COURSE_SAVING
     if(flash_buffer.radius[course_state_time] < THRESHOLDRADIUS)
     {
         // deceleration
-        velocity_target = 1000;
-        kp = 17.5f;
-        kd = 335.71f;
-        ki = 0;
+        velocity_target = low_velo.velocity_target[rv];
+        kp = low_velo.kp[rv];
+        kd = low_velo.kd[rv];
+        ki = low_velo.ki[rv];
     }
     else
     {
         // acceleration
-        velocity_target = base_velocity_target;
-        kp = base_p;
-        ki = base_i;
-        kd = base_d;
+        velocity_target = high_velo.velocity_target[rv];
+        kp = high_velo.kp[rv];
+        kd = high_velo.kd[rv];
+        ki = high_velo.ki[rv];
     }
 #endif
+#endif
+}
+
+void course_state_function()
+{
+	if(playmode == search)
+	{
+		if(course_state_time + 1 >= COURSE_STATE_SIZE)	// sizeof(flash_buffer.radius) / sizeof(flash_buffer.radius[0]))
+		{
+			led_rgb(1, 1, 0);	// Yellow
+			motorenable = 0;
+		}
+		else
+		{
+#if USE_COURSE_STATE_TIME
+			course_state_time++;
+#endif
+			flash_buffer.course_state_time_max = course_state_time;
+			my_gyro.z = theta * RADPERDEG;
+	//		my_gyro.z *= RADPERDEG;
+	#if !D_COURSE_SAVING
+	#if !USE_LR_DIFFERENCE
+			flash_buffer.radius[course_state_time] = (double) my_gyro.z / (double) mm_length;
+	#else	// USE_LR_DIFFERENCE
+			flash_buffer.radius[course_state_time] = (double) TREAD * (double) ((left_length) + (right_length)) / (double) ((left_length) - (right_length)) / (double) 2;
+	#endif	// USE_LR_DIFFERENCE
+	#else	// D_COURSE_SAVING
+	#if !USE_LR_DIFFERENCE
+			flash_buffer.igz[course_state_time] = my_gyro.z;
+			flash_buffer.len[course_state_time] = mm_length;
+	#endif	// !USE_LR_DIFFERENCE
+	#endif	// D_COURSE_SAVING
+	#if USE_LR_DIFFERENCE
+			left_length = 0;
+			right_length = 0;
+	#endif
+			mm_length = 0;
+			my_gyro.z = 0;
+		}
+	}
+	if(playmode == accel)
+	{
+		velocity_control_switch_function();
+		if(course_state_time + 1 >= COURSE_STATE_SIZE)	// sizeof(flash_buffer.radius) / sizeof(flash_buffer.radius[0]))
+		{
+			led_rgb(1, 1, 0);	// Yellow
+			motorenable = 0;
+		}
+		else
+		{
+#if USE_COURSE_STATE_TIME
+			course_state_time++;
+#endif
+		}
+	}
 }
 
 void radius_calc()
 {
 #if USE_IMU
+	/*
 	if (!slow && rightmarkercount && rv == 0x01)	// SAMPLING_LENGTH /
 	{
 		sampling_time++;
@@ -462,6 +539,7 @@ void radius_calc()
 			sampling_time = 0;
 		}
 	}
+	*/
 #endif	// USE_IMU
 }
 
@@ -484,4 +562,51 @@ void led_brink()
 		timtim1 = 0;
 	}
 #endif
+}
+
+void pid_gain_initialize()
+{
+	for(int i = 0; i < 16; i++)
+	{
+		low_velo.velocity_target[i] = VELOCITY_TARGET_LOW;
+		high_velo.velocity_target[i] = VELOCITY_TARGET_HIGH;
+	}
+	low_velo.kp[0] = KP_LOW;
+	low_velo.ki[0] = KI_LOW;
+	low_velo.kd[0] = KD_LOW;
+	high_velo.kp[0] = KP_HIGH;
+	high_velo.ki[0] = KI_HIGH;
+	high_velo.kd[0] = KD_HIGH;
+	for(int i = 1; i < 16; i++)
+	{
+		low_velo.kp[i] = KP_LOW + (i - 1) * KP_LOW_TOLERANCE;
+		low_velo.ki[i] = KI_LOW + (i - 1) * KI_LOW_TOLERANCE;
+		low_velo.kd[i] = KD_LOW + (i - 1) * KD_LOW_TOLERANCE;
+		high_velo.kp[i] = KP_HIGH + (i - 1) * KP_HIGH_TOLERANCE;
+		high_velo.ki[i] = KI_HIGH + (i - 1) * KI_HIGH_TOLERANCE;
+		high_velo.kd[i] = KD_HIGH + (i - 1) * KD_HIGH_TOLERANCE;
+	}
+}
+
+void pid_initialize()
+{
+	velocity_target = low_velo.velocity_target[rv];
+	kp = low_velo.kp[rv];
+	kd = low_velo.kd[rv];
+	ki = low_velo.ki[rv];
+	if(playmode == accel)
+	{
+		velocity_target = high_velo.velocity_target[rv];
+		kp = high_velo.kp[rv];
+		kd = high_velo.kd[rv];
+		ki = high_velo.ki[rv];
+	}
+#if USE_SLOWSTART
+	slow = 1;
+	starting_length = 0;
+	base_velocity_target = velocity_target;
+	base_p = kp;
+	base_i = ki;
+	base_d = kd;
+#endif  // USE_SLOWSTART
 }

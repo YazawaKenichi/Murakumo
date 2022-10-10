@@ -1,7 +1,8 @@
 #ifndef ICM_20648_H
 #define ICM_20648_H
 
-#include "main.h"
+#include <main.h>
+#include <math.h>
 
 extern SPI_HandleTypeDef hspi2;
 #define CS_RESET HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET)
@@ -37,6 +38,13 @@ typedef struct
 
 typedef struct
 {
+	double x;
+	double y;
+	double z;
+} Coordinate_float;
+
+typedef struct
+{
 	Coordinate accel;
 	Coordinate gyro;
 } Inertial;
@@ -46,6 +54,8 @@ typedef struct
 	Coordinate position;
 	Coordinate theta;
 } Displacement;
+
+double RADPERDEG;	// ( M_PI / 180 )	[rad / deg]
 
 uint8_t read_byte(uint8_t);
 void write_byte(uint8_t, uint8_t);

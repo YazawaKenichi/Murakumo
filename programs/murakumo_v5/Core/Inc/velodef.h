@@ -9,7 +9,7 @@
 #define D_ROTARY 0
 #define D_PLAYMODE 0
 #define D_SWITCH 0
-#define D_IMU 0
+#define D_IMU 1
 #define D_FLASH 1
 #define D_LED 0
 #define D_VELOCITY_CONTROL 0
@@ -18,6 +18,7 @@
 #define D_SLOWSTART 0
 #define D_SEARCH 1
 #define D_WHILE_PRINT 0
+#define D_COURSE_SAVING 0
 
 #define USE_ANALOG 1
 #define USE_MOTOR 1
@@ -31,13 +32,51 @@
 #define USE_BUZZER 0
 #define USE_VELOCITY_CONTROL 1
 #define USE_SIGMOID_TRACE 0
+#define USE_DANGERSTOP 0
+#define USE_LR_DIFFERENCE 1
+#define USE_PID_ARRAY 1
+#define USE_COURSE_STATE_TIME 1
 
 #define USE_SLOWSTART 1
 #define USE_WRITE_FLASH 1
 
+// one side only
+#define LENGTH_SAMPLING 1
+#define LEFTMARKER_SAMPLING 0
+
 #define NOISY 0
 #define GOD 0
 #define P_ONLY 0
+
+#if USE_PID_ARRAY
+
+#define VELOCITY_TARGET_LOW 1000
+#define VELOCITY_TARGET_HIGH 1500
+#define VELOCITY_TARGET_MAX 2000
+
+// 6 0.06
+#define VKP 6
+#define VKI 0.06f
+// #define VKP 0.5f
+// #define VKI 0.005f
+
+// low speed
+#define KP_LOW 17.5f
+#define KP_LOW_TOLERANCE 0
+#define KD_LOW 335.71f
+#define KD_LOW_TOLERANCE ((635.71f - 335) / 16)
+#define KI_LOW 0
+
+// high speed
+#define KI_LOW_TOLERANCE 0
+#define KP_HIGH 17.5f
+#define KP_HIGH_TOLERANCE 2
+#define KD_HIGH 335.71f
+#define KD_HIGH_TOLERANCE 10
+#define KI_HIGH 0
+#define KI_HIGH_TOLERANCE 0
+
+#else
 
 #if !USE_VELOCITY_CONTROL
 #define COMMONSPEED0 0
@@ -75,6 +114,7 @@
 #define VELOCITY_TARGETF 1000
 #endif
 
+#if !NOISY
 #define KP0 5.4f
 #define KD0 200
 #define KI0 0
@@ -123,6 +163,7 @@
 #define KPF 5.4f
 #define KDF 300
 #define KIF 0
+#endif
 
 #if P_ONLY
 #define KP0 0
@@ -202,6 +243,9 @@
 // 5.46f == KP ... great!, 165.71 <= KD <= 170 ... great!
 
 #if NOISY
+#define KP0 17.5f
+#define KD0 335
+#define KI0 0
 #define KP1 17.5f
 #define KD1 335.71f
 #define KI1 0
@@ -248,4 +292,4 @@
 #define KDF 635.71f
 #define KIF 0
 #endif
-
+#endif	// !USE_PID_ARRAY

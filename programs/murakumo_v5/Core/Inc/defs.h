@@ -1,11 +1,12 @@
 #ifndef __DEFS_H__
 #define __DEFS_H__
+#include <ICM20648.h>
 #include "stdio.h"
 #include <string.h>
 #include <stdint.h>
-#include <math.h>
-#include "ICM20648.h"
+
 #include "velodef.h"
+//#include "banquet_art.hpp"
 
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -25,14 +26,18 @@
 
 #define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_11
 #define BACKUP_FLASH_SECTOR_SIZE (1024*16)
-#define COURSE_STATE_SIZE 600	// over ( 60 * 10 * 1,000,000 / SAMPLING_LENGTH )
+#if D_COURSE_STATE_SAVING
+#define COURSE_STATE_SIZE 600/2	// over ( 60 * 10 * 1,000,000 / SAMPLING_LENGTH )
+#else
+#define COURSE_STATE_SIZE 10000
+#endif
 
 #define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
 #define SENSGETCOUNT 9
 
 #define ENCODER_MIDDLE (2048/2)
 #define SAMPLING_TIME 1000	// ms
-#define SAMPLING_LENGTH 100000	// [udm]	// 10cm	// 100,000 [udm] = 1 [m]
+#define SAMPLING_LENGTH 10000	// [udm]	// 10cm	// 100,000 [udm] = 1 [m]
 
 #ifndef __OBSOLETE_MATH
 #define PI 3.14159265358979f
@@ -42,7 +47,7 @@
 #define PULSEPERROTATE 4096	// Pulse / Rotate
 #define PINION 25
 #define SUPER 64
-#define TREAD 100	// mm
+#define TREAD 103	// mm
 #define RMIN 100	// mm
 #define THRESHOLDRADIUS 500	// mm
 // LENGTHPUEPULSE = M_PI * TIREDIAMETER / PULSEPERROTATE
@@ -50,8 +55,6 @@
 #if USE_VELOCITY_CONTROL
 #define VELOCITY_MAX 8340
 #if VELOCITY_CONTROL_RELATIVE
-#define VKP 6
-#define VKI 0.06f
 //#define VKP 20	// 27.5f
 //#define VKI 0.2f	// 0.15f
 #else	// VELOCITY_CONTRO_RELATIVE
@@ -98,19 +101,35 @@
 
 typedef struct
 {
-	double radius[COURSE_STATE_SIZE];	// radius > 0 => turn right
+	uint16_t course_state_time_max;
 	uint16_t analogmin[CALIBRATIONSIZE];
 	uint16_t analogmax[CALIBRATIONSIZE];
-	uint16_t course_state_time_max;
+#if !D_COURSE_SAVING
+	double radius[COURSE_STATE_SIZE];	// radius > 0 => turn right
+#endif
+#if D_COURSE_SAVING
+	double igz[COURSE_STATE_SIZE];
+	double len[COURSE_STATE_SIZE];
+#endif
 } FlashBuffer;
+
+typedef struct
+{
+	uint16_t velocity_target[16];
+	double kp[16];
+	double ki[16];
+	double kd[16];
+} VeloGain;
 
 typedef enum
 {
     calibration,    // 0
     search,	// 1
     accel, // 2
-    pid_tuning,	// 3
-    zero_trace,	// 4
+	max_enable,	// 3
+    pid_tuning,	// 4
+    zero_trace,	// 5
+	banquet,	// 6
     flash_print = 15
 } PlayMode;
 
@@ -166,9 +185,7 @@ double base_velocity_target;
 #endif
 double velocity, s_velocity, velocity_error, s_velocity_error, velocity_next, velocity_raw;
 double s_velocity_l, s_velocity_r;
-#if D_ENCODER
 double left_length, right_length;
-#endif
 #if USE_SLOWSTART
 	double starting_length;
 #endif
@@ -197,6 +214,7 @@ char enter;
 int timtim1, timtim2;
 
 PlayMode playmode;
+VeloGain low_velo, high_velo;
 
 #if USE_SLOWSTART
 uint8_t slow;
@@ -207,8 +225,9 @@ FlashBuffer flash_buffer;
 uint16_t course_state_time;
 #endif
 
-Coordinate my_gyro;
+Coordinate_float my_gyro;
 uint16_t before_igz;
+double theta;
 
 // flag
 uint8_t motorenable;
@@ -226,6 +245,7 @@ void encoder_set_function();
 void velocity_control_function();
 void slow_start_function();
 void velocity_control_switch_function();
+void course_state_function();
 
 void radius_calc();
 void led_brink();
@@ -234,6 +254,8 @@ void running_initialize();
 void running_finalize();
 void sensor_initialize();
 void sensor_finalize();
+void pid_gain_initialize();
+void pid_initialize();
 
 void playmode_print();
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle);
