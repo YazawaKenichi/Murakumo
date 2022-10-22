@@ -340,12 +340,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 1406 * rotary_value_row / 16);
 #endif
 
-		if (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14)
-				&& HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15)) {
+		if(read_switch(0) == 0b10)
+		{
 			enter = 1;
 		}
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14)
-				&& !HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15)) {
+		if(read_switch(0) == 0b01)
+		{
 			enter = 0;
 		}
 	}
@@ -382,8 +382,7 @@ int main(void)
 	motorenable = 0;
 	rotary_value = 0;
 	rv = 0;
-	LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE
-			/ (double) SUPER;
+	LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
 	commonspeed = 0;
 	calibrationsize = CALIBRATIONSIZE;
 
@@ -396,11 +395,6 @@ int main(void)
 	printf("Load Flash\r\n");
 	loadFlash(start_address, (uint8_t*) &flash_buffer, sizeof(FlashBuffer));
 #endif
-
-	for (unsigned char i = 0; CALIBRATIONSIZE > i; i++) {
-		analogmax[i] = 0;
-		analogmin[i] = 4096;
-	}
 
   /* USER CODE END Init */
 
@@ -428,11 +422,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	printf(ESC_DEF);
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
-
-	printf("Starting Analog Read\r\n");
-	if (HAL_ADC_Init(&hadc1) != HAL_OK) {
-		Error_Handler();
-	}
 
 	printf("Starting TIM11\r\n");
 	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// ROTARY SWITCH
@@ -1528,19 +1517,6 @@ uint8_t read_sidesens()
 	return _subsens;
 }
 
-void sensor_initialize() {
-	sensgettime = 0;
-	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analograw,
-	ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) {
-		Error_Handler();
-	}
-	HAL_Delay(1000);
-}
-
-void sensor_finalize() {
-	HAL_ADC_Stop_DMA(&hadc1);
-}
-
 void running_initialize()
 {
 #if USE_LED
@@ -1661,10 +1637,6 @@ void encoder_finalize() {
 	HAL_TIM_Encoder_Stop(&htim3, TIM_CHANNEL_ALL);
 }
 
-PUTCHAR_PROTOTYPE {
-	HAL_UART_Transmit(&huart6, (uint8_t*) &ch, 1, 0xFFFF);
-	return ch;
-}
 /* USER CODE END 4 */
 
 /**

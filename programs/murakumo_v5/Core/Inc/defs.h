@@ -1,18 +1,12 @@
 #ifndef __DEFS_H__
 #define __DEFS_H__
-#include <ICM20648.h>
+#include "ICM20648.h"
 #include "stdio.h"
-#include <string.h>
-#include <stdint.h>
+#include "string.h"
+#include "stdint.h"
 
 #include "velodef.h"
 //#include "banquet_art.hpp"
-
-#ifdef __GNUC__
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
 
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
@@ -32,9 +26,6 @@
 #define COURSE_STATE_SIZE 10000
 #endif
 
-#define ADC_CONVERTED_DATA_BUFFER_SIZE 16	// ADC Channel Count
-#define SENSGETCOUNT 9
-
 #define ENCODER_MIDDLE (2048/2)
 #define SAMPLING_TIME 1000	// ms
 #define SAMPLING_LENGTH 10000	// [udm]	// 10cm	// 100,000 [udm] = 1 [m]
@@ -42,7 +33,7 @@
 #ifndef __OBSOLETE_MATH
 #define PI 3.14159265358979f
 #define E 2.718281828459f
-#endif	// __MAIN_H
+#endif	// __OBSOLETE_MATH
 #define TIREDIAMETER 21000		// um
 #define PULSEPERROTATE 4096	// Pulse / Rotate
 #define PINION 25
@@ -77,15 +68,6 @@
 #endif
 
 #if ATTACH_LONGSENSOR	// use normal sensor and long sensor
-
-#define CALIBRATIONSIZE 16
-#else	// !ATTACH_LONGSENSOR
-#if USE_LONGSENSOR	// only use long sensor
-#define CALIBRATIONSIZE 4
-#else	// !USE_LONGSENSOR
-#define CALIBRATIONSIZE 12
-#endif	// !USE_LONGSENSOR
-#endif	// !ATTACH_LONGSENSOR
 
 #if USE_SLOWSTART
 #define THRESHOLD_STARTING_LENGTH 250000	// um
@@ -208,8 +190,6 @@ double leftmotor;
 double rightmotor;
 
 // switch
-uint8_t rotary_value;
-uint8_t rv;
 char enter;
 int timtim1, timtim2;
 
