@@ -1,13 +1,22 @@
 #include "analog.h"
+#include "flash.h"
 
 int sensgettime;
 
-uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
 uint16_t analograw[CALIBRATIONSIZE_MAX];
 uint16_t analog[CALIBRATIONSIZE];
 uint16_t analogmax[CALIBRATIONSIZE];
 uint16_t analogmin[CALIBRATIONSIZE];
 uint16_t analograte[CALIBRATIONSIZE];
+
+void analog_set(FlashBuffer *flashbuffer_)
+{
+	for(unsigned int i = 0; i < CALIBRATIONSIZE; i++)
+	{
+		flashbuffer_ -> analogmin[i] = analogmin[i];
+		flashbuffer_ -> analogmax[i] = analogmax[i];
+	}
+}
 
 void analog_initialize()
 {
@@ -40,6 +49,7 @@ void sensor_finalize()
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 {
+uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
     /* sort */
 	if(sensgettime >= SENSGETCOUNT)
     {

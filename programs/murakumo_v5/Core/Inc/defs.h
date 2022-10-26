@@ -8,23 +8,12 @@
 #include "velodef.h"
 //#include "banquet_art.hpp"
 
-#define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
-#define USE_LONGSENSOR 0	// only use long sensor
-
 #define COURSE_START_TIME_PLUSE 1
 
 #define SECOND 1
 
 #define D_VELOCITY_CONTROL_IN_WHILE 0
 #define VELOCITY_CONTROL_RELATIVE 1
-
-#define BACKUP_FLASH_SECTOR_NUM FLASH_SECTOR_11
-#define BACKUP_FLASH_SECTOR_SIZE (1024*16)
-#if D_COURSE_STATE_SAVING
-#define COURSE_STATE_SIZE 600/2	// over ( 60 * 10 * 1,000,000 / SAMPLING_LENGTH )
-#else
-#define COURSE_STATE_SIZE 10000
-#endif
 
 #define ENCODER_MIDDLE (2048/2)
 #define SAMPLING_TIME 1000	// ms
@@ -42,24 +31,6 @@
 #define RMIN 100	// mm
 #define THRESHOLDRADIUS 500	// mm
 // LENGTHPUEPULSE = M_PI * TIREDIAMETER / PULSEPERROTATE
-
-#if USE_VELOCITY_CONTROL
-#define VELOCITY_MAX 8340
-#if VELOCITY_CONTROL_RELATIVE
-//#define VKP 20	// 27.5f
-//#define VKI 0.2f	// 0.15f
-#else	// VELOCITY_CONTRO_RELATIVE
-// left
-#define VKPL 8.0f
-#define VKIL 0.025	// 0.025f
-// right
-#define VKPR 8.0f
-#define VKIR 0.025	// 0.025f
-#endif	// VELOCITY_CONTROL_RELATIVE
-#if D_VELOCITY_CONTROL_TIMER
-#define STOPTIME 1000 // 13188	// uint32_t [ms]
-#endif
-#endif	// USE_VELOCITY_CONTROL
 
 #define PWMMAX 1000 // 3360
 
@@ -81,49 +52,7 @@
 #define ESC_BLU	"\x1b[34m"
 #define ESC_DEF "\x1b[39m"
 
-typedef struct
-{
-	uint16_t course_state_time_max;
-	uint16_t analogmin[CALIBRATIONSIZE];
-	uint16_t analogmax[CALIBRATIONSIZE];
-#if !D_COURSE_SAVING
-	double radius[COURSE_STATE_SIZE];	// radius > 0 => turn right
-#endif
-#if D_COURSE_SAVING
-	double igz[COURSE_STATE_SIZE];
-	double len[COURSE_STATE_SIZE];
-#endif
-} FlashBuffer;
-
-typedef struct
-{
-	uint16_t velocity_target[16];
-	double kp[16];
-	double ki[16];
-	double kd[16];
-} VeloGain;
-
-typedef enum
-{
-    calibration,    // 0
-    search,	// 1
-    accel, // 2
-	max_enable,	// 3
-    pid_tuning,	// 4
-    zero_trace,	// 5
-	banquet,	// 6
-    flash_print = 15
-} PlayMode;
-
 // analog
-uint16_t analograw[ADC_CONVERTED_DATA_BUFFER_SIZE];	// Analog Data
-
-uint16_t analog[CALIBRATIONSIZE];
-uint16_t analogmax[CALIBRATIONSIZE];
-uint16_t analogmin[CALIBRATIONSIZE];
-uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
-
-uint16_t analograte[CALIBRATIONSIZE];
 uint16_t analogr, analogl;	// Sum Right Analog Sensor, Sum Left Analog Sensor
 int direction, beforedirection, sdirection;	// = analogr - analogl
 unsigned char sensgettime;
@@ -200,11 +129,6 @@ VeloGain low_velo, high_velo;
 uint8_t slow;
 #endif
 
-#if USE_FLASH
-FlashBuffer flash_buffer;
-uint16_t course_state_time;
-#endif
-
 Coordinate_float my_gyro;
 uint16_t before_igz;
 double theta;
@@ -246,11 +170,6 @@ double exponential(double);
 double sigmoid(double, double, double);
 void encoder_initialize();
 void encoder_finalize();
-#if USE_FLASH
-void eraseFlash(void);
-void writeFlash(uint32_t, uint8_t*, uint32_t);
-void loadFlash(uint32_t, uint8_t*, uint32_t);
-#endif
 void d_print();
 double low_pass_filter(double val, double pre_val, double gamma);
 

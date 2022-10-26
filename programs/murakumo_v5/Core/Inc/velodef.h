@@ -50,16 +50,6 @@
 
 #if USE_PID_ARRAY
 
-#define VELOCITY_TARGET_LOW 1000
-#define VELOCITY_TARGET_HIGH 1500
-#define VELOCITY_TARGET_MAX 2000
-
-// 6 0.06
-#define VKP 6
-#define VKI 0.06f
-// #define VKP 0.5f
-// #define VKI 0.005f
-
 // low speed
 #define KP_LOW 17.5f
 #define KP_LOW_TOLERANCE 0
