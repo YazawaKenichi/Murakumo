@@ -1,6 +1,8 @@
 #include "flash.h"
 
+#ifndef USE_WRITE_FLASH
 #define USE_WRITE_FLASH 0
+#endif
 
 FlashBuffer flashbuffer;
 uint16_t course_state_time;
@@ -24,7 +26,7 @@ void flash_write(uint32_t address, uint8_t *data, uint32_t size)
 {
 #if USE_WRITE_FLASH
 	HAL_FLASH_Unlock();
-	eraseFlash();
+	flash_erase();
 
 	for (uint32_t add = address; add < (address + size); add++)
 	{
@@ -43,6 +45,6 @@ void flash_load(uint32_t address, uint8_t *data, uint32_t size)
 
 void flash_init()
 {
-	loadFlash(start_address, (uint8_t*) &flashbuffer, sizeof(FlashBuffer));
+	flash_load(start_address, (uint8_t*) &flashbuffer, sizeof(FlashBuffer));
 }
 

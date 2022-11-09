@@ -1,7 +1,10 @@
 #ifndef __TRACER_H__
 #define __TRACER_H__
 
+#include "velodef.h"
 #include "pid.h"
+
+#define TRACE_STEP_SIZE 16
 
 /* s_error and d_error are zero*/
 void tracer_init(double samplingtime_);
@@ -12,9 +15,9 @@ void tracer_set_target(double target_);
 /* calclate pid solving */
 double tracer_solve(double reference_);
 /* read pid struct */
-PID tracer_read();
+// PID tracer_read();
 /* set pid struct */
-void tracer_set(PID);
+// void tracer_set(PID);
 
 /* usuage */
 /*

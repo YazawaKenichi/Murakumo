@@ -85,6 +85,7 @@ void start_flash();
 void end_flash();
 void end_encoder();
 void main_init();
+void course_state_function();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

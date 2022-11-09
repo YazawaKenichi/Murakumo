@@ -53,7 +53,7 @@ void sidesensor_function()
 {
 	unsigned char subsens;
 
-	subsens = read_sidesens();
+	subsens = sidesensor_read();
 
 	if(subsens != subsensbuf)
 	{

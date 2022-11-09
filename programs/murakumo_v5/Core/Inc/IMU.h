@@ -65,7 +65,7 @@ void IMU_set_offset();
 void IMU_read();
 void Inertial_Integral(Displacement*);
 void Coordinate_Init(Coordinate*);
-void Coordinate_Set(Coordinate, Coordinate);
+void Coordinate_Set(Coordinate *, Coordinate *);
 
 //extern volatile int16_t 	xa, ya, za;
 //extern volatile int16_t 	xg, yg, zg;

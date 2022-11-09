@@ -4,7 +4,7 @@
 #include "velodef.h"
 #include "pid.h"
 
-#define PID_STEP_SIZE 16
+#define VELOTRACE_STEP_SIZE 16
 
 /* velotrace_init(1), velotrace_set_gain(), velotrace_set_target() */
 void velotrace_start();

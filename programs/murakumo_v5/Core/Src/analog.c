@@ -68,6 +68,7 @@ uint16_t analog_sensor_get(unsigned char i)
 #if USE_SIGMOID_TRACE
 	analograte[i] = 1000 * sigmoid(analograte[i], (16 - i)/(double)800, 500);
 #endif
+	return analograte[i];
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)

@@ -11,6 +11,4 @@ typedef struct
     double kd;
 } PID;
 
-PID pid_product(PID, double);
-
 #endif

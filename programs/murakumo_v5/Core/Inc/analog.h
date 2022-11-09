@@ -17,7 +17,7 @@ void analog_calibration_init();
 void analog_init();
 void analog_sensor_init();
 void analog_sensor_finalize();
-void analog_sensor_get();
+uint16_t analog_sensor_get(unsigned char i);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef * AdcHandle);
 
 #endif

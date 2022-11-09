@@ -13,11 +13,11 @@ void tracer_init(double samplingtime_)
     before_error = 0;
 }
 
-void tracer_set_gain(double kp_, double ki_, double kd_)
+void tracer_set_gain(unsigned short int i)
 {
-    pid.kp = kp_;
-    pid.ki = ki_;
-    pid.kd = kd_;
+    pid.kp = TRACER_KP_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KP_TOLERANCE;
+    pid.ki = TRACER_KI_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KI_TOLERANCE;
+    pid.kd = TRACER_KD_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KD_TOLERANCE;
 }
 
 void tracer_set_target(double target_)
@@ -37,12 +37,16 @@ double tracer_solve(double reference_)
     return result;
 }
 
+/*
 PID tracer_read()
 {
     return pid;
 }
+*/
 
+/*
 void tracer_set(PID pid_)
 {
     pid = pid_;
 }
+*/

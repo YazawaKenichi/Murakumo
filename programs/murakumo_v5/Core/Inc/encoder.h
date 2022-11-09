@@ -6,6 +6,9 @@
 
 #define ENCODER_MIDDLE (2048/2)
 
+/* Timer 10 Frequent */
+#define TIM10_Hz 0.001  // [Hz]
+
 /* LENGTH PER PULSE */
 #define TIREDIAMETER 21000
 #define PULSEPERROTATE 4096
@@ -20,7 +23,7 @@ void encoder_init();
 void encoder_set_middle();
 void encoder_initialize();
 void encoder_finalize();
-double encoder_read_velocity();
+double encoder_read_velocity_lr();
 double encoder_read();
 
 extern double encoder_velocity;

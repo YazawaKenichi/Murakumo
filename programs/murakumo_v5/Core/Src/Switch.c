@@ -14,7 +14,7 @@ void switch_reset_enter()
 
 void switch_init()
 {
-    switch_reset_einter();
+    switch_reset_enter();
 }
 
 uint8_t switch_read_enter()
@@ -24,12 +24,12 @@ uint8_t switch_read_enter()
 
 uint8_t switch1_read()
 {
-    return HAL_GPIO_ReadPin(SW1_Pin, SW1_GPIO_Port) ? 0 : 1;
+    return HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) ? 0 : 1;
 }
 
 uint8_t switch2_read()
 {
-    return HAL_GPIO_ReadPin(SW2_Pin, SW2_GPIO_Port) ? 0 : 1;
+    return HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) ? 0 : 1;
 }
 
 uint8_t switch_read()
@@ -46,11 +46,11 @@ void switch_enter()
 {
     if(switch_read() == 0b01)
     {
-        switch_reset();
+        switch_reset_enter();
     }
     else if(switch_read() == 0b10)
     {
-        switch_set();
+        switch_set_enter();
     }
 }
 

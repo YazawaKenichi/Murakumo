@@ -1139,7 +1139,7 @@ void end_analog()
 
 void start_encoder()
 {
-  encoder_initialize();
+  encoder_start();
 }
 
 void start_flash()
@@ -1164,7 +1164,7 @@ void main_init()
   velotrace_init(1);
   tracer_init(1);
   analog_init();
-	pid_gain_initialize();
+  pid_gain_initialize();
   imu_initialize();
 }
 

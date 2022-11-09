@@ -43,6 +43,7 @@
 // one side only
 #define LENGTH_SAMPLING 1
 #define LEFTMARKER_SAMPLING 0
+#define SAMPLING_LENGTH 10000
 
 #define NOISY 0
 #define GOD 0
@@ -60,7 +61,15 @@
 #define VELOCITY_KI_TOLERANCE 0
 #define VELOCITY_KD_TOLERANCE 0
 
+#define TRACER_KP_MAX 6
+#define TRACER_KI_MAX 0.06f
+#define TRACER_KD_MAX 0
 
+#define TRACER_KP_TOLERANCE 0
+#define TRACER_KI_TOLERANCE 0
+#define TRACER_KD_TOLERANCE 0
+
+/*
 // low speed
 #define KP_LOW 17.5f
 #define KP_LOW_TOLERANCE 0
@@ -76,6 +85,7 @@
 #define KD_HIGH_TOLERANCE 10
 #define KI_HIGH 0
 #define KI_HIGH_TOLERANCE 0
+*/
 
 #else
 

@@ -33,7 +33,7 @@ Core/Src/stm32f4xx_hal_msp.o: ../Core/Src/stm32f4xx_hal_msp.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/defs.h ../Core/Inc/analog.h ../Core/Inc/main.h \
- ../Core/Inc/encoder.h ../Core/Inc/flash.h ../Core/Inc/ICM20648.h \
+ ../Core/Inc/encoder.h ../Core/Inc/flash.h ../Core/Inc/IMU.h \
  ../Core/Inc/LED.h ../Core/Inc/motor.h ../Core/Inc/pid.h \
  ../Core/Inc/print.h ../Core/Inc/Rotary.h ../Core/Inc/sidesensor.h \
  ../Core/Inc/Switch.h ../Core/Inc/tim6.h ../Core/Inc/velotrace.h \
@@ -118,7 +118,7 @@ Core/Src/stm32f4xx_hal_msp.o: ../Core/Src/stm32f4xx_hal_msp.c \
 
 ../Core/Inc/flash.h:
 
-../Core/Inc/ICM20648.h:
+../Core/Inc/IMU.h:
 
 ../Core/Inc/LED.h:
 

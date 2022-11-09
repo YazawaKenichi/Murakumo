@@ -25,9 +25,9 @@ void velotrace_init(double samplingtime_)
 
 void velotrace_set_gain(unsigned short int i)
 {
-    pid.kp = VELOCITY_KP_MAX - (PID_STEP_SIZE - i + 1) * (double) VELOCITY_KP_TOLERANCE;
-    pid.ki = VELOCITY_KI_MAX - (PID_STEP_SIZE - i + 1) * (double) VELOCITY_KI_TOLERANCE;
-    pid.kd = VELOCITY_KD_MAX - (PID_STEP_SIZE - i + 1) * (double) VELOCITY_KD_TOLERANCE;
+    pid.kp = VELOCITY_KP_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KP_TOLERANCE;
+    pid.ki = VELOCITY_KI_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KI_TOLERANCE;
+    pid.kd = VELOCITY_KD_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KD_TOLERANCE;
 }
 
 void velotrace_set_target(unsigned short int i)

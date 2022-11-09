@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-uint8_t sidesensor_init();
+void sidesensor_init();
 uint8_t sidesensor_read();
 void sidesensor_right();
 void sidesensor_left();

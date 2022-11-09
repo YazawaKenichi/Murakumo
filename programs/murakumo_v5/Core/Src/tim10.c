@@ -1,11 +1,17 @@
 #include "tim10.h"
 
-#include "encoder.h"
-#include "sidesensor.h"
-#include "LED.h"
+/* lengths is updated only in tim10 file. */
+double length, length_left, length_right;
+double velocity_left, velocity_right, velocity;
+
+void tim10_length_init()
+{
+  length = 0;
+}
 
 void tim10_init()
 {
+  tim10_length_init();
 	HAL_TIM_Base_Stop_IT(&htim10);
 }
 
@@ -14,16 +20,31 @@ void tim10_fin()
 	HAL_TIM_Base_Stop_IT(&htim10);
 }
 
+double tim10_read_length()
+{
+  return length;
+}
+
 void tim10_main()
 {
-    double velocity;
-    velocity = encoder_read_velocity();
+  /* set encoder middle and update velocities */
+  encoder_set();
 
-    if(mm_length >= SAMPLING_LENGTH)
-    {
-      course_state_function();
-    }
+  /* update velocity */
+  velocity_left = encoder_read_left() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
+  velocity_right = encoder_read_right() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
+  velocity = encoder_read() * (double) LENGTHPERPUSE * (double) TIM10_Hz;
 
-    sidesens_function();
-    led_brink();
+  /* update lengths */
+  length_left += (double) encoder_read_left();
+  length_right += (double) encoder_read_right();
+  length += (double) encoder_read();
+
+  if(length >= SAMPLING_LENGTH)
+  {
+    course_state_function();
+  }
+
+  sidesens_function();
+  led_brink();
 }

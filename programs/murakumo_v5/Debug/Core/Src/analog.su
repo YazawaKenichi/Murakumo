@@ -6,4 +6,4 @@ analog.c:41:6:analog_init	8	static
 analog.c:50:6:analog_sensor_init	8	static
 analog.c:60:6:analog_sensor_finalize	8	static
 analog.c:65:10:analog_sensor_get	16	static
-analog.c:73:6:HAL_ADC_ConvCpltCallback	312	static
+analog.c:74:6:HAL_ADC_ConvCpltCallback	312	static
