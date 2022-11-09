@@ -1,0 +1,6 @@
+tracer.c:9:6:tracer_init	16	static
+tracer.c:16:6:tracer_set_gain	32	static
+tracer.c:23:6:tracer_set_target	16	static
+tracer.c:28:8:tracer_solve	56	static
+tracer.c:40:5:tracer_read	88	static
+tracer.c:45:6:tracer_set	48	static

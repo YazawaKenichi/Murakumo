@@ -1,7 +1,8 @@
 #include "analog.h"
 #include "flash.h"
 
-int sensgettime;
+unsigned int sensgettime;
+uint8_t calibrationsize;
 
 uint16_t analograw[CALIBRATIONSIZE_MAX];
 uint16_t analog[CALIBRATIONSIZE];
@@ -18,38 +19,60 @@ void analog_set(FlashBuffer *flashbuffer_)
 	}
 }
 
-void analog_initialize()
+void analog_set_calibrationsize(uint8_t calibrationsize_)
+{
+	calibrationsize = calibrationsize_;
+}
+
+uint8_t analog_read_calibrationsize()
+{
+	return calibrationsize;
+}
+
+void analog_calibration_init()
 {
     for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
     {
         analogmax[i] = 0;
         analogmin[i] = 4096;
     }
+}
 
+void analog_init()
+{
+	analog_set_calibrationsize(CALIBRATIONSIZE);
     if(HAL_ADC_Init(&hadc1) != HAL_OK)
     {
         Error_Handler();
     }
 }
 
-void sensor_initialize()
+void analog_sensor_init()
 {
     sensgettime = 0;
-    if(HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analograw, ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK)
+    if(HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analograw, CALIBRATIONSIZE_MAX) != HAL_OK)
     {
         Error_Handler();
     }
     HAL_Delay(1000);
 }
 
-void sensor_finalize()
+void analog_sensor_finalize()
 {
 	HAL_ADC_Stop_DMA(&hadc1);
 }
 
+uint16_t analog_sensor_get(unsigned char i)
+{
+	analograte[i] = ((analog[i] - analogmin[i]) * 1000) / (analogmax[i] - analogmin[i]);
+#if USE_SIGMOID_TRACE
+	analograte[i] = 1000 * sigmoid(analograte[i], (16 - i)/(double)800, 500);
+#endif
+}
+
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 {
-uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
+	uint16_t analogbuffers[SENSGETCOUNT][CALIBRATIONSIZE];
     /* sort */
 	if(sensgettime >= SENSGETCOUNT)
     {

@@ -2,12 +2,12 @@
 
 void write_led1(uint8_t value_)
 {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, value_)
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, value_);
 }
 
 void write_led2(uint8_t value_)
 {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, value_)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, value_);
 }
 
 void write_rgb(uint8_t rgb_)

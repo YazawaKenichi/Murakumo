@@ -50,6 +50,17 @@
 
 #if USE_PID_ARRAY
 
+#define VELOCITY_TARGET_MAX 2000    // m / s
+#define VELOCITY_KP_MAX 6
+#define VELOCITY_KI_MAX 0.06f
+#define VELOCITY_KD_MAX 0
+
+#define VELOCITY_TARGET_TOLERANCE ((2000 - 1000) / 16)
+#define VELOCITY_KP_TOLERANCE 0
+#define VELOCITY_KI_TOLERANCE 0
+#define VELOCITY_KD_TOLERANCE 0
+
+
 // low speed
 #define KP_LOW 17.5f
 #define KP_LOW_TOLERANCE 0

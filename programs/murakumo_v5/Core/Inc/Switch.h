@@ -1,6 +1,8 @@
 #ifndef __SWITCH_H__
 #define __SWITCH_H__
 
+#include "main.h"
+
 typedef struct
 {
     uint8_t value;
@@ -9,8 +11,13 @@ typedef struct
     uint8_t release;
 } Switch;
 
-uint8_t read_sw1();
-uint8_t read_sw2();
-uint8_t read_switch();
+void switch_set_enter();
+void switch_reset_enter();
+void switch_init();
+uint8_t switch_read_enter();
+uint8_t switch1_read();
+uint8_t switch2_read();
+uint8_t switch_read();
+void switch_enter();
 
 #endif

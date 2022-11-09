@@ -2,6 +2,7 @@
 #define __FLASH_H__
 
 #include "analog.h"
+#include "main.h"
 
 #define BACKUP_FLASH_SECTORNUM FLASH_SECTOR_11
 #define BACKUP_FLASH_SECTOR_SIZE (1024*16)
@@ -10,6 +11,8 @@
 #else
 #define COURSE_STATE_SIZE 10000
 #endif
+
+#define CALIBRATIONSIZE 16
 
 typedef struct
 {
@@ -21,9 +24,10 @@ typedef struct
     double len[COURSE_STATE_SIZE];
 } FlashBuffer;
 
-void eraseFlash(void);
-void writeFlash(uint32_t, uint8_t*, uint32_t);
-void loadFlash(uint32_t, uint8_t*, uint32_t);
+void flash_erase(void);
+void flash_write(uint32_t, uint8_t*, uint32_t);
+void flash_load(uint32_t, uint8_t*, uint32_t);
+void flash_init();
 
 extern FlashBuffer flashbuffer;
 

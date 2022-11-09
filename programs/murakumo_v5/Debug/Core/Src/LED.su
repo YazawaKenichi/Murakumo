@@ -1,0 +1,4 @@
+LED.c:3:6:write_led1	16	static
+LED.c:8:6:write_led2	16	static
+LED.c:13:6:write_rgb	16	static
+LED.c:20:6:write_led	16	static

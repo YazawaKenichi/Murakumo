@@ -1,40 +1,48 @@
 #include "tracer.h"
 
 double s_error;
-double kp;
-double ki;
-double kd;
-double target;
 double before_error;
-unsigned double samplingtime;
+double samplingtime;
 
-void pid_init(double samplintgime_);
+PID pid;
+
+void tracer_init(double samplingtime_)
 {
     samplingtime = samplingtime_;
     s_error = 0;
     before_error = 0;
 }
 
-void pid_set_gain(double kp_, double ki_, double kd_)
+void tracer_set_gain(double kp_, double ki_, double kd_)
 {
-    kp = kp_;
-    ki = ki_;
-    kd = kd_;
+    pid.kp = kp_;
+    pid.ki = ki_;
+    pid.kd = kd_;
 }
 
-void pid_set_target(double target_)
+void tracer_set_target(double target_)
 {
-    target = target_;
+    pid.target = target_;
 }
 
-double pid_return(double reference_)
+double tracer_solve(double reference_)
 {
-    double error = target - reference_;
+    double error = reference_ - pid.target;
     double d_error = error - before_error;
     s_error += error;
-    double result = kp * error + ki * s_error * samplingtime + kd * d_error / samplingtime;
+    double result = pid.kp * error + pid.ki * s_error * samplingtime + pid.kd * d_error / samplingtime;
 
     error = before_error;
 
     return result;
+}
+
+PID tracer_read()
+{
+    return pid;
+}
+
+void tracer_set(PID pid_)
+{
+    pid = pid_;
 }

@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "defs.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -56,7 +56,35 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
 
+extern I2C_HandleTypeDef hi2c1;
+
+extern SPI_HandleTypeDef hspi2;
+
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim10;
+extern TIM_HandleTypeDef htim11;
+extern TIM_HandleTypeDef htim14;
+
+extern UART_HandleTypeDef huart6;
+
+void running_initialize();
+void running_finalize();
+void start_motor();
+void end_motor();
+void imu_initialize();
+void start_analog();
+void end_analog();
+void start_encoder();
+void start_flash();
+void end_flash();
+void end_encoder();
+void main_init();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

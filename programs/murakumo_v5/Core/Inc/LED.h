@@ -1,6 +1,8 @@
 #ifndef __LED_H__
 #define __LED_H__
 
+#include "main.h"
+
 /* set led1 value */
 void write_led1(uint8_t value_);
 /* set led2 value */

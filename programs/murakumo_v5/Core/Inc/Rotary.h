@@ -1,13 +1,11 @@
 #ifndef __ROTARY_H__
 #define __ROTARY_H__
 
-typedef struct
-{
-    uint8_t value;
-    uint8_t offset;
-} Rotary;
+#include "main.h"
 
-typedef enum
+#define ROTARY_COUNT 16
+
+typedef enum PLAYMODE
 {
     calibration,
     search,
@@ -19,7 +17,9 @@ typedef enum
     flash_print = 15
 } PlayMode;
 
-uint8_t rotary_init(Rotary);
-uint8_t rotary_value(uint8_t);
+void rotary_init();
+void rotary_set_playmode();
+PlayMode rotary_read_playmode();
+uint8_t rotary_read();
 
 #endif

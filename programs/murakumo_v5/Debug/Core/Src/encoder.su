@@ -1,0 +1,6 @@
+encoder.c:6:6:encoder_init	8	static
+encoder.c:11:6:encoder_set_middle	4	static
+encoder.c:17:6:encoder_initialize	8	static
+encoder.c:26:6:encoder_finalize	8	static
+encoder.c:32:8:encoder_read_velocity	40	static
+encoder.c:50:8:encoder_read	8	static

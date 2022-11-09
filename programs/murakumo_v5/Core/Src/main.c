@@ -24,8 +24,7 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <defs.h>
-#include <main.h>
+#include "main.h"
 
 /* USER CODE END Includes */
 
@@ -60,10 +59,6 @@ TIM_HandleTypeDef htim14;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-#if USE_FLASH
-const uint32_t start_address = 0x080E0000;
-const uint32_t end_address = 0x080FFFFF;
-#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -83,271 +78,21 @@ static void MX_I2C1_Init(void);
 static void MX_TIM14_Init(void);
 /* USER CODE BEGIN PFP */
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim->Instance == TIM6) {	// 1 ms
-		if (motorenable) {
-#if USE_ANALOG
-			analogl = 0;
-			analogr = 0;
-			for (unsigned char i = 0; i < calibrationsize; i++) {
-				analograte[i] = ((analog[i] - analogmin[i]) * 1000)
-						/ (analogmax[i] - analogmin[i]);
-#if USE_SIGMOID_TRACE
-				analograte[i] = 1000 * sigmoid(analograte[i], (16 - i)/(double)800, 500);
-#endif
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == TIM6)
+  {
+    tim6_main();
+	}
 
-				if (i % 2 == 0) {
-					analogl += analograte[i];
-				} else {
-					analogr += analograte[i];
-				}
-			}
-
-#if USE_DANGERSTOP
-			if (analogl + analogr >= 980 * calibrationsize) {
-				velocity_target = 0;
-				motorenable = 0;
-				enter = 0;
-			}
-#endif
-
-			// ( direction > 0 ) is ( analogl > analogr ) i.e. left is black, right is white.
-			// When ( direction > 0 ) , must turn right.
-			direction = (analogl - analogr);	// difference
-			sdirection = sdirection + direction;	// Integral
-
-			if (analogl + analogr <= 700 * calibrationsize) {
-				direction = 0;
-			}
-#if !VELOCITY_CONTROL_RELATIVE
-			// left
-			leftmotor = nextspeed_l + (kp * direction + kd * (direction - beforedirection)) / calibrationsize / 2;
-			rightmotor = nextspeed_r - (kp * direction + kd * (direction - beforedirection)) / calibrationsize / 2;
-#else	// VELOCITY_CONTROL_RELATIVE
-			if(playmode != banquet)
-			{
-				leftmotor = commonspeed
-						+ (kp * direction + kd * (direction - beforedirection)
-								+ ki * sdirection) / calibrationsize / 2;
-				rightmotor = commonspeed
-						- (kp * direction + kd * (direction - beforedirection)
-								+ ki * sdirection) / calibrationsize / 2;
-			}
-			else
-			{
-			}
-#endif	// VELOCITY_CONTROL_RELAT
-#endif	// USE_ANALOG
-#if !USE_ANALOG && USE_VELOCITY_CONTROL
-#if !VELOCITY_CONTROL_RELATIVE
-			leftmotor = nextspeed_l;
-			rightmotor = nextspeed_r;
-#else
-			leftmotor = commonspeed;
-			rightmotor = commonspeed;
-#endif
-#endif	// !USE_ANALOG
-#if USE_ANALOG
-			beforedirection = direction;
-#endif	// USE_ANALOG
-#if STATICMOTORPWM	// !STATICMOTORPWM
-			leftmotor = COMMONSPEED1;
-			rightmotor = COMMONSPEED1;
-#endif	// !STATICMOTORPWM
-		} else	// if(motorenable)
-		{
-			leftmotor = 0;
-			rightmotor = 0;
-		}
-#if USE_MOTOR
-		if (leftmotor < 0) {
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-			leftmotor = leftmotor * -1;
-		} else {
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
-		}
-
-		if (rightmotor < 0) {
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-			rightmotor = rightmotor * -1;
-		} else {
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-		}
-
-		leftmotor = leftmotor > PWMMAX ? PWMMAX : leftmotor;
-		rightmotor = rightmotor > PWMMAX ? PWMMAX : rightmotor;
-#endif
-
-#if !D_PWM
-#if USE_MOTOR
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, leftmotor);
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, rightmotor);
-#endif
-#else
-#if !STATICPWM
-		if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))	// SW1
-		{
-			pwmstepoutput = PWM_STEP_OMEGA * pwmsteptime / 1000;
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET); HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET); __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, pwmstepoutput); __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, pwmstepoutput); pwmstepud = (PWM_STEP_AMPLITUDE <= pwmstepoutput) ? 255 : (0 >= pwmstepoutput) ? 1 : pwmstepud; pwmsteptime = (pwmstepud == 255) ? pwmsteptime - 1 : pwmsteptime + 1;
-		}
-#else	// !STATICPWM
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, COMMONSPEED1);
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, COMMONSPEED1);
-#endif	// STATICPWM
-#endif	// D_PWM
-	}	// TIM6
-
-	if (htim->Instance == TIM10)	// TIM10 // 1ms
+	if(htim->Instance == TIM10)	// TIM10 // 1ms
 	{
-	#if USE_ENCODER
-		// 1ms
-		encoder_l = TIM1->CNT - ENCODER_MIDDLE;
-		encoder_r = -(TIM3->CNT - ENCODER_MIDDLE);
-
-		TIM1->CNT = ENCODER_MIDDLE;
-		TIM3->CNT = ENCODER_MIDDLE;
-
-		encoder = (double) (encoder_l + encoder_r) / 2;
-		velocity = (double) encoder * LENGTHPERPULSE;
-	#endif	// USE_ENCODER
-	#if USE_SLOWSTART
-		if(slow)
-		{
-			starting_length += velocity;
-			if(rightmarkercount == 0)
-			{
-				if(starting_length < THRESHOLD_STARTING_LENGTH)
-				{
-					velocity_target = 100;
-					kp = 10;
-					kd = 15;
-					ki = 0;
-				}
-				else
-				{
-					velocity_target = base_velocity_target;
-					kp = base_p;
-					ki = base_i;
-					kd = base_d;
-					slow = 0;
-					starting_length = 0;
-				}
-			}
-			if(rightmarkercount >= 2)
-			{
-				if(starting_length < THRESHOLD_STARTING_LENGTH)
-				{
-					double _rate;
-					_rate = (THRESHOLD_STARTING_LENGTH - starting_length) / THRESHOLD_STARTING_LENGTH;
-					velocity_target = base_velocity_target * _rate;
-					kp = base_p * _rate;
-					ki = base_i * _rate;
-					kd = base_d * _rate;
-				}
-				else
-				{
-					motorenable = 0;
-				}
-			}
-		}
-		else
-		{
-	        if(playmode == accel)
-	        {
-#if LENGTH_SAMPLING
-	        	course_state_function();
-#endif
-	        }
-		}
-	#endif	// USE_MOTOR && USE_SLOWSTART
-#if D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
-		if(rightmarkercount >= 1)
-		{
-			if(stoptime < STOPTIME)
-			{
-				stoptime += 1;	// 1 ms / roop
-			}
-			else
-			{
-				velocity_target = 0;
-			}
-		}
-#endif // D_VELOCITY_CONTROL_TIMER && USE_VELOCITY_CONTROL
-
-#if USE_VELOCITY_CONTROL
-		if (playmode != zero_trace && playmode != banquet)
-		{
-			velocity_error = velocity_target - velocity;
-			s_velocity_error = s_velocity_error + velocity_error;
-
-			velocity_next = (double) VKP * velocity_error
-					+ (double) VKI * s_velocity_error;
-			commonspeed = (double) velocity_next * (double) PWMMAX
-					/ (double) VELOCITY_MAX;
-		} else {
-			commonspeed = 0;
-		}
-	#endif	// USE_VELOCITY_CONTROL
-	#if USE_IMU
-		if(playmode == search && !slow)
-		{
-			if (rightmarkercount == 1)	// SAMPLING_LENGTH /
-			{
-				IMU_read();
-				theta += (double) inertial.gyro.z / (double) GYRO_RANGE;
-//				my_gyro.z += low_pass_filter((double) inertial.gyro.z / (double) GYRO_RANGE, before_igz, 0);
-//				my_gyro.z += (double) inertial.gyro.z / (double) GYRO_RANGE;
-//				before_igz = inertial.gyro.z;
-				mm_length += (double) velocity / (double) 1000;
-#if USE_LR_DIFFERENCE
-		left_length += (double) encoder_l * LENGTHPERPULSE;
-		right_length += (double) encoder_r * LENGTHPERPULSE;
-#endif
-				// radius = my_gyro.z / mm_length
-#if LENGTH_SAMPLING
-				if(mm_length >= SAMPLING_LENGTH)
-				{
-					course_state_function();
-				}
-#endif
-			}
-			else
-			{
-#if !D_COURSE_SAVING
-				flash_buffer.radius[course_state_time] = 0;
-#endif
-			}
-		}	// playmode == search && !slow
-	#endif	// USE_IMU
-
-		sidesens_function();
-		led_brink();
-	}	// TIM10
-
+    tim10_main();
+	}
 
 	if (htim->Instance == TIM11)	// TIM11 // 1ms
 	{
-		uint8_t rotary_value_row;
-		rotary_value_row = (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12)) ? 1 : 0;
-		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)) ? 2 : 0;
-		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12)) ? 4 : 0;
-		rotary_value_row += (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11)) ? 8 : 0;
-		rotary_value = rotary_value_row;
-
-#if USE_BUZZER
-		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 1406 * rotary_value_row / 16);
-#endif
-
-		if(read_switch(0) == 0b10)
-		{
-			enter = 1;
-		}
-		if(read_switch(0) == 0b01)
-		{
-			enter = 0;
-		}
+    tim11_main();
 	}
 }
 
@@ -374,27 +119,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#if USE_LED
-	set_led(0b11, 0b00);
-#endif
-
-	enter = 0;
-	motorenable = 0;
-	rotary_value = 0;
-	rv = 0;
-	LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
-	commonspeed = 0;
-	calibrationsize = CALIBRATIONSIZE;
-
-#if D_PWM
-	pwmsteptime = 0;
-	pwmstepud = 1;
-#endif
-
-#if USE_FLASH
-	printf("Load Flash\r\n");
-	loadFlash(start_address, (uint8_t*) &flash_buffer, sizeof(FlashBuffer));
-#endif
 
   /* USER CODE END Init */
 
@@ -421,52 +145,11 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 	printf(ESC_DEF);
+
 	printf("\r\n\r\n\r\nStarting Program...\r\n\r\n");
 
-	printf("Starting TIM11\r\n");
-	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// ROTARY SWITCH
+  main_init();
 
-	playmode = (PlayMode) rotary_value;
-
-	playmode_print();
-
-#if USE_BUZZER
-printf("Starting TIM2 (Buzzer)\r\n");
-if(HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK)
-{
-	Error_Handler();
-}
-#endif
-
-#if USE_IMU
-	printf("Starting SPI2 (IMU)\r\n");
-	uint8_t wai, ret;
-	ret = IMU_init(&wai);
-	printf("who_am_i = %d\r\n", wai);
-	if (ret == 1) {
-		printf("SPI INIT COLLECT!\r\n");
-	} else {
-		printf("SPI INIT FAILURE x_x \r\n");
-	}
-#endif
-
-#if D_ENCODER
-	printf("LENGTHPERPULSE = %f\r\n", LENGTHPERPULSE);
-#endif
-
-#if D_MATH
-printf("M_PI = %f, exp(1) = %f\r\n", M_PI, exp(1));
-printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
-#endif
-#if USE_LED
-	set_led(0b11, 0b11);
-	led_rgb(1, 1, 1);	// White
-#endif
-#if D_LED
-	HAL_TIM_Base_Start_IT(&htim6);	// PID
-#endif
-
-	pid_gain_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -477,115 +160,30 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 #if D_WHILE_PRINT
 		printf("///// WHILE /////\n\r");
 #endif
-#if D_PLAYMODE
-		playmode_print();
-#endif
 
-#if D_SWITCH
-		printf("enter = %d\r\n", enter);
-#endif
-
-#if D_ROTARY
-		printf("rotary_value = %x\r\n", rotary_value);
-#endif
-
-		if(enter)
+		if(switch_read_enter())
 		{
-			rv = rotary_value;
-			switch (rv) {
+			switch(rotary_read())
+      {
 			case 0x00:
-				if(playmode == calibration)
+				if(rotary_read_playmode() == calibration)
 				{
-	#if USE_LED
-					led_rgb(1, 1, 0);	// Yellow
-	#endif
-					for (unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-					{
-						analogmax[i] = 0;
-						analogmin[i] = 4096;
-					}
+          analog_calibration_init();
+					start_analog();
 
-					sensor_initialize();
-
-					while (enter)
+					while(switch_read_enter())
 					{
-	#if D_ANALOG
-					printf(ESC_DEF);
-					printf("////////// ANALOG //////////\r\n");
-	#if CALIBRATIONSIZE == 16
-					printf("\x1b[23C");	// Cursor move right *24
-					printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15],
-							analog[13]);
-	#endif
-	#if CALIBRATIONSIZE >= 12
-					printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
-							analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
-							analog[11], analog[9], analog[7], analog[5], analog[3],
-							analog[1]);
-	#endif
-	#endif
 						HAL_Delay(100);
 					}
 
-					sensor_finalize();
-
-	#if D_ANALOG
-				printf(ESC_YEL);
-				for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
-					printf("[%2d] = ", j);
-					printf("%4d,", analogmax[j]);
+					end_analog();
 				}
-				printf("\r\n");
-				printf(ESC_CYA);
-				for (unsigned char j = 0; CALIBRATIONSIZE > j; j++) {
-					printf("[%2d] = ", j);
-					printf("%4d,", analogmin[j]);
-				}
-				printf("\r\n");
-				printf(ESC_DEF);
-				for (unsigned char i = 0; 5 * CALIBRATIONSIZE > i; i++) {
-					printf("v");
-				}
-				printf("\r\n");
-				printf(ESC_YEL);
-				for (unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++) {
-					printf("[%2d] = ", i * 2);
-					printf("%4d, ", analogmax[i * 2]);
-				}
-				for (unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--) {
-					printf("[%2d] = ", i * 2 - 1);
-					printf("%4d,", analogmax[i * 2 - 1]);
-				}
-				printf("\r\n");
-				printf(ESC_CYA);
-				for (unsigned char i = 0; i < CALIBRATIONSIZE / 2; i++) {
-					printf("[%2d] = ", i * 2);
-					printf("%4d, ", analogmin[i * 2]);
-				}
-				for (unsigned char i = CALIBRATIONSIZE / 2; i > 0; i--) {
-					printf("[%2d] = ", i * 2 - 1);
-					printf("%4d,", analogmin[i * 2 - 1]);
-				}
-				printf("\r\n");
-				printf(ESC_DEF);
-	#endif
-
-	#if USE_FLASH
-					for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
-					{
-						flash_buffer.analogmax[i] = analogmax[i];
-						flash_buffer.analogmin[i] = analogmin[i];
-					}
-
-					writeFlash(start_address, (uint8_t*) &flash_buffer,
-							sizeof(FlashBuffer));
-	#endif
-				}
-				else    // if(!(playmode == calibration))
+				else    // if(!(rotary_read_playmode()== calibration))
 				{
 					running_initialize();
 
-					while (enter) {
+					while(switch_read_enter())
+          {
 						d_print();
 						HAL_Delay(250);
 					}
@@ -596,7 +194,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x01:	// 1
 				running_initialize();
 
-				while (enter) {
+				while (switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(500);
 				}
@@ -606,7 +205,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x02:	// 2
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -616,7 +216,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x03:	// 3
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -626,7 +227,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x04:	// 4
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -636,7 +238,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x05:	// 5
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -646,7 +249,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x06:	// 6
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -656,7 +260,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x07:	// 7
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -666,7 +271,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x08:	// 8
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -676,7 +282,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x09:	// 9
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -686,7 +293,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x0A:	// A
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -696,7 +304,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x0B:	// B
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -706,7 +315,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x0C:	// C
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -716,7 +326,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x0D:	// D
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -726,7 +337,8 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 			case 0x0E:	// E
 				running_initialize();
 
-				while (enter) {
+				while(switch_read_enter())
+        {
 					d_print();
 					HAL_Delay(250);
 				}
@@ -734,66 +346,26 @@ printf("10 ^ (-1 / 10) = %f\r\n", pow(10, -1/(double)10));
 				running_finalize();
 				break;
 			case 0x0F:
-				if(playmode == flash_print)
-                {
-#if USE_FLASH
-					// load flash output
-					loadFlash(start_address, (uint8_t*) &flash_buffer,
-							sizeof(FlashBuffer));
-					printf("////////// Radius //////////\r\n");
-					printf("course_state_time_max = %5d\r\n", flash_buffer.course_state_time_max);
-					for (int i = 0; i < COURSE_STATE_SIZE; i++)
-					{
-						if(i >= flash_buffer.course_state_time_max + 1)
-						{
-							printf(ESC_RED);
-						}
-#if !D_COURSE_SAVING
-						printf("%3d, %6.3lf\r\n", i, flash_buffer.radius[i]);
-#else
-						printf("%6.3lf, %6.3lf\r\n", flash_buffer.igz[i], flash_buffer.len[i]);
-#endif
-						printf(ESC_DEF);
-					}
-
-					while(enter)
-					{
-						HAL_Delay(250);
-					}
-#endif
+				if(rotary_read_playmode()== flash_print)
+        {
 				}
-                else    // if(!(playmode == flash_print))
-                {
+        else    // if(!(rotary_read_playmode()== flash_print))
+        {
 					running_initialize();
 
-					while (enter) {
+					while(switch_read_enter())
+          {
 						d_print();
 						HAL_Delay(250);
 					}
 
 					running_finalize();
 				}
-				/*
-				 #if USE_FLASH
-				 // FLASH PRINT
-				 FlashBuffer readrom;
-				 loadFlash(start_address, (uint8_t*) &readrom,
-				 sizeof(FlashBuffer));
-				 #if USE_ENCODER
-				 printf("////////// Encorder //////////\r\n");
-				 for (int i = 0; i < COURSE_STATE_SIZE; i++) {
-				 printf("%2d, %3d, %4d, %4d\r\n", i, readrom.time[i], readrom.svl[i],
-				 readrom.svr[i]);
-				 }
-				 #endif
-				 #endif
-				 */
-
 				break;
 			default:
 				break;
 			} // switch(rotary_value)
-		}	// if(enter)
+		}	// if(switch_read_enter())
 	}	// while(1)
 #endif	// !D_LED
     /* USER CODE END WHILE */
@@ -1502,139 +1074,98 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DRV1_PH_GPIO_Port, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
-
-uint8_t read_sidesens()
-{
-	uint8_t _subsens;
-
-	_subsens = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) ? 1 : 0; // right
-	_subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 2 : 0; // left
-
-	return _subsens;
-}
-
 void running_initialize()
 {
-#if USE_LED
-	set_led(0b11, 0b00);
-#endif
-#if USE_FLASH
-	for (unsigned char i = 0; CALIBRATIONSIZE > i; i++) {
-		analogmax[i] = flash_buffer.analogmax[i];
-		analogmin[i] = flash_buffer.analogmin[i];
-	}
-	if(playmode == search)
-	{
-		for(int i = 0; i <= COURSE_STATE_SIZE; i++)
-		{
-			// flash_buffer.igz[i] = 0;
-			// flash_buffer.len[i] = 0;
-		}
-	}
-#endif
+  analog_set(flashbuffer);
 	HAL_Delay(3000);
-	pid_initialize();
-	sensor_initialize();
-#if D_ENCODER
-	s_encoder_l = 0;
-	s_encoder_r = 0;
-	left_length = 0;
-	right_length = 0;
-#endif
-#if USE_VELOCITY_CONTROL && D_VELOCITY_CONTROL_TIMER
-	stoptime = 0;
-#endif
-	sampling_time = 0;
-	m_velocity = 0;
-	mm_length = 0;
-	my_gyro.z = 0;
-	before_igz = 0;
-	timtim1 = 0;
-	timtim2 = 0;
-	encoder_initialize();
-	printf("Encoder_Start\r\n");
-	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-	subsensbuf = 0;
-	marker = 0;
-	sidedeltacount = 0;
-	markerstate = 0;
-	rightmarkercount = 0;
-#if USE_FLASH
-	course_state_time = 0;
-#endif
-	printf("SideSens Timer\r\n");
-	HAL_TIM_Base_Start_IT(&htim14);
-	printf("Encoder Timer\r\n");
-	HAL_TIM_Base_Start_IT(&htim10);
-	leftmotor = 0;
-	rightmotor = 0;
-	beforedirection = 0;
-	sdirection = 0;
-	printf("PWM_Start\r\n");
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-	printf("PID\r\n");
-	HAL_TIM_Base_Start_IT(&htim6);	// PID
-#if PLAY
-	motorenable = 1;
-#endif
+	start_analog();
+  velotrace_start();
+	start_encoder();
+  sidesensor_init();
+  tim6_init();
+  tim10_init();
+  tim11_init();
+  start_motor();
 }
 
-void running_finalize() {
-	motorenable = 0;
-	sensor_finalize();
-	HAL_TIM_Base_Stop_IT(&htim6);
-	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_1);
-	encoder_finalize();
-	HAL_TIM_Base_Stop_IT(&htim10);
-	if(playmode == search)
-	{
-#if USE_FLASH
-		printf(ESC_CYA);
-		printf("////////// WRITE FLASH ///////////\r\n");
-		printf(ESC_DEF);
-		writeFlash(start_address, (uint8_t*) &flash_buffer,
-				sizeof(FlashBuffer));
-#endif
-	}
+void running_finalize()
+{
+  end_motor();
+	end_analog();
+	end_encoder();
 }
 
-void encoder_initialize() {
-#if USE_VELOCITY_CONTROL
-#if VELOCITY_CONTROL_RELATIVE
-	s_velocity_error = 0;
-#else
-	s_velocity_error_l = 0;
-	s_velocity_error_r = 0;
-#endif
-#if USE_FLASH
-	if (rv == 0x01) {
-		s_velocity = 0;
-		for (int i = 0; COURSE_STATE_SIZE > i; i++) {
-#if !D_COURSE_SAVING
-			flash_buffer.radius[i] = 65536;
-#endif
-		}
+void start_motor()
+{
+  motor_enable(1);
+}
+
+void end_motor()
+{
+  motor_enable(0);
+  tim6_fin();
+}
+
+void imu_initialize()
+{
+#if USE_IMU
+	printf("Starting SPI2 (IMU)\r\n");
+	uint8_t wai, ret;
+	ret = IMU_init(&wai);
+	printf("who_am_i = %d\r\n", wai);
+	if (ret == 1) {
+		printf("SPI INIT COLLECT!\r\n");
+	} else {
+		printf("SPI INIT FAILURE x_x \r\n");
 	}
 #endif
-#endif
 
-	TIM1->CNT = ENCODER_MIDDLE;
-	TIM3->CNT = ENCODER_MIDDLE;
-
-	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 }
 
-void encoder_finalize() {
-	HAL_TIM_Encoder_Stop(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Stop(&htim3, TIM_CHANNEL_ALL);
+void start_analog()
+{
+  // start_analog();
+  analog_sensor_init();
+}
+
+void end_analog()
+{
+  // end_alanog();
+  analog_sensor_finalize();
+}
+
+void start_encoder()
+{
+  encoder_initialize();
+}
+
+void start_flash()
+{
+}
+
+void end_flash()
+{
+}
+
+void end_encoder()
+{
+  encoder_finalize();
+}
+
+void main_init()
+{
+  switch_init();
+  motor_init();
+  rotary_init();
+  encoder_init();
+  velotrace_init(1);
+  tracer_init(1);
+  analog_init();
+	pid_gain_initialize();
+  imu_initialize();
 }
 
 /* USER CODE END 4 */

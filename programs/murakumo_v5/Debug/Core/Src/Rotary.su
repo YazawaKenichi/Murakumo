@@ -1,0 +1,4 @@
+Rotary.c:5:6:rotary_init	8	static
+Rotary.c:11:6:rotary_set_playmode	8	static
+Rotary.c:16:10:rotary_read_playmode	4	static
+Rotary.c:21:9:rotary_read	16	static

@@ -1,0 +1,4 @@
+flash.c:11:6:flash_erase	32	static
+flash.c:23:6:flash_write	24	static
+flash.c:39:6:flash_load	24	static
+flash.c:44:6:flash_init	8	static

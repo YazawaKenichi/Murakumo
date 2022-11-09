@@ -2,10 +2,13 @@
 
 #define USE_WRITE_FLASH 0
 
-FlashBuffer flash_buffer;
+FlashBuffer flashbuffer;
 uint16_t course_state_time;
 
-void eraseFlash(void)
+const uint32_t start_address = 0x080E0000;
+const uint32_t end_address = 0x080FFFFF;
+
+void flash_erase(void)
 {
 	FLASH_EraseInitTypeDef erase;
 	erase.TypeErase = FLASH_TYPEERASE_SECTORS;
@@ -17,7 +20,7 @@ void eraseFlash(void)
 	HAL_FLASHEx_Erase(&erase, &pageError);
 }
 
-void writeFlash(uint32_t address, uint8_t *data, uint32_t size)
+void flash_write(uint32_t address, uint8_t *data, uint32_t size)
 {
 #if USE_WRITE_FLASH
 	HAL_FLASH_Unlock();
@@ -33,7 +36,13 @@ void writeFlash(uint32_t address, uint8_t *data, uint32_t size)
 #endif
 }
 
-void loadFlash(uint32_t address, uint8_t *data, uint32_t size)
+void flash_load(uint32_t address, uint8_t *data, uint32_t size)
 {
 	memcpy(data, (uint64_t*) address, size);
 }
+
+void flash_init()
+{
+	loadFlash(start_address, (uint8_t*) &flashbuffer, sizeof(FlashBuffer));
+}
+

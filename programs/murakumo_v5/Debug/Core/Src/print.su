@@ -1,0 +1,2 @@
+print.c:3:1:__io_putchar	16	static
+print.c:9:6:d_print	4	static

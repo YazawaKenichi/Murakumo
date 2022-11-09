@@ -1,5 +1,6 @@
 Core/Src/ICM20648.o: ../Core/Src/ICM20648.c ../Core/Src/../Inc/ICM20648.h \
- ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Src/../Inc/main.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -31,11 +32,20 @@ Core/Src/ICM20648.o: ../Core/Src/ICM20648.c ../Core/Src/../Inc/ICM20648.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ ../Core/Src/../Inc/defs.h ../Core/Src/../Inc/analog.h \
+ ../Core/Src/../Inc/encoder.h ../Core/Src/../Inc/flash.h \
+ ../Core/Src/../Inc/ICM20648.h ../Core/Src/../Inc/LED.h \
+ ../Core/Src/../Inc/motor.h ../Core/Src/../Inc/pid.h \
+ ../Core/Src/../Inc/print.h ../Core/Src/../Inc/Rotary.h \
+ ../Core/Src/../Inc/sidesensor.h ../Core/Src/../Inc/Switch.h \
+ ../Core/Src/../Inc/tim6.h ../Core/Src/../Inc/velotrace.h \
+ ../Core/Src/../Inc/velodef.h ../Core/Src/../Inc/tracer.h \
+ ../Core/Src/../Inc/tim10.h ../Core/Src/../Inc/tim11.h
 
 ../Core/Src/../Inc/ICM20648.h:
 
-../Core/Inc/main.h:
+../Core/Src/../Inc/main.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
@@ -102,3 +112,39 @@ Core/Src/ICM20648.o: ../Core/Src/ICM20648.c ../Core/Src/../Inc/ICM20648.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+
+../Core/Src/../Inc/defs.h:
+
+../Core/Src/../Inc/analog.h:
+
+../Core/Src/../Inc/encoder.h:
+
+../Core/Src/../Inc/flash.h:
+
+../Core/Src/../Inc/ICM20648.h:
+
+../Core/Src/../Inc/LED.h:
+
+../Core/Src/../Inc/motor.h:
+
+../Core/Src/../Inc/pid.h:
+
+../Core/Src/../Inc/print.h:
+
+../Core/Src/../Inc/Rotary.h:
+
+../Core/Src/../Inc/sidesensor.h:
+
+../Core/Src/../Inc/Switch.h:
+
+../Core/Src/../Inc/tim6.h:
+
+../Core/Src/../Inc/velotrace.h:
+
+../Core/Src/../Inc/velodef.h:
+
+../Core/Src/../Inc/tracer.h:
+
+../Core/Src/../Inc/tim10.h:
+
+../Core/Src/../Inc/tim11.h:
