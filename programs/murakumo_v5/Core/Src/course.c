@@ -1,13 +1,13 @@
 #include "course.h"
 
-uint16 course_state_time;
+uint16_t course_state_time;
 
 void course_init()
 {
-    course_set_state_time(0)
+    course_set_state_time(0);
 }
 
-void course_read_state_time()
+uint16_t course_read_state_time()
 {
     return course_state_time;
 }
