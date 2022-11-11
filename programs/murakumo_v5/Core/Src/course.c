@@ -1,10 +1,22 @@
 #include "course.h"
 
 uint16_t course_state_time;
+double course_length;
 
 void course_init()
 {
     course_set_state_time(0);
+}
+
+double course_read_length()
+{
+	return course_length;
+}
+
+double course_add_length(double length)
+{
+	course_length += length;
+	return course_read_length();
 }
 
 uint16_t course_read_state_time()
@@ -20,7 +32,9 @@ void course_increment_state_time()
 double course_calclate_radius()
 {
     short int left_length, right_length;
-    encoder_read_pulse(&left_length, &right_length);
+	left_length = tim10_read_length_left();
+	right_length = tim10_read_length_right();
+	tim10_legth_init();
     return (double) TREAD * (double) ((left_length) + (right_length)) / (double) ((left_length) - (right_length)) / (double) 2;
 }
 

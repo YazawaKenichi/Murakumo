@@ -6,6 +6,8 @@ double velocity_left, velocity_right, velocity;
 
 void tim10_length_init()
 {
+  length_left = 0;
+  length_right = 0;
   length = 0;
 }
 
@@ -20,6 +22,15 @@ void tim10_fin()
 	HAL_TIM_Base_Stop_IT(&htim10);
 }
 
+double tim10_read_length_left()
+{
+  return length_left;
+}
+
+double tim10_read_length_right()
+{
+  return length_right;
+}
 double tim10_read_length()
 {
   return length;
