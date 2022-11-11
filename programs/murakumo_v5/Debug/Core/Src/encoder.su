@@ -1,8 +1,9 @@
 encoder.c:8:6:encoder_init	4	static
-encoder.c:14:6:encoder_set_middle	4	static
-encoder.c:20:6:encoder_start	8	static
-encoder.c:29:6:encoder_stop	8	static
-encoder.c:35:8:encoder_read	4	static
-encoder.c:40:8:encoder_read_left	4	static
-encoder.c:45:8:encoder_read_right	4	static
-encoder.c:51:6:encoder_set	8	static
+encoder.c:13:6:encoder_finalize	8	static
+encoder.c:19:6:encoder_set_middle	4	static
+encoder.c:25:6:encoder_start	8	static
+encoder.c:34:6:encoder_stop	8	static
+encoder.c:40:8:encoder_read	4	static
+encoder.c:45:8:encoder_read_left	4	static
+encoder.c:50:8:encoder_read_right	4	static
+encoder.c:56:6:encoder_set	8	static

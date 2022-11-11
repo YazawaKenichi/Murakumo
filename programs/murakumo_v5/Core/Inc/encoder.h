@@ -20,6 +20,7 @@
 #endif
 
 void encoder_init();
+void encoder_finalize();
 void encoder_set_middle();
 void encoder_start();
 void encoder_stop();
@@ -28,7 +29,7 @@ double encoder_read_left();
 double encoder_read_right();
 void encoder_set();
 
-extern double encoder_velocity;
+extern double LENGTHPERPULSE;
 
 #endif
 

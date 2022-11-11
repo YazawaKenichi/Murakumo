@@ -1,0 +1,7 @@
+tim10.c:7:6:tim10_length_init	4	static
+tim10.c:14:6:tim10_init	8	static
+tim10.c:20:6:tim10_fin	8	static
+tim10.c:25:8:tim10_read_length_left	4	static
+tim10.c:30:8:tim10_read_length_right	4	static
+tim10.c:34:8:tim10_read_length	4	static
+tim10.c:39:6:tim10_main	8	static

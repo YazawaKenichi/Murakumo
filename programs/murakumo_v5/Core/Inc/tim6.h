@@ -7,6 +7,7 @@
 #include "velotrace.h"
 #include "tracer.h"
 #include "main.h"
+#include "sidesensor.h"
 
 void tim6_init();
 void tim6_fin();

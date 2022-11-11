@@ -1,3 +1,6 @@
+#ifndef __VELODEF_H__
+#define __VELODEF_H__
+
 #define PLAY 1
 
 #define D_ANALOG 0
@@ -304,3 +307,5 @@
 #define KIF 0
 #endif
 #endif	// !USE_PID_ARRAY
+
+#endif // __VELODEF_H__

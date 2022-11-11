@@ -1,5 +1,6 @@
 #include "velodef.h"
 
+/*
 void pid_gain_initialize()
 {
 	for(int i = 0; i < 16; i++)
@@ -23,3 +24,4 @@ void pid_gain_initialize()
 		high_velo.kd[i] = KD_HIGH + (i - 1) * KD_HIGH_TOLERANCE;
 	}
 }
+*/

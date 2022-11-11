@@ -9,7 +9,7 @@
 /* s_error and d_error are zero*/
 void tracer_init(double samplingtime_);
 /* kp ki kd settings*/
-void tracer_set_gain(double kp_, double ki_, double kd_);
+void tracer_set_gain(unsigned short int i);
 /* terget setting */
 void tracer_set_target(double target_);
 /* calclate pid solving */

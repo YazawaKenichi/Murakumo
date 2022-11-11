@@ -1087,7 +1087,6 @@ void running_initialize()
   sidesensor_init();
   tim6_init();
   tim10_init();
-  tim11_init();
   start_motor();
 }
 
@@ -1157,15 +1156,16 @@ void end_encoder()
 
 void main_init()
 {
-  switch_init();
-  motor_init();
-  rotary_init();
-  encoder_init();
-  velotrace_init(1);
-  tracer_init(1);
-  analog_init();
-  pid_gain_initialize();
-  imu_initialize();
+	/* enter = 0 */
+	tim11_init();
+	motor_init();
+	rotary_init();
+	encoder_init();
+	velotrace_init(1);
+	tracer_init(1);
+	analog_init();
+//  pid_gain_initialize();
+	imu_initialize();
 }
 
 /* USER CODE END 4 */

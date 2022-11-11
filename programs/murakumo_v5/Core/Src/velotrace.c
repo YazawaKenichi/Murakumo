@@ -32,7 +32,7 @@ void velotrace_set_gain(unsigned short int i)
 
 void velotrace_set_target(unsigned short int i)
 {
-    pid.target = VELOCITY_TARGET_MAX - (PID_STEP_SIZE - i + 1) * (double) VELOCITY_TARGET_TOLERANCE;
+    pid.target = VELOCITY_TARGET_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_TARGET_TOLERANCE;
 }
 
 double velotrace_solve(double reference_)

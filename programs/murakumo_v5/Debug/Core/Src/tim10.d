@@ -1,6 +1,5 @@
 Core/Src/tim10.o: ../Core/Src/tim10.c ../Core/Inc/tim10.h \
- ../Core/Inc/encoder.h ../Core/Inc/main.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -38,12 +37,9 @@ Core/Src/tim10.o: ../Core/Src/tim10.c ../Core/Inc/tim10.h \
  ../Core/Inc/motor.h ../Core/Inc/pid.h ../Core/Inc/print.h \
  ../Core/Inc/Rotary.h ../Core/Inc/sidesensor.h ../Core/Inc/Switch.h \
  ../Core/Inc/tim6.h ../Core/Inc/velotrace.h ../Core/Inc/velodef.h \
- ../Core/Inc/tracer.h ../Core/Inc/tim10.h ../Core/Inc/tim11.h \
- ../Core/Inc/sidesensor.h ../Core/Inc/LED.h
+ ../Core/Inc/tracer.h ../Core/Inc/tim10.h ../Core/Inc/tim11.h
 
 ../Core/Inc/tim10.h:
-
-../Core/Inc/encoder.h:
 
 ../Core/Inc/main.h:
 
@@ -148,7 +144,3 @@ Core/Src/tim10.o: ../Core/Src/tim10.c ../Core/Inc/tim10.h \
 ../Core/Inc/tim10.h:
 
 ../Core/Inc/tim11.h:
-
-../Core/Inc/sidesensor.h:
-
-../Core/Inc/LED.h:

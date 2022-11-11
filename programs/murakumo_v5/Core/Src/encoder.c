@@ -10,6 +10,11 @@ void encoder_init()
     LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
 }
 
+void encoder_finalize()
+{
+    encoder_stop();
+}
+
 /* private */
 void encoder_set_middle()
 {

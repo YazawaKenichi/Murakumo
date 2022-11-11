@@ -8,8 +8,12 @@
 
 #define TIM10_Hz 0.001
 
+void tim10_length_init();
 void tim10_init();
 void tim10_fin();
+double tim10_read_length_left();
+double tim10_read_length_right();
+double tim10_read_length();
 void tim10_main();
 
 #endif

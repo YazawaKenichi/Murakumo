@@ -44,7 +44,7 @@ void tim10_main()
   /* update velocity */
   velocity_left = encoder_read_left() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
   velocity_right = encoder_read_right() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
-  velocity = encoder_read() * (double) LENGTHPERPUSE * (double) TIM10_Hz;
+  velocity = encoder_read() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
 
   /* update lengths */
   length_left += (double) encoder_read_left();
@@ -56,6 +56,6 @@ void tim10_main()
     course_state_function();
   }
 
-  sidesens_function();
-  led_brink();
+  sidesensor_function();
+//  led_brink();
 }
