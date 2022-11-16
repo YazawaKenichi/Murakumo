@@ -1,7 +1,7 @@
 #define PLAY 1
 
-#define D_ANALOG 0
-#define D_ANALOGRATE 0
+#define D_ANALOG 1
+#define D_ANALOGRATE 1
 #define D_MOTOR 0
 #define D_SIDESENS 0	//
 #define D_ENCODER 0	// Debug Encoder
