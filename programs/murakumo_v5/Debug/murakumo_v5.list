@@ -1856,15 +1856,15 @@ void d_print() {
 	printf(ESC_RED);
  8001376:	484d      	ldr	r0, [pc, #308]	; (80014ac <d_print+0x144>)
  8001378:	f008 fe10 	bl	8009f9c <iprintf>
+	printf(ESC_DEF);
+#endif
+
+#if !D_ANALOGRATE
 	// only use normal sensor
-	printf("\x1b[23C");	// Cursor move right *24
-	printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15],
-			analog[13]);
-#else
 	printf("\x1b[23C");	// Cursor move right *24
  800137c:	484c      	ldr	r0, [pc, #304]	; (80014b0 <d_print+0x148>)
  800137e:	f008 fe0d 	bl	8009f9c <iprintf>
-	printf("%4d, %4d | %4d, %4d\r\n", analograte[12], analograte[14], analograte[15],
+	printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15],
  8001382:	4b4c      	ldr	r3, [pc, #304]	; (80014b4 <d_print+0x14c>)
  8001384:	8b1b      	ldrh	r3, [r3, #24]
  8001386:	4619      	mov	r1, r3
@@ -1874,10 +1874,10 @@ void d_print() {
  800138e:	4b49      	ldr	r3, [pc, #292]	; (80014b4 <d_print+0x14c>)
  8001390:	8bdb      	ldrh	r3, [r3, #30]
  8001392:	4618      	mov	r0, r3
-			analograte[13]);
+			analog[13]);
  8001394:	4b47      	ldr	r3, [pc, #284]	; (80014b4 <d_print+0x14c>)
  8001396:	8b5b      	ldrh	r3, [r3, #26]
-	printf("%4d, %4d | %4d, %4d\r\n", analograte[12], analograte[14], analograte[15],
+	printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15],
  8001398:	9300      	str	r3, [sp, #0]
  800139a:	4603      	mov	r3, r0
  800139c:	4846      	ldr	r0, [pc, #280]	; (80014b8 <d_print+0x150>)
@@ -1890,67 +1890,66 @@ void d_print() {
 	printf(ESC_DEF);
  80013a2:	4846      	ldr	r0, [pc, #280]	; (80014bc <d_print+0x154>)
  80013a4:	f008 fdfa 	bl	8009f9c <iprintf>
-			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
-			analog[11], analog[9], analog[7], analog[5], analog[3],
-			analog[1]);
-#else
+#endif
+
+#if !D_ANALOGRATE
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013a8:	4b42      	ldr	r3, [pc, #264]	; (80014b4 <d_print+0x14c>)
  80013aa:	881b      	ldrh	r3, [r3, #0]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013ac:	469c      	mov	ip, r3
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013ae:	4b41      	ldr	r3, [pc, #260]	; (80014b4 <d_print+0x14c>)
  80013b0:	889b      	ldrh	r3, [r3, #4]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013b2:	469e      	mov	lr, r3
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013b4:	4b3f      	ldr	r3, [pc, #252]	; (80014b4 <d_print+0x14c>)
  80013b6:	891b      	ldrh	r3, [r3, #8]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013b8:	4698      	mov	r8, r3
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013ba:	4b3e      	ldr	r3, [pc, #248]	; (80014b4 <d_print+0x14c>)
  80013bc:	899b      	ldrh	r3, [r3, #12]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013be:	461a      	mov	r2, r3
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013c0:	4b3c      	ldr	r3, [pc, #240]	; (80014b4 <d_print+0x14c>)
  80013c2:	8a1b      	ldrh	r3, [r3, #16]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013c4:	4619      	mov	r1, r3
-			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analog[0], analog[2], analog[4], analog[6], analog[8], analog[10],
  80013c6:	4b3b      	ldr	r3, [pc, #236]	; (80014b4 <d_print+0x14c>)
  80013c8:	8a9b      	ldrh	r3, [r3, #20]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013ca:	4618      	mov	r0, r3
-			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
  80013cc:	4b39      	ldr	r3, [pc, #228]	; (80014b4 <d_print+0x14c>)
  80013ce:	8adb      	ldrh	r3, [r3, #22]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013d0:	461c      	mov	r4, r3
-			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
  80013d2:	4b38      	ldr	r3, [pc, #224]	; (80014b4 <d_print+0x14c>)
  80013d4:	8a5b      	ldrh	r3, [r3, #18]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013d6:	461d      	mov	r5, r3
-			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
  80013d8:	4b36      	ldr	r3, [pc, #216]	; (80014b4 <d_print+0x14c>)
  80013da:	89db      	ldrh	r3, [r3, #14]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013dc:	461e      	mov	r6, r3
-			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
  80013de:	4b35      	ldr	r3, [pc, #212]	; (80014b4 <d_print+0x14c>)
  80013e0:	895b      	ldrh	r3, [r3, #10]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013e2:	607b      	str	r3, [r7, #4]
-			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analog[11], analog[9], analog[7], analog[5], analog[3],
  80013e4:	4b33      	ldr	r3, [pc, #204]	; (80014b4 <d_print+0x14c>)
  80013e6:	88db      	ldrh	r3, [r3, #6]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
  80013e8:	603b      	str	r3, [r7, #0]
-			analograte[1]);
+			analog[1]);
  80013ea:	4b32      	ldr	r3, [pc, #200]	; (80014b4 <d_print+0x14c>)
  80013ec:	885b      	ldrh	r3, [r3, #2]
 	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
@@ -1970,6 +1969,10 @@ void d_print() {
  8001408:	4661      	mov	r1, ip
  800140a:	482d      	ldr	r0, [pc, #180]	; (80014c0 <d_print+0x158>)
  800140c:	f008 fdc6 	bl	8009f9c <iprintf>
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n",
+			analograte[0], analograte[2], analograte[4], analograte[6], analograte[8], analograte[10],
+			analograte[11], analograte[9], analograte[7], analograte[5], analograte[3],
+			analograte[1]);
 #endif	// D_ANALOGRATE
 	printf("\r\n");
  8001410:	482c      	ldr	r0, [pc, #176]	; (80014c4 <d_print+0x15c>)
@@ -2058,7 +2061,7 @@ void d_print() {
  80014a8:	0800dcc8 	.word	0x0800dcc8
  80014ac:	0800dce8 	.word	0x0800dce8
  80014b0:	0800dcf0 	.word	0x0800dcf0
- 80014b4:	20000368 	.word	0x20000368
+ 80014b4:	20000258 	.word	0x20000258
  80014b8:	0800dcf8 	.word	0x0800dcf8
  80014bc:	0800dd10 	.word	0x0800dd10
  80014c0:	0800dd18 	.word	0x0800dd18
