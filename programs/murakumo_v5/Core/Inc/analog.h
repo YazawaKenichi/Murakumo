@@ -10,13 +10,16 @@
 #define CALIBRATIONSIZE_MAX 16
 #define CALIBRATIONSIZE 16
 
-void analog_set();
+void analog_set_on_flash(uint16_t *, uint16_t *);
+void analog_set_from_flash(uint16_t *, uint16_t *);
 void analog_set_calibrationsize(uint8_t calibrationsize_);
 uint8_t analog_read_calibrationsize();
 void analog_calibration_init();
 void analog_init();
-void analog_sensor_init();
-void analog_sensor_finalize();
+void analog_start();
+void analog_stop();
+void analog_sensor_start();
+void analog_sensor_stop();
 uint16_t analog_sensor_get(unsigned char i);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef * AdcHandle);
 

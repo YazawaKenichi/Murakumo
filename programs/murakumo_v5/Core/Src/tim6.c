@@ -1,24 +1,34 @@
 #include "tim6.h"
 
-int beforedirection, sdirection;
-
 void tim6_init()
 {
-    beforedirection = 0;
-    sdirection = 0;
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-	HAL_TIM_Base_Start_IT(&htim6);	// PID
-#if PLAY
-    motor_enable(1);
-#endif
+    motor_init();
+    analog_init();
+    velotrace_init(1);
+    tracer_init(1);
 }
 
-void tim6_fin()
+void tim6_start()
+{
+    /* analogmin/max = FlashBuffer.analogmin/max */
+    analog_set_from_flash(flashbuffer.analogmin, flashbuffer.analogmax);
+    HAL_Delay(3000);
+    /* sensgettime = 0, HAL_ADC_Start_DMA() */
+    analog_start();
+    /* samplingtime = 0, s_error = 0, before_error = 0, if search ( p/i/d = [0], target = [0] ) */
+    velotrace_start();
+    /* samplingtime = 0, s_error = 0, before_error = 0 */
+    tracer_start();
+
+    motor_start();
+	HAL_TIM_Base_Start_IT(&htim6);	// PID
+}
+
+void tim6_stop()
 {
 	HAL_TIM_Base_Stop_IT(&htim6);
-	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_1);
+    analog_stop();
+    motor_stop();
 }
 
 void tim6_main()
@@ -58,8 +68,8 @@ void tim6_main()
 
     if(motor_read_enable())
     {
-        leftmotor = velotrace_solve(encoder_read()) + tracer_solve(direction);
-        rightmotor = velotrace_solve(encoder_read()) - tracer_solve(direction);
+        leftmotor   = velotrace_solve(tim10_read_velocity()) + tracer_solve(direction);
+        rightmotor  = velotrace_solve(tim10_read_velocity()) - tracer_solve(direction);
     }
     else
     {

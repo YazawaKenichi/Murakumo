@@ -14,12 +14,24 @@ void tim10_length_init()
 void tim10_init()
 {
   tim10_length_init();
+	encoder_init();
 	HAL_TIM_Base_Stop_IT(&htim10);
 }
 
-void tim10_fin()
+void tim10_start()
+{
+  /* encoder_set_middle, HAL_TIM_Encoder_Start */
+  encoder_start();
+  /* marker = subsensbuf = sidedeltacount = markerstate = rightmarkercount = 0 */
+  sidesensor_start();
+  HAL_TIM_Base_Start_IT(&htim10);
+}
+
+void tim10_stop()
 {
 	HAL_TIM_Base_Stop_IT(&htim10);
+  sidesensor_stop();
+  encoder_stop();
 }
 
 double tim10_read_length_left()
@@ -31,9 +43,25 @@ double tim10_read_length_right()
 {
   return length_right;
 }
+
 double tim10_read_length()
 {
   return length;
+}
+
+double tim10_read_velocity_left()
+{
+  return velocity_left;
+}
+
+double tim10_read_velocity_right()
+{
+  return velocity_right;
+}
+
+double tim10_read_velocity()
+{
+  return velocity;
 }
 
 void tim10_main()
@@ -47,15 +75,16 @@ void tim10_main()
   velocity = encoder_read() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
 
   /* update lengths */
-  length_left += (double) encoder_read_left();
-  length_right += (double) encoder_read_right();
-  length += (double) encoder_read();
+  length_left += (double) encoder_read_left() * (double) LENGTHPERPULSE;
+  length_right += (double) encoder_read_right() * (double) LENGTHPERPULSE;
+  length += (double) encoder_read() * (double) LENGTHPERPULSE;
 
+  /*
   if(length >= SAMPLING_LENGTH)
   {
     course_state_function();
   }
+  */
 
   sidesensor_function();
-//  led_brink();
 }

@@ -1,5 +1,4 @@
 #include "analog.h"
-#include "flash.h"
 
 unsigned int sensgettime;
 uint8_t calibrationsize;
@@ -10,12 +9,21 @@ uint16_t analogmax[CALIBRATIONSIZE];
 uint16_t analogmin[CALIBRATIONSIZE];
 uint16_t analograte[CALIBRATIONSIZE];
 
-void analog_set(FlashBuffer *flashbuffer_)
+void analog_set_on_flash(uint16_t *analogmin_, uint16_t *analogmax_)
 {
 	for(unsigned int i = 0; i < CALIBRATIONSIZE; i++)
 	{
-		flashbuffer_ -> analogmin[i] = analogmin[i];
-		flashbuffer_ -> analogmax[i] = analogmax[i];
+		*(analogmin_ + i) = analogmin[i];
+		*(analogmax_ + i) = analogmax[i];
+	}
+}
+
+void analog_set_from_flash(uint16_t *analogmin_, uint16_t *analogmax_)
+{
+	for(unsigned int i = 0; i < CALIBRATIONSIZE; i++)
+	{
+		analogmin[i] = *(analogmin_ + i);
+		analogmax[i] = *(analogmax_ + i);
 	}
 }
 
@@ -47,7 +55,17 @@ void analog_init()
     }
 }
 
-void analog_sensor_init()
+void analog_start()
+{
+	analog_sensor_start();
+}
+
+void analog_stop()
+{
+	analog_sensor_stop();
+}
+
+void analog_sensor_start()
 {
     sensgettime = 0;
     if(HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analograw, CALIBRATIONSIZE_MAX) != HAL_OK)
@@ -57,7 +75,7 @@ void analog_sensor_init()
     HAL_Delay(1000);
 }
 
-void analog_sensor_finalize()
+void analog_sensor_stop()
 {
 	HAL_ADC_Stop_DMA(&hadc1);
 }

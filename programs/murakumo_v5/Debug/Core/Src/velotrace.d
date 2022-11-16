@@ -1,6 +1,6 @@
 Core/Src/velotrace.o: ../Core/Src/velotrace.c ../Core/Inc/velotrace.h \
- ../Core/Inc/velodef.h ../Core/Inc/pid.h ../Core/Inc/main.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Inc/velodef.h ../Core/Inc/defines.h ../Core/Inc/pid.h \
+ ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -43,6 +43,8 @@ Core/Src/velotrace.o: ../Core/Src/velotrace.c ../Core/Inc/velotrace.h \
 ../Core/Inc/velotrace.h:
 
 ../Core/Inc/velodef.h:
+
+../Core/Inc/defines.h:
 
 ../Core/Inc/pid.h:
 

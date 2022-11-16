@@ -6,6 +6,8 @@
 
 #define TRACE_STEP_SIZE 16
 
+/* s_error and d_error are zero and if search then gain and target are zero */
+void tracer_start();
 /* s_error and d_error are zero*/
 void tracer_init(double samplingtime_);
 /* kp ki kd settings*/

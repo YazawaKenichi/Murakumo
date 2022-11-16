@@ -26,6 +26,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -165,206 +168,208 @@ int main(void)
 		{
 			switch(rotary_read())
       {
-			case 0x00:
-				if(rotary_read_playmode() == calibration)
-				{
-          analog_calibration_init();
-					start_analog();
-
-					while(switch_read_enter())
-					{
-						HAL_Delay(100);
-					}
-
-					end_analog();
-				}
-				else    // if(!(rotary_read_playmode()== calibration))
-				{
-					running_initialize();
-
-					while(switch_read_enter())
+        case 0x00:
+          if(rotary_read_playmode() == calibration)
           {
-						d_print();
-						HAL_Delay(250);
-					}
+            /* min = 4096, max = 0 */
+            analog_calibration_init();
+            /* sensgettime = 0, HAL_ADC_Start_DMA() */
+            analog_start();
 
-					running_finalize();
-				}
-				break;	// case 0x00:
-			case 0x01:	// 1
-				running_initialize();
+            while(switch_read_enter())
+            {
+              HAL_Delay(100);
+            }
 
-				while (switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(500);
-				}
-
-				running_finalize();
-				break;
-			case 0x02:	// 2
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x03:	// 3
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x04:	// 4
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x05:	// 5
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x06:	// 6
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x07:	// 7
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x08:	// 8
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x09:	// 9
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0A:	// A
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0B:	// B
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0C:	// C
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0D:	// D
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0E:	// E
-				running_initialize();
-
-				while(switch_read_enter())
-        {
-					d_print();
-					HAL_Delay(250);
-				}
-
-				running_finalize();
-				break;
-			case 0x0F:
-				if(rotary_read_playmode()== flash_print)
-        {
-				}
-        else    // if(!(rotary_read_playmode()== flash_print))
-        {
-					running_initialize();
-
-					while(switch_read_enter())
+            analog_stop();
+          }
+          else    // if(!(rotary_read_playmode()== calibration))
           {
-						d_print();
-						HAL_Delay(250);
-					}
+            running_start();
 
-					running_finalize();
-				}
-				break;
-			default:
-				break;
-			} // switch(rotary_value)
+            while(switch_read_enter())
+            {
+              d_print();
+              HAL_Delay(250);
+            }
+
+            running_stop();
+          }
+          break;	// case 0x00:
+        case 0x01:	// 1
+          running_start();
+
+          while (switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(500);
+          }
+
+          running_stop();
+          break;
+        case 0x02:	// 2
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x03:	// 3
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x04:	// 4
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x05:	// 5
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x06:	// 6
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x07:	// 7
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x08:	// 8
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x09:	// 9
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0A:	// A
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0B:	// B
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0C:	// C
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0D:	// D
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0E:	// E
+          running_start();
+
+          while(switch_read_enter())
+          {
+            d_print();
+            HAL_Delay(250);
+          }
+
+          running_stop();
+          break;
+        case 0x0F:
+          if(rotary_read_playmode()== flash_print)
+          {
+          }
+          else    // if(!(rotary_read_playmode()== flash_print))
+          {
+            running_start();
+
+            while(switch_read_enter())
+            {
+              d_print();
+              HAL_Delay(250);
+            }
+
+            running_stop();
+          }
+          break;
+        default:
+          break;
+      } // switch(rotary_value)
 		}	// if(switch_read_enter())
 	}	// while(1)
 #endif	// !D_LED
@@ -1074,38 +1079,36 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DRV1_PH_GPIO_Port, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
-void running_initialize()
+void main_init()
 {
-  analog_set(flashbuffer);
-	HAL_Delay(3000);
-	start_analog();
-  velotrace_start();
-	start_encoder();
-  sidesensor_init();
-  tim6_init();
+  /* switch_init, HAL_TIM_BASE_Start_IT(&htim11), rotary_init */
+	tim11_init();
+  /* encoder_init */
   tim10_init();
-  start_motor();
+  /* motor_init, analog_init, velotrace_init(1), tracer_init(1) */
+  tim6_init();
+  /* print who am i */
+  imu_initialize();
 }
 
-void running_finalize()
+void running_start()
 {
-  end_motor();
-	end_analog();
-	end_encoder();
+  /* encoder_set_middle, HAL_TIM_Encoder_Start, HAL_TIM_Base_Start_IT */
+  tim10_start();
+  /* analogmin/max = FlashBuffer.analogmin/max, sensgettime = 0, HAL_ADC_Start_DMA, samplingtime = s_error = before_error = 0, if search ( p/i/d = [0], target = [0]), motor_enable = 0 */
+  tim6_start();
 }
 
-void start_motor()
+void running_stop()
 {
-  motor_enable(1);
-}
-
-void end_motor()
-{
-  motor_enable(0);
-  tim6_fin();
+  /* HAL_TIM_Base_Stop_IT, HAL_ADC_Stop_DMA, motor_enable = 0, HAL_TIM_PWM_Stop */
+  tim6_stop();
+  /* HAL_TIM_Base_Stop_IT, HAL_TIM_Encoder_Stop, sidesensor_stop */
+  tim10_stop();
 }
 
 void imu_initialize()
@@ -1113,7 +1116,7 @@ void imu_initialize()
 #if USE_IMU
 	printf("Starting SPI2 (IMU)\r\n");
 	uint8_t wai, ret;
-	ret = IMU_init(&wai);
+	ret = imu_init(&wai);
 	printf("who_am_i = %d\r\n", wai);
 	if (ret == 1) {
 		printf("SPI INIT COLLECT!\r\n");
@@ -1122,50 +1125,6 @@ void imu_initialize()
 	}
 #endif
 
-}
-
-void start_analog()
-{
-  // start_analog();
-  analog_sensor_init();
-}
-
-void end_analog()
-{
-  // end_alanog();
-  analog_sensor_finalize();
-}
-
-void start_encoder()
-{
-  encoder_start();
-}
-
-void start_flash()
-{
-}
-
-void end_flash()
-{
-}
-
-void end_encoder()
-{
-  encoder_finalize();
-}
-
-void main_init()
-{
-	/* enter = 0 */
-	tim11_init();
-	motor_init();
-	rotary_init();
-	encoder_init();
-	velotrace_init(1);
-	tracer_init(1);
-	analog_init();
-//  pid_gain_initialize();
-	imu_initialize();
 }
 
 /* USER CODE END 4 */

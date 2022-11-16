@@ -1,11 +1,12 @@
 #include "Rotary.h"
 
 PlayMode playmode;
+uint8_t value;
 
 void rotary_init()
 {
-	HAL_TIM_Base_Start_IT(&htim11);	// 1ms	// ROTARY SWITCH
     rotary_set_playmode();
+    rotary_set_value();
 }
 
 void rotary_set_playmode()
@@ -18,16 +19,26 @@ PlayMode rotary_read_playmode()
     return playmode;
 }
 
+void rotary_set_value()
+{
+    value = rotary_read();
+}
+
+uint8_t rotary_read_value()
+{
+    return value;
+}
+
 uint8_t rotary_read()
 {
-    uint8_t rotaryvalue_ = 0;
+    uint8_t rotary_value_ = 0;
 
-    rotaryvalue_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12) ? 0 : 1) << 0;
-    rotaryvalue_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) ? 0 : 1) << 1;
-    rotaryvalue_ += (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12) ? 0 : 1) << 2;
-    rotaryvalue_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11) ? 0 : 1) << 3;
+    rotary_value_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12) ? 0 : 1) << 0;
+    rotary_value_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) ? 0 : 1) << 1;
+    rotary_value_ += (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12) ? 0 : 1) << 2;
+    rotary_value_ += (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11) ? 0 : 1) << 3;
 
-    return rotaryvalue_;
+    return rotary_value_;
 }
 
 /* Usuage */

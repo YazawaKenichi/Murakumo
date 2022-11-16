@@ -6,6 +6,16 @@ double samplingtime;
 
 PID pid;
 
+void tracer_start()
+{
+    tracer_init(1);
+    if(rotary_read_playmode() == search)
+    {
+        tracer_set_gain(0);
+        tracer_set_target(0);
+    }
+}
+
 void tracer_init(double samplingtime_)
 {
     samplingtime = samplingtime_;

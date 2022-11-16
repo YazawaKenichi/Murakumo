@@ -57,12 +57,12 @@ typedef struct
 
 double RADPERDEG;	// ( M_PI / 180 )	[rad / deg]
 
-uint8_t IMU_read_byte(uint8_t);
-void IMU_write_byte(uint8_t, uint8_t);
-uint8_t IMU_init(uint8_t*);
-void IMU_fin();
-void IMU_set_offset();
-void IMU_read();
+uint8_t imu_read_byte(uint8_t);
+void imu_write_byte(uint8_t, uint8_t);
+uint8_t imu_init(uint8_t*);
+void imu_fin();
+void imu_set_offset();
+void imu_read();
 void Inertial_Integral(Displacement*);
 void Coordinate_Init(Coordinate*);
 void Coordinate_Set(Coordinate *, Coordinate *);

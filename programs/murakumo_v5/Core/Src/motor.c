@@ -7,6 +7,22 @@ void motor_init()
     motor_enable(0);
 }
 
+void motor_start()
+{
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);	// 50kHz (0.02ms)
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+#if PLAY
+    motor_enable(1);
+#endif
+}
+
+void motor_stop()
+{
+    motor_enable(0);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_1);
+}
+
 void motor_enable(uint8_t enable_)
 {
     enable = enable_ ? 1 : 0;

@@ -1,4 +1,5 @@
-tracer.c:9:6:tracer_init	16	static
-tracer.c:16:6:tracer_set_gain	16	static
-tracer.c:23:6:tracer_set_target	16	static
-tracer.c:28:8:tracer_solve	48	static
+tracer.c:9:6:tracer_start	8	static
+tracer.c:19:6:tracer_init	16	static
+tracer.c:26:6:tracer_set_gain	16	static
+tracer.c:33:6:tracer_set_target	16	static
+tracer.c:38:8:tracer_solve	48	static

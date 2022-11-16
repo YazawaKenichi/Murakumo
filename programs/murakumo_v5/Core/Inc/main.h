@@ -73,19 +73,10 @@ extern TIM_HandleTypeDef htim14;
 
 extern UART_HandleTypeDef huart6;
 
-void running_initialize();
-void running_finalize();
-void start_motor();
-void end_motor();
-void imu_initialize();
-void start_analog();
-void end_analog();
-void start_encoder();
-void start_flash();
-void end_flash();
-void end_encoder();
 void main_init();
-void course_state_function();
+void running_start();
+void running_stop();
+void imu_initialize();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

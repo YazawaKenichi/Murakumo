@@ -13,14 +13,19 @@ uint8_t sidesensor_read()
     return subsens;
 }
 
-void sidesensor_init()
+void sidesensor_start()
 {
     marker = 0;
     subsensbuf = 0;
     sidedeltacount = 0;
     markerstate = 0;
     rightmarkercount = 0;
-    HAL_TIM_Base_Start_IT(&htim14);
+    // HAL_TIM_Base_Start_IT(&htim14);
+}
+
+void sidesensor_stop()
+{
+	/* sidesensor_stop */
 }
 
 void sidesensor_right()
@@ -96,5 +101,3 @@ void sidesensor_function()
 		}
 	}
 }
-
-

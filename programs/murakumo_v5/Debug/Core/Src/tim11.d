@@ -37,7 +37,8 @@ Core/Src/tim11.o: ../Core/Src/tim11.c ../Core/Inc/tim11.h \
  ../Core/Inc/motor.h ../Core/Inc/pid.h ../Core/Inc/print.h \
  ../Core/Inc/Rotary.h ../Core/Inc/sidesensor.h ../Core/Inc/Switch.h \
  ../Core/Inc/tim6.h ../Core/Inc/velotrace.h ../Core/Inc/velodef.h \
- ../Core/Inc/tracer.h ../Core/Inc/tim10.h ../Core/Inc/tim11.h
+ ../Core/Inc/defines.h ../Core/Inc/tracer.h ../Core/Inc/tim10.h \
+ ../Core/Inc/tim11.h
 
 ../Core/Inc/tim11.h:
 
@@ -138,6 +139,8 @@ Core/Src/tim11.o: ../Core/Src/tim11.c ../Core/Inc/tim11.h \
 ../Core/Inc/velotrace.h:
 
 ../Core/Inc/velodef.h:
+
+../Core/Inc/defines.h:
 
 ../Core/Inc/tracer.h:
 

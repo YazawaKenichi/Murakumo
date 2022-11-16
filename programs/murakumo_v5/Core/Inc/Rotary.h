@@ -20,6 +20,8 @@ typedef enum PLAYMODE
 void rotary_init();
 void rotary_set_playmode();
 PlayMode rotary_read_playmode();
+void rotary_set_value();
+uint8_t rotary_reqad_value();
 uint8_t rotary_read();
 
 #endif

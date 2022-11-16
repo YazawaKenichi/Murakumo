@@ -5,6 +5,8 @@
 
 #define PWMMAX 1000
 
+void motor_start();
+void motor_stop();
 void motor_init();
 void motor_enable(uint8_t enable_);
 char motor_read_enable();
