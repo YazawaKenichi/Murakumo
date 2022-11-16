@@ -160,9 +160,7 @@ int main(void)
 #if !D_LED
 	while (1)
 	{
-#if D_WHILE_PRINT
-		printf("///// WHILE /////\n\r");
-#endif
+    print_while();
 
 		if(switch_read_enter())
 		{
@@ -171,17 +169,18 @@ int main(void)
         case 0x00:
           if(rotary_read_playmode() == calibration)
           {
-            /* min = 4096, max = 0 */
-            analog_calibration_init();
-            /* sensgettime = 0, HAL_ADC_Start_DMA() */
-            analog_start();
+            /* min = 4096, max = 0, sensgettime = 0, HAL_ADC_Start_DMA() */
+            analog_calibration_start();
 
             while(switch_read_enter())
             {
               HAL_Delay(100);
             }
 
+            /* HAL_ADC_Stop_DMA */
             analog_stop();
+            /* flashbuffer.analogmin/max = analogmin/max */
+            analog_set_on_flash(flashbuffer.analogmin, flashbuffer.analogmax);
           }
           else    // if(!(rotary_read_playmode()== calibration))
           {
@@ -371,6 +370,7 @@ int main(void)
           break;
       } // switch(rotary_value)
 		}	// if(switch_read_enter())
+    HAL_Delay(500);
 	}	// while(1)
 #endif	// !D_LED
     /* USER CODE END WHILE */

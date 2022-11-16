@@ -9,10 +9,14 @@ uint16_t analogmax[CALIBRATIONSIZE];
 uint16_t analogmin[CALIBRATIONSIZE];
 uint16_t analograte[CALIBRATIONSIZE];
 
+AnalogMode analogmode;
+
 void analog_set_on_flash(uint16_t *analogmin_, uint16_t *analogmax_)
 {
+	printf("analog_set_on_flash()\r\n");
 	for(unsigned int i = 0; i < CALIBRATIONSIZE; i++)
 	{
+		printf("analogmin[%2d] = %5d, analogmax[%2d] = %5d\r\n", i, analogmin[i], i, analogmax[i]);
 		*(analogmin_ + i) = analogmin[i];
 		*(analogmax_ + i) = analogmax[i];
 	}
@@ -20,6 +24,7 @@ void analog_set_on_flash(uint16_t *analogmin_, uint16_t *analogmax_)
 
 void analog_set_from_flash(uint16_t *analogmin_, uint16_t *analogmax_)
 {
+	printf("analog_set_from_flash()\r\n");
 	for(unsigned int i = 0; i < CALIBRATIONSIZE; i++)
 	{
 		analogmin[i] = *(analogmin_ + i);
@@ -37,13 +42,21 @@ uint8_t analog_read_calibrationsize()
 	return calibrationsize;
 }
 
-void analog_calibration_init()
+void analog_calibration_start()
 {
+	analogmode = calibrating;
     for(unsigned char i = 0; CALIBRATIONSIZE > i; i++)
     {
         analogmax[i] = 0;
         analogmin[i] = 4096;
     }
+	analog_sensor_start();
+}
+
+void analog_calibration_stop()
+{
+	/* analog_calibration_stop */
+	analogmode = all;
 }
 
 void analog_init()
@@ -112,8 +125,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 			// get maxvalue and minimumvalue
 			uint16_t analogbuf;
 			analogbuf = analog[index];
-			analogmax[index] = (analogmax[index] < analogbuf) ? analogbuf : analogmax[index];
-			analogmin[index] = (analogmin[index] > analogbuf) ? analogbuf : analogmin[index];
+			if(analogmode == calibrating)
+			{
+				analogmax[index] = (analogmax[index] < analogbuf) ? analogbuf : analogmax[index];
+				analogmin[index] = (analogmin[index] > analogbuf) ? analogbuf : analogmin[index];
+			}
 		}
 	}
 

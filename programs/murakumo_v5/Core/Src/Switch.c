@@ -36,8 +36,8 @@ uint8_t switch_read()
 {
     uint8_t value_ = 0;
 
-    value_ += switch1_read() << 0;
-    value_ += switch2_read() << 1;
+    value_ += switch1_read() << 1;
+    value_ += switch2_read() << 0;
 
     return value_;
 }

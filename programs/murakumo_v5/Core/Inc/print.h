@@ -21,5 +21,9 @@
 PUTCHAR_PROTOTYPE;
 
 void d_print();
+void print_playmode();
+void print_rotary_value();
+void print_while();
+void print_analog_rate();
 
 #endif
