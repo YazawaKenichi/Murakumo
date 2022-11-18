@@ -1,5 +1,8 @@
 tracer.c:9:6:tracer_start	8	static
 tracer.c:19:6:tracer_init	16	static
-tracer.c:26:6:tracer_set_gain	16	static
-tracer.c:33:6:tracer_set_target	16	static
-tracer.c:38:8:tracer_solve	48	static
+tracer.c:26:8:tracer_read_gain_kp	16	static
+tracer.c:31:8:tracer_read_gain_ki	16	static
+tracer.c:36:8:tracer_read_gain_kd	16	static
+tracer.c:41:6:tracer_set_gain	16	static
+tracer.c:48:6:tracer_set_target	16	static
+tracer.c:53:8:tracer_solve	48	static

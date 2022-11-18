@@ -23,16 +23,36 @@ void velotrace_init(double samplingtime_)
     before_error = 0;
 }
 
+double velotrace_read_target(unsigned short int i)
+{
+    return VELOCITY_TARGET_MAX - ((VELOTRACE_STEP_SIZE - 1) - i) * (double) (VELOCITY_TARGET_MAX - VELOCITY_TARGET_MIN) / (double) (VELOTRACE_STEP_SIZE - 1);
+}
+
+double velotrace_read_gain_kp(unsigned short int i)
+{
+    return VELOCITY_KP_MAX - ((VELOTRACE_STEP_SIZE - 1) - i) * (double) (VELOCITY_KP_MAX - VELOCITY_KP_MIN) / (double) (VELOTRACE_STEP_SIZE - 1);
+}
+
+double velotrace_read_gain_ki(unsigned short int i)
+{
+    return VELOCITY_KI_MAX - ((VELOTRACE_STEP_SIZE - 1) - i) * (double) (VELOCITY_KI_MAX - VELOCITY_KI_MIN) / (double) (VELOTRACE_STEP_SIZE - 1);
+}
+
+double velotrace_read_gain_kd(unsigned short int i)
+{
+    return VELOCITY_KD_MAX - ((VELOTRACE_STEP_SIZE - 1) - i) * (double) (VELOCITY_KD_MAX - VELOCITY_KD_MIN) / (double) (VELOTRACE_STEP_SIZE - 1);
+}
+
 void velotrace_set_gain(unsigned short int i)
 {
-    pid.kp = VELOCITY_KP_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KP_TOLERANCE;
-    pid.ki = VELOCITY_KI_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KI_TOLERANCE;
-    pid.kd = VELOCITY_KD_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_KD_TOLERANCE;
+    pid.kp = velotrace_read_gain_kp(i);
+    pid.ki = velotrace_read_gain_ki(i);
+    pid.kd = velotrace_read_gain_kd(i);
 }
 
 void velotrace_set_target(unsigned short int i)
 {
-    pid.target = VELOCITY_TARGET_MAX - (VELOTRACE_STEP_SIZE - i + 1) * (double) VELOCITY_TARGET_TOLERANCE;
+    pid.target = velotrace_read_target(i);
 }
 
 double velotrace_solve(double reference_)

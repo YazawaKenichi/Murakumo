@@ -174,11 +174,12 @@ int main(void)
 
             while(switch_read_enter())
             {
+              d_print();
               HAL_Delay(100);
             }
 
-            /* HAL_ADC_Stop_DMA */
-            analog_stop();
+            /* analogmode = all, */
+            analog_calibration_stop();
             /* flashbuffer.analogmin/max = analogmin/max */
             analog_set_on_flash(flashbuffer.analogmin, flashbuffer.analogmax);
           }

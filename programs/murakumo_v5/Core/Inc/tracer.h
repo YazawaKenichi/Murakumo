@@ -4,12 +4,16 @@
 #include "velodef.h"
 #include "pid.h"
 
-#define TRACE_STEP_SIZE 16
+#define TRACER_STEP_SIZE 16
 
 /* s_error and d_error are zero and if search then gain and target are zero */
 void tracer_start();
 /* s_error and d_error are zero*/
 void tracer_init(double samplingtime_);
+/* read kp ki kd */
+double tracer_read_gain_kp(unsigned short int i);
+double tracer_read_gain_ki(unsigned short int i);
+double tracer_read_gain_kd(unsigned short int i);
 /* kp ki kd settings*/
 void tracer_set_gain(unsigned short int i);
 /* terget setting */

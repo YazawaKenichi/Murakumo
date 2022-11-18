@@ -11,7 +11,7 @@ void tracer_start()
     tracer_init(1);
     if(rotary_read_playmode() == search)
     {
-        tracer_set_gain(0);
+        tracer_set_gain(rotary_read_value());
         tracer_set_target(0);
     }
 }
@@ -23,11 +23,26 @@ void tracer_init(double samplingtime_)
     before_error = 0;
 }
 
+double tracer_read_gain_kp(unsigned short int i)
+{
+    return TRACER_KP_MAX - ((TRACER_STEP_SIZE - 1) - i) * (double) (TRACER_KP_MAX - TRACER_KP_MIN) / (double) (TRACER_STEP_SIZE - 1);
+}
+
+double tracer_read_gain_ki(unsigned short int i)
+{
+    return TRACER_KI_MAX - ((TRACER_STEP_SIZE - 1) - i) * (double) (TRACER_KI_MAX - TRACER_KI_MIN) / (double) (TRACER_STEP_SIZE - 1);
+}
+
+double tracer_read_gain_kd(unsigned short int i)
+{
+    return TRACER_KD_MAX - ((TRACER_STEP_SIZE - 1) - i) * (double) (TRACER_KD_MAX - TRACER_KD_MIN) / (double) (TRACER_STEP_SIZE - 1);
+}
+
 void tracer_set_gain(unsigned short int i)
 {
-    pid.kp = TRACER_KP_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KP_TOLERANCE;
-    pid.ki = TRACER_KI_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KI_TOLERANCE;
-    pid.kd = TRACER_KD_MAX - (TRACE_STEP_SIZE - i + 1) * (double) TRACER_KD_TOLERANCE;
+    pid.kp = tracer_read_gain_kp(i);
+    pid.ki = tracer_read_gain_ki(i);
+    pid.kd = tracer_read_gain_kd(i);
 }
 
 void tracer_set_target(double target_)

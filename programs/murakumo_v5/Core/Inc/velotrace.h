@@ -10,6 +10,11 @@
 void velotrace_start();
 /* s_error and d_error are zero */
 void velotrace_init(double samplingtime_);
+/* read target kp ki kd */
+double velotrace_read_target(unsigned short int i);
+double velotrace_read_gain_kp(unsigned short int i);
+double velotrace_read_gain_ki(unsigned short int i);
+double velotrace_read_gain_kd(unsigned short int i);
 /* kp ki kd settings */
 void velotrace_set_gain(unsigned short int i);
 /* terget setting */

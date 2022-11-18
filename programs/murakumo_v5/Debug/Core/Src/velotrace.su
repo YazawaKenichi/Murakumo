@@ -1,5 +1,9 @@
 velotrace.c:9:6:velotrace_start	8	static
 velotrace.c:19:6:velotrace_init	16	static
-velotrace.c:26:6:velotrace_set_gain	16	static
-velotrace.c:33:6:velotrace_set_target	16	static
-velotrace.c:38:8:velotrace_solve	48	static
+velotrace.c:26:8:velotrace_read_target	16	static
+velotrace.c:31:8:velotrace_read_gain_kp	16	static
+velotrace.c:36:8:velotrace_read_gain_ki	16	static
+velotrace.c:41:8:velotrace_read_gain_kd	16	static
+velotrace.c:46:6:velotrace_set_gain	16	static
+velotrace.c:53:6:velotrace_set_target	16	static
+velotrace.c:58:8:velotrace_solve	48	static

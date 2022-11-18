@@ -8,7 +8,7 @@ PUTCHAR_PROTOTYPE
 
 void d_print()
 {
-	// debug print
+	/* debug print */
 	print_analog_rate();
 }
 
@@ -17,6 +17,23 @@ void print_while()
 	printf("///// WHILE /////\n\r");
     print_playmode();
 	print_rotary_value();
+	/* print Tracer and Velotracer target and gains */
+	print_tracer_values();
+	print_velotrace_values();
+}
+
+void print_tracer_values()
+{
+	printf("Tracer\r\n");
+	printf("target = 0\r\n");
+	printf("kp = %5.3f, ki = %5.3f, kd = %5.3f\r\n", tracer_read_gain_kp(rotary_read_value()), tracer_read_gain_ki(rotary_read_value()), tracer_read_gain_kd(rotary_read_value()));
+}
+
+void print_velotrace_values()
+{
+	printf("Velotrace\r\n");
+	printf("target = %5.3f\r\n", velotrace_read_target(rotary_read_value()));
+	printf("kp = %5.3f, ki = %5.3f, kd = %5.3f\r\n", velotrace_read_gain_kp(rotary_read_value()), velotrace_read_gain_ki(rotary_read_value()), velotrace_read_gain_kd(rotary_read_value()));
 }
 
 void print_playmode()

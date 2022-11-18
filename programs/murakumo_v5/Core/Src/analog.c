@@ -11,6 +11,34 @@ uint16_t analograte[CALIBRATIONSIZE];
 
 AnalogMode analogmode;
 
+void analog_print()
+{
+	printf("analog_print\r\n");
+	printf("\x1b[23C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analog[12], analog[14], analog[15], analog[13]);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analog[0], analog[2], analog[4], analog[6], analog[8], analog[10], analog[11], analog[9], analog[7], analog[5], analog[3], analog[1]);
+}
+
+void analog_print_max()
+{
+	printf(ESC_RED);
+	printf("analog_print_max\r\n");
+	printf("\x1b[23C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analogmax[12], analogmax[14], analogmax[15], analogmax[13]);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analogmax[0], analogmax[2], analogmax[4], analogmax[6], analogmax[8], analogmax[10], analogmax[11], analogmax[9], analogmax[7], analogmax[5], analogmax[3], analogmax[1]);
+	printf(ESC_DEF);
+}
+
+void analog_print_min()
+{
+	printf(ESC_CYA);
+	printf("analog_print_min\r\n");
+	printf("\x1b[23C");	// Cursor move right *24
+	printf("%4d, %4d | %4d, %4d\r\n", analogmin[12], analogmin[14], analogmin[15], analogmin[13]);
+	printf("%4d, %4d, %4d, %4d, %4d, %4d | %4d, %4d, %4d, %4d, %4d, %4d\r\n", analogmin[0], analogmin[2], analogmin[4], analogmin[6], analogmin[8], analogmin[10], analogmin[11], analogmin[9], analogmin[7], analogmin[5], analogmin[3], analogmin[1]);
+	printf(ESC_DEF);
+}
+
 void analog_set_on_flash(uint16_t *analogmin_, uint16_t *analogmax_)
 {
 	printf("analog_set_on_flash()\r\n");
@@ -57,6 +85,10 @@ void analog_calibration_stop()
 {
 	/* analog_calibration_stop */
 	analogmode = all;
+	/* HAL_ADC_Stop_DMA */
+	analog_stop();
+	analog_print_max();
+	analog_print_min();
 }
 
 void analog_init()
