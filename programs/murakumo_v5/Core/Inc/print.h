@@ -3,6 +3,7 @@
 
 #include "stdio.h"
 #include "main.h"
+#include "analog.h"
 
 #define ESC_MAG	"\x1b[35m"
 #define ESC_RED "\x1b[31m"

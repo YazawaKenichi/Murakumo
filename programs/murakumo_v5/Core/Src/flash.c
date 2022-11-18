@@ -22,7 +22,7 @@ void flash_erase(void)
 	HAL_FLASHEx_Erase(&erase, &pageError);
 }
 
-void flash_write(uint32_t address, uint8_t *data, uint32_t size)
+void flash_writting(uint32_t address, uint8_t *data, uint32_t size)
 {
 #if USE_WRITE_FLASH
 	HAL_FLASH_Unlock();
@@ -38,13 +38,24 @@ void flash_write(uint32_t address, uint8_t *data, uint32_t size)
 #endif
 }
 
-void flash_load(uint32_t address, uint8_t *data, uint32_t size)
+void flash_reading(uint32_t address, uint8_t *data, uint32_t size)
 {
 	memcpy(data, (uint64_t*) address, size);
 }
 
+void flash_write()
+{
+	flash_writting(start_address, (uint8_t *) &flashbuffer, sizeof(FlashBuffer));
+}
+
+void flash_read()
+{
+	flash_reading(start_address, (uint8_t *) &flashbuffer, sizeof(FlashBuffer));
+}
+
+/* flash_read called only this method. */
 void flash_init()
 {
-	flash_load(start_address, (uint8_t*) &flashbuffer, sizeof(FlashBuffer));
+	flash_read();
 }
 

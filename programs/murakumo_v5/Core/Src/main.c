@@ -174,14 +174,15 @@ int main(void)
 
             while(switch_read_enter())
             {
-              d_print();
+              #if ANALOG_CALIBRATION_IN_WHILE
+              analog_get_and_sort();
+              #endif
+              // d_print();
               HAL_Delay(100);
             }
 
             /* analogmode = all, */
             analog_calibration_stop();
-            /* flashbuffer.analogmin/max = analogmin/max */
-            analog_set_on_flash(flashbuffer.analogmin, flashbuffer.analogmax);
           }
           else    // if(!(rotary_read_playmode()== calibration))
           {
@@ -1086,6 +1087,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void main_init()
 {
+  flash_init();
   /* switch_init, HAL_TIM_BASE_Start_IT(&htim11), rotary_init */
 	tim11_init();
   /* encoder_init */

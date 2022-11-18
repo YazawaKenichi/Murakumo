@@ -9,6 +9,19 @@ void course_init()
 	course_length = 0;
 }
 
+void course_start()
+{
+	/* course_start */
+}
+
+void course_end()
+{
+	if(rotary_read_playmode() == search)
+	{
+		flash_write();
+	}
+}
+
 double course_read_length()
 {
 	return course_length;

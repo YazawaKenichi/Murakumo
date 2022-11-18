@@ -9,7 +9,6 @@ PUTCHAR_PROTOTYPE
 void d_print()
 {
 	/* debug print */
-	print_analog_rate();
 }
 
 void print_while()
@@ -38,7 +37,38 @@ void print_velotrace_values()
 
 void print_playmode()
 {
-	printf("playmode = %2d\r\n", rotary_read_playmode());
+	printf("playmode = ");
+	switch(rotary_read_playmode())
+	{
+		case calibration:
+			printf("calibration");
+			break;
+		case search:
+			printf("search");
+			break;
+		case accel:
+			printf("accel");
+			break;
+		case max_enable:
+			printf("max_enable");
+			break;
+		case pid_tuning:
+			printf("pid_tuning");
+			break;
+		case zero_trace:
+			printf("zero_trace");
+			break;
+		case banquet:
+			printf("banquet");
+			break;
+		case flash_print:
+			printf("flash_print");
+			break;
+		default:
+			printf("unknown playmode...");
+			break;
+	}
+	printf("\r\n");
 }
 
 void print_rotary_value()
