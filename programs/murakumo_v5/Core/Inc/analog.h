@@ -4,7 +4,7 @@
 #include "main.h"
 #include "print.h"
 
-#define ANALOG_CALIBRATION_IN_WHILE 1
+#define ANALOG_CALIBRATION_IN_WHILE 0
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor
 #define USE_LONGSENSOR 0	// only use long sensor
 

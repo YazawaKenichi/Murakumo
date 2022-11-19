@@ -14,10 +14,18 @@ void velotrace_start()
         velotrace_set_gain(0);
         velotrace_set_target(0);
     }
+    else
+    {
+        velotrace_set_gain(rotary_read_value());
+        velotrace_set_target(rotary_read_value());
+    }
 }
 
 void velotrace_init(double samplingtime_)
 {
+    #if D_VELOTRACE
+    printf("samplingtime = 1, s_error = 0, before_error = 0\r\n");
+    #endif
     samplingtime = samplingtime_;
     s_error = 0;
     before_error = 0;
@@ -45,6 +53,9 @@ double velotrace_read_gain_kd(unsigned short int i)
 
 void velotrace_set_gain(unsigned short int i)
 {
+    #if D_VELOTRACE
+    printf("pid = velotrace_read_gain\r\n");
+    #endif
     pid.kp = velotrace_read_gain_kp(i);
     pid.ki = velotrace_read_gain_ki(i);
     pid.kd = velotrace_read_gain_kd(i);
@@ -52,6 +63,9 @@ void velotrace_set_gain(unsigned short int i)
 
 void velotrace_set_target(unsigned short int i)
 {
+    #if D_VELOTRACE
+    printf("pid = velotrace_read_target\r\n");
+    #endif
     pid.target = velotrace_read_target(i);
 }
 

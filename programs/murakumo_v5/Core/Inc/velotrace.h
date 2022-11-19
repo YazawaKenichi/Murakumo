@@ -3,6 +3,9 @@
 
 #include "velodef.h"
 #include "pid.h"
+#include "print.h"
+
+#define D_VELOTRACE 1
 
 #define VELOTRACE_STEP_SIZE 16
 

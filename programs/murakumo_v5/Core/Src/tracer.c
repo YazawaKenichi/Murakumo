@@ -9,15 +9,15 @@ PID pid;
 void tracer_start()
 {
     tracer_init(1);
-    if(rotary_read_playmode() == search)
-    {
-        tracer_set_gain(rotary_read_value());
-        tracer_set_target(0);
-    }
+    tracer_set_gain(rotary_read_value());
+    tracer_set_target(0);
 }
 
 void tracer_init(double samplingtime_)
 {
+    #if D_TRACER
+    printf("[tracer.c] > sampling_time = 1, s_error = 0, before_error = 0\r\n");
+    #endif
     samplingtime = samplingtime_;
     s_error = 0;
     before_error = 0;
@@ -40,6 +40,9 @@ double tracer_read_gain_kd(unsigned short int i)
 
 void tracer_set_gain(unsigned short int i)
 {
+    #if D_TRACER
+    printf("pid = tracer_read_gain\r\n");
+    #endif
     pid.kp = tracer_read_gain_kp(i);
     pid.ki = tracer_read_gain_ki(i);
     pid.kd = tracer_read_gain_kd(i);
@@ -47,6 +50,9 @@ void tracer_set_gain(unsigned short int i)
 
 void tracer_set_target(double target_)
 {
+    #if D_TRACER
+    printf("pid = target \r\n");
+    #endif
     pid.target = target_;
 }
 

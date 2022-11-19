@@ -5,7 +5,9 @@
 
 #define D_ANALOG 0
 #define D_ANALOGRATE 0
-#define D_MOTOR 0
+#ifndef D_MOTOR
+#define D_MOTOR 1
+#endif
 #define D_SIDESENS 0	//
 #define D_ENCODER 0	// Debug Encoder
 #define D_PWM 0
@@ -22,6 +24,7 @@
 #define D_SEARCH 1
 #define D_WHILE_PRINT 0
 #define D_COURSE_SAVING 0
+#define D_PRINT 1
 
 #define USE_ANALOG 1
 #define USE_MOTOR 1

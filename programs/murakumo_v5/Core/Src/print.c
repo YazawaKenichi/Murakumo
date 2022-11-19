@@ -9,6 +9,9 @@ PUTCHAR_PROTOTYPE
 void d_print()
 {
 	/* debug print */
+	printf("d_print()\r\n");
+	printf("switch_read_enter() = %1d\r\n", switch_read_enter());
+	printf("rotary_read() = %2d\r\n", rotary_read());
 }
 
 void print_while()

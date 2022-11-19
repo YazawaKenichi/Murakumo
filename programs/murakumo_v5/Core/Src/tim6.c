@@ -14,12 +14,16 @@ void tim6_start()
     analog_set_from_flash(flashbuffer.analogmin, flashbuffer.analogmax);
     HAL_Delay(3000);
     /* sensgettime = 0, HAL_ADC_Start_DMA() */
+    printf("analog_start()\r\n");
     analog_start();
     /* samplingtime = 0, s_error = 0, before_error = 0, if search ( p/i/d = [0], target = [0] ) */
+    printf("velotrace_start()\r\n");
     velotrace_start();
     /* samplingtime = 0, s_error = 0, before_error = 0 */
+    printf("tracer_start()\r\n");
     tracer_start();
 
+    printf("motor_start()\r\n");
     motor_start();
 	HAL_TIM_Base_Start_IT(&htim6);	// PID
 }

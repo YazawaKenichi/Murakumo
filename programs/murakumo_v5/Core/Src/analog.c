@@ -146,6 +146,7 @@ void analog_init()
 
 void analog_start()
 {
+	printf("analog_sensor_start()\r\n");
 	analog_sensor_start();
 }
 
@@ -156,6 +157,7 @@ void analog_stop()
 
 void analog_sensor_start()
 {
+	printf("sensgettime = 0\r\nHAL_ADC_Start_DMA()\r\n");
     sensgettime = 0;
     if(HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analograw, CALIBRATIONSIZE) != HAL_OK)
     {
@@ -181,7 +183,7 @@ uint16_t analog_sensor_get(unsigned char i)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 {
 #if !ANALOG_CALIBRATION_IN_WHILE
-	// analog_get_and_sort();
+	analog_get_and_sort();
 #endif
 }
 
@@ -218,17 +220,14 @@ void analog_get_and_sort()
 			#endif
 			
 			/* get max and min */
-			if(analog_read_analogmode() == calibrating)
-			{
-				#if ANALOG_CALIBRATION_IN_WHILE
-				analog_print_analogmode();
-				#endif
-				analogmax[index] = (analogmax[index] < analog[index]) ? analog[index] : analogmax[index];
-				analogmin[index] = (analogmin[index] > analog[index]) ? analog[index] : analogmin[index];
-				#if ANALOG_CALIBRATION_IN_WHILE
-				printf("analogmin[%2d] = %5d, analogmax[%2d] = %5d\r\n", index, analogmin[index], index, analogmax[index]);
-				#endif
-			}
+			#if ANALOG_CALIBRATION_IN_WHILE
+			analog_print_analogmode();
+			#endif
+			analogmax[index] = (analogmax[index] < analog[index]) ? analog[index] : analogmax[index];
+			analogmin[index] = (analogmin[index] > analog[index]) ? analog[index] : analogmin[index];
+			#if ANALOG_CALIBRATION_IN_WHILE
+			printf("analogmin[%2d] = %5d, analogmax[%2d] = %5d\r\n", index, analogmin[index], index, analogmax[index]);
+			#endif
 		}
 	}
 

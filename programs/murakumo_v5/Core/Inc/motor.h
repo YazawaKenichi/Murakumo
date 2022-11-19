@@ -2,6 +2,9 @@
 #define __MOTOR_H__
 
 #include "main.h"
+#include "print.h"
+
+#define D_MOTOR 1
 
 #define PWMMAX 1000
 
