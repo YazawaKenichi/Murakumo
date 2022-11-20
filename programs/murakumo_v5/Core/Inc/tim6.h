@@ -10,6 +10,8 @@
 #include "main.h"
 #include "sidesensor.h"
 
+#define D_TIM6 1
+
 void tim6_init();
 void tim6_start();
 void tim6_stop();

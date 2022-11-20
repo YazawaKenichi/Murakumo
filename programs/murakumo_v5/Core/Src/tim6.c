@@ -1,5 +1,11 @@
 #include "tim6.h"
 
+#if D_TIM6
+uint16_t analogl, analogr;
+int direction;
+double leftmotor, rightmotor;
+#endif
+
 void tim6_init()
 {
     motor_init();
@@ -37,9 +43,11 @@ void tim6_stop()
 
 void tim6_main()
 {
+    #if !D_TIM6
     uint16_t analogl, analogr;
     int direction;
     double leftmotor, rightmotor;
+    #endif
     analogl = 0;
     analogr = 0;
 
@@ -82,4 +90,11 @@ void tim6_main()
     }
 
     motor_set(leftmotor, rightmotor);
+}
+
+void tim6_d_print()
+{
+    #if D_TIM6
+    printf("analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3d\r\n", analogl, analogr, direction, leftmotor, rigtmotor);
+    #endif
 }
