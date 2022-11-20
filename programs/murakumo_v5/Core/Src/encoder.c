@@ -10,6 +10,26 @@ void encoder_init()
     LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
 }
 
+double encoder_LENGTHPERPULSE()
+{
+    return LENGTHPERPULSE;
+}
+
+double encoder_length()
+{
+  return (double) encoder_read() * (double) LENGTHPERPULSE;
+}
+
+double encoder_length_left()
+{
+  return (double) encoder_read_left() * (double) LENGTHPERPULSE;
+}
+
+double encoder_length_right()
+{
+  return (double) encoder_read_right() * (double) LENGTHPERPULSE;
+}
+
 void encoder_finalize()
 {
     encoder_stop();

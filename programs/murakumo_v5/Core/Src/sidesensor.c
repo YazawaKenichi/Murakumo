@@ -28,6 +28,14 @@ void sidesensor_stop()
 	/* sidesensor_stop */
 }
 
+SideSensorState sidesensor_read_state()
+{
+}
+
+void sidesensor_set_state(SideSensorState)
+{
+}
+
 void sidesensor_right()
 {
     markerstate = 0b01;

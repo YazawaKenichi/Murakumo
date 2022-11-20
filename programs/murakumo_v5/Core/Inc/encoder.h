@@ -1,13 +1,12 @@
 #ifndef __ENCODER_H__
 #define __ENCODER_H__
 
+#ifndef __MAIN_H
 #include "main.h"
+#endif
 #include "math.h"
 
 #define ENCODER_MIDDLE (2048/2)
-
-/* Timer 10 Frequent */
-#define TIM10_Hz 0.001  // [Hz]
 
 /* LENGTH PER PULSE */
 #define TIREDIAMETER 21000
@@ -27,6 +26,9 @@ void encoder_stop();
 double encoder_read();
 double encoder_read_left();
 double encoder_read_right();
+double encoder_length_left();
+double encoder_length_right();
+double encoder_length();
 void encoder_set();
 
 extern double LENGTHPERPULSE;

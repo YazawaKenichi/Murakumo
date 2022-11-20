@@ -66,18 +66,24 @@ double tim10_read_velocity()
 
 void tim10_main()
 {
+  double el, er, e;
+
+  el = encoder_length_left();
+  er = encoder_length_right();
+  e = encoder_length();
+
   /* set encoder middle and update velocities */
   encoder_set();
 
   /* update velocity */
-  velocity_left = encoder_read_left() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
-  velocity_right = encoder_read_right() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
-  velocity = encoder_read() * (double) LENGTHPERPULSE * (double) TIM10_Hz;
+  velocity_left = el * (double) TIM10_Hz;
+  velocity_right = er * (double) TIM10_Hz;
+  velocity = e * (double) TIM10_Hz;
 
   /* update lengths */
-  length_left += (double) encoder_read_left() * (double) LENGTHPERPULSE;
-  length_right += (double) encoder_read_right() * (double) LENGTHPERPULSE;
-  length += (double) encoder_read() * (double) LENGTHPERPULSE;
+  length_left += el;
+  length_right += er;
+  length += e;
 
   /*
   if(length >= SAMPLING_LENGTH)
@@ -87,4 +93,12 @@ void tim10_main()
   */
 
   sidesensor_function();
+}
+
+void print_tim10()
+{
+  #if D_TIM10
+  printf("velocity_left = %7.3f, velocity_right = %7.3f, velocity = %7.3f\r\n", velocity_left, velocity_right, velocity);
+  printf("length_left = %7.3f, length_right = %7.3f, length = %7.3f\r\n", length_left, length_right, length);
+  #endif
 }

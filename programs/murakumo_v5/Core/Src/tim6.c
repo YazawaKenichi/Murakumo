@@ -95,6 +95,6 @@ void tim6_main()
 void tim6_d_print()
 {
     #if D_TIM6
-    printf("analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3d\r\n", analogl, analogr, direction, leftmotor, rigtmotor);
+    printf("[tim6] > analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3d\r\n", analogl, analogr, direction, leftmotor, rigtmotor);
     #endif
 }
