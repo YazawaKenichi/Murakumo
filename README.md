@@ -1,5 +1,4 @@
 # Murakumo
-Yazawa の初めてのロボトレの情報を置いておくリポジトリ。
 
 ```
 * 8b    d8 88   88 88""Yb    db    88  dP 88   88 8b    d8  dP"Yb             Yb    dP 888888 *
@@ -8,6 +7,7 @@ Yazawa の初めてのロボトレの情報を置いておくリポジトリ。
 * 88 YY 88 `YbodP' 88  Yb dP""""Yb 88  Yb `YbodP' 88 YY 88  YbodP  oooooooooo    YP    8888P' *
 ```
 
+Yazawa の初めてのロボトレの情報を置いておくリポジトリ。
 ##### Excel フォルダ
 機体の仕様決定
 
