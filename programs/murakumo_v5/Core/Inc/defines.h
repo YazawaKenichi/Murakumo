@@ -5,11 +5,7 @@
 
 #define D_ANALOG 0
 #define D_ANALOGRATE 0
-#ifndef D_MOTOR
-#define D_MOTOR 1
-#endif
 #define D_SIDESENS 0	//
-#define D_ENCODER 0	// Debug Encoder
 #define D_PWM 0
 #define D_ROTARY 0
 #define D_PLAYMODE 0

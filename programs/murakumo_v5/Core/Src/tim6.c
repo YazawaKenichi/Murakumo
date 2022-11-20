@@ -30,6 +30,13 @@ void tim6_start()
     tracer_start();
 
     printf("motor_start()\r\n");
+    #if D_TIM6
+    analogl = 0;
+    analogr = 0;
+    direction = 0;
+    leftmotor = 0;
+    rightmotor = 0;
+    #endif
     motor_start();
 	HAL_TIM_Base_Start_IT(&htim6);	// PID
 }
@@ -43,6 +50,7 @@ void tim6_stop()
 
 void tim6_main()
 {
+    motor_set(500, 500);
     #if !D_TIM6
     uint16_t analogl, analogr;
     int direction;
@@ -80,8 +88,8 @@ void tim6_main()
 
     if(motor_read_enable())
     {
-        leftmotor   = velotrace_solve(tim10_read_velocity()) + tracer_solve(direction);
-        rightmotor  = velotrace_solve(tim10_read_velocity()) - tracer_solve(direction);
+        // leftmotor   = velotrace_solve(tim10_read_velocity()) + tracer_solve(direction);
+        // rightmotor  = velotrace_solve(tim10_read_velocity()) - tracer_solve(direction);
     }
     else
     {
@@ -89,12 +97,12 @@ void tim6_main()
         rightmotor = 0;
     }
 
-    motor_set(leftmotor, rightmotor);
+    // motor_set(leftmotor, rightmotor);
 }
 
 void tim6_d_print()
 {
     #if D_TIM6
-    printf("[tim6] > analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3d\r\n", analogl, analogr, direction, leftmotor, rigtmotor);
+    printf("[tim6] > analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3f\r\n", analogl, analogr, direction, leftmotor, rightmotor);
     #endif
 }

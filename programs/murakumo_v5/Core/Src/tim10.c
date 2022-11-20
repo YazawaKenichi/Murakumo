@@ -4,16 +4,24 @@
 double length, length_left, length_right;
 double velocity_left, velocity_right, velocity;
 
-void tim10_length_init()
+void tim10_length_set_zero()
 {
   length_left = 0;
   length_right = 0;
   length = 0;
 }
 
+void tim10_velocity_set_zero()
+{
+  velocity_left = 0;
+  velocity_right = 0;
+  velocity = 0;
+}
+
 void tim10_init()
 {
-  tim10_length_init();
+  tim10_length_set_zero();
+  tim10_velocity_set_zero();
 	encoder_init();
 	HAL_TIM_Base_Stop_IT(&htim10);
 }
@@ -24,6 +32,8 @@ void tim10_start()
   encoder_start();
   /* marker = subsensbuf = sidedeltacount = markerstate = rightmarkercount = 0 */
   sidesensor_start();
+  tim10_length_set_zero();
+  tim10_velocity_set_zero();
   HAL_TIM_Base_Start_IT(&htim10);
 }
 
@@ -95,10 +105,11 @@ void tim10_main()
   sidesensor_function();
 }
 
-void print_tim10()
+void tim10_d_print()
 {
   #if D_TIM10
-  printf("velocity_left = %7.3f, velocity_right = %7.3f, velocity = %7.3f\r\n", velocity_left, velocity_right, velocity);
-  printf("length_left = %7.3f, length_right = %7.3f, length = %7.3f\r\n", length_left, length_right, length);
+  printf("[tim10] > encoder_length_left() = %7.5f, encoder_length_right() = %7.5f, encoder_length() = %7.5f\r\n", encoder_length_left(), encoder_length_right(), encoder_length());
+  printf("[tim10] > velocity_left = %7.3f, velocity_right = %7.3f, velocity = %7.3f\r\n", velocity_left, velocity_right, velocity);
+  printf("[tim10] > length_left = %7.3f, length_right = %7.3f, length = %7.3f\r\n", length_left, length_right, length);
   #endif
 }

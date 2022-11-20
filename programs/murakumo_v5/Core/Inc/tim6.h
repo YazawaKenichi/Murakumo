@@ -17,4 +17,6 @@ void tim6_start();
 void tim6_stop();
 void tim6_main();
 
+void tim6_d_print();
+
 #endif

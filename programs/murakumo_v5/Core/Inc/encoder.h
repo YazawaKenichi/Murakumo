@@ -6,6 +6,10 @@
 #endif
 #include "math.h"
 
+#ifndef D_ENCODER
+#define D_ENCODER 1
+#endif
+
 #define ENCODER_MIDDLE (2048/2)
 
 /* LENGTH PER PULSE */

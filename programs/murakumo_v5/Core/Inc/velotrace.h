@@ -5,7 +5,7 @@
 #include "pid.h"
 #include "print.h"
 
-#define D_VELOTRACE 1
+#define D_VELOTRACE 0
 
 #define VELOTRACE_STEP_SIZE 16
 

@@ -8,6 +8,9 @@ double encoder_left, encoder_right, encoder;
 void encoder_init()
 {
     LENGTHPERPULSE = M_PI * TIREDIAMETER * PINION / (double) PULSEPERROTATE / (double) SUPER;
+    #if D_ENCODER
+    printf("LENGTHPERPULSE = %7.3f\r\n", LENGTHPERPULSE);
+    #endif
 }
 
 double encoder_LENGTHPERPULSE()
@@ -44,6 +47,10 @@ void encoder_set_middle()
 
 void encoder_start()
 {
+    encoder_left = 0;
+    encoder_right = 0;
+    encoder = 0;
+
     encoder_set_middle();
 
 	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
@@ -80,4 +87,11 @@ void encoder_set()
     encoder = (encoder_left + encoder_right) / 2;
 
     encoder_set_middle();
+}
+
+void encoder_d_print()
+{
+    #if D_ENCODER
+    printf("[encoder] > encoder_read_left() = %7.3f, encoder_read_left() = %7.3f, encoder_read() = %7.3f\r\n", encoder_read_left(), encoder_read_right(), encoder_read());
+    #endif
 }

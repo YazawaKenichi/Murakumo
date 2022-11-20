@@ -6,6 +6,8 @@
 #include "sidesensor.h"
 #include "LED.h"
 
+#define D_TIM10 1
+
 #define TIM10_Hz 0.001
 
 void tim10_length_init();
@@ -23,5 +25,7 @@ double tim10_read_length_right();
 double tim10_read_length();
 
 void tim10_main();
+
+void tim10_d_print();
 
 #endif

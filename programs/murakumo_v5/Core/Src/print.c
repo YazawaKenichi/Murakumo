@@ -12,6 +12,8 @@ void d_print()
 	printf("d_print()\r\n");
 	printf("switch_read_enter() = %1d\r\n", switch_read_enter());
 	printf("rotary_read() = %2d\r\n", rotary_read());
+	tim6_d_print();
+	tim10_d_print();
 }
 
 void print_while()
