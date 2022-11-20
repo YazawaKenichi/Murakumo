@@ -9,7 +9,7 @@ typedef enum SIDESENSORSTATE
     start_or_stop = 1,
     curve = 2,
     cross = 3
-} SideSensorState
+} SideSensorState;
 
 void sidesensor_start();
 void sidesensor_init();

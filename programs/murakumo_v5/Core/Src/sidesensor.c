@@ -1,6 +1,7 @@
 #include "sidesensor.h"
 
 unsigned char subsensbuf, marker, sidedeltacount, markerstate, rightmarkercount;
+SideSensorState sidesensorstate;
 
 uint8_t sidesensor_read()
 {
@@ -30,15 +31,17 @@ void sidesensor_stop()
 
 SideSensorState sidesensor_read_state()
 {
+	return sidesensorstate;
 }
 
-void sidesensor_set_state(SideSensorState)
+void sidesensor_set_state(SideSensorState sidesensorstate_)
 {
+	sidesensorstate = sidesensorstate_;
 }
 
 void sidesensor_right()
 {
-    markerstate = 0b01;
+    markerstate = start_or_stop;
     if(rightmarkercount == 1 - 1)
     {
         // start
@@ -53,13 +56,19 @@ void sidesensor_right()
 void sidesensor_left()
 {
     // curve
-    markerstate = 0b10;
+    markerstate = curve;
 }
 
 void sidesensor_cross()
 {
     // cross
-    markerstate = 0b11;
+    markerstate = cross;
+}
+
+void sidesensor_straight()
+{
+	// straight
+	markerstate = straight;
 }
 
 void sidesensor_function()
