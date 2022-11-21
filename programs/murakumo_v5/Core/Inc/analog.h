@@ -1,8 +1,8 @@
 #ifndef __ANALOG_H__
 #define __ANALOG_H__
 
-#include "main.h"
 #include "print.h"
+#include "defines.h"
 
 #define ANALOG_CALIBRATION_IN_WHILE 0
 #define ATTACH_LONGSENSOR 0	// use normal sensor and long sensor

@@ -1,8 +1,3 @@
 print.c:3:1:__io_putchar	16	static
-print.c:9:6:d_print	8	static
-print.c:19:6:print_while	8	static
-print.c:29:6:print_tracer_values	40	static
-print.c:36:6:print_velotrace_values	40	static
-print.c:43:6:print_playmode	8	static
-print.c:79:6:print_rotary_value	8	static
-print.c:84:6:print_analog_rate	96	static
+print.c:9:6:print_rotary_value	8	static
+print.c:14:6:print_analog_rate	96	static

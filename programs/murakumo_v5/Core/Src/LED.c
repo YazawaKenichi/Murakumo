@@ -1,5 +1,7 @@
 #include "LED.h"
 
+#ifndef __LED_H__
+
 void write_led1(uint8_t value_)
 {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, value_);
@@ -28,3 +30,5 @@ void write_led(uint8_t mask_, uint8_t value_)
         write_led2(0b10 & value_ >> 1);
     }
 }
+
+#endif

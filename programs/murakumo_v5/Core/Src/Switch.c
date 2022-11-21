@@ -24,12 +24,12 @@ uint8_t switch_read_enter()
 
 uint8_t switch1_read()
 {
-    return HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) ? 0 : 1;
+    return HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) ? 0 : 1;
 }
 
 uint8_t switch2_read()
 {
-    return HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) ? 0 : 1;
+    return HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15) ? 0 : 1;
 }
 
 uint8_t switch_read()

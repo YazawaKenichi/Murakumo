@@ -1,14 +1,14 @@
 #ifndef __TIM6_H__
 #define __TIM6_H__
 
+#include "print.h"
 #include "analog.h"
 #include "flash.h"
 #include "motor.h"
-#include "encoder.h"
 #include "velotrace.h"
 #include "tracer.h"
-#include "main.h"
-#include "sidesensor.h"
+#include "defines.h"
+#include "Rotary.h" /* rotary_read_playmode() */
 
 #define D_TIM6 1
 

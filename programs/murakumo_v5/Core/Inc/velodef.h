@@ -1,7 +1,7 @@
+#define __VELODEF_H__   // 今は使われていないヘッダ
+
 #ifndef __VELODEF_H__
 #define __VELODEF_H__
-
-#include "defines.h"
 
 #define NOISY 0
 #define GOD 0

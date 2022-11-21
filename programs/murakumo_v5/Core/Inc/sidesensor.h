@@ -1,7 +1,7 @@
 #ifndef __SIDESENSOR_H__
 #define __SIDESENSOR_H__
 
-#include "main.h"
+#include "defines.h"
 
 typedef enum SIDESENSORSTATE
 {

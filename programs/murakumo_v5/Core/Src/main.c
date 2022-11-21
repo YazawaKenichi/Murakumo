@@ -41,6 +41,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#ifndef __DEFINES_H__
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -62,6 +63,7 @@ TIM_HandleTypeDef htim14;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
+#endif	/* __DEFINES_H__ */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -160,7 +162,7 @@ int main(void)
 #if !D_LED
 	while (1)
 	{
-    print_while();
+    main_print_while();
 
 		if(switch_read_enter())
 		{
@@ -174,10 +176,11 @@ int main(void)
 
             while(switch_read_enter())
             {
+
               #if ANALOG_CALIBRATION_IN_WHILE
               analog_get_and_sort();
               #endif
-              // d_print();
+              main_d_print();
               HAL_Delay(100);
             }
 
@@ -190,7 +193,7 @@ int main(void)
 
             while(switch_read_enter())
             {
-              d_print();
+              main_d_print();
               HAL_Delay(250);
             }
 
@@ -202,8 +205,8 @@ int main(void)
 
           while (switch_read_enter())
           {
-            d_print();
-            HAL_Delay(500);
+            main_d_print();
+            HAL_Delay(250);
           }
 
           running_stop();
@@ -213,7 +216,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -224,7 +227,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -235,7 +238,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -246,7 +249,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -257,7 +260,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -268,7 +271,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -279,7 +282,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -290,7 +293,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -301,7 +304,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -312,7 +315,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -323,7 +326,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -334,7 +337,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -345,7 +348,7 @@ int main(void)
 
           while(switch_read_enter())
           {
-            d_print();
+            main_d_print();
             HAL_Delay(250);
           }
 
@@ -361,7 +364,7 @@ int main(void)
 
             while(switch_read_enter())
             {
-              d_print();
+              main_d_print();
               HAL_Delay(250);
             }
 
@@ -687,7 +690,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 2047;
+  htim1.Init.Period = 4096;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -737,7 +740,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 2047;
+  htim3.Init.Period = 4096;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
@@ -1089,7 +1092,7 @@ void main_init()
 {
   flash_init();
   /* switch_init, HAL_TIM_BASE_Start_IT(&htim11), rotary_init */
-	tim11_init();
+  tim11_init();
   /* encoder_init */
   tim10_init();
   /* motor_init, analog_init, velotrace_init(1), tracer_init(1) */
@@ -1112,28 +1115,30 @@ void running_start()
   tim6_start();
 }
 
+void main_print_while()
+{
+	printf("///// WHILE /////\n\r");
+  rotary_print_playmode();
+	print_rotary_value();
+	/* print Tracer and Velotracer target and gains */
+	tracer_print_values();
+	velotrace_print_values();
+}
+
+void main_d_print()
+{
+  printf("main_d_print\r\n");
+  #if D_ROTARY
+  #endif
+  tim10_d_print();
+}
+
 void running_stop()
 {
   /* HAL_TIM_Base_Stop_IT, HAL_ADC_Stop_DMA, motor_enable = 0, HAL_TIM_PWM_Stop */
   tim6_stop();
   /* HAL_TIM_Base_Stop_IT, HAL_TIM_Encoder_Stop, sidesensor_stop */
   tim10_stop();
-}
-
-void imu_initialize()
-{
-#if USE_IMU
-	printf("Starting SPI2 (IMU)\r\n");
-	uint8_t wai, ret;
-	ret = imu_init(&wai);
-	printf("who_am_i = %d\r\n", wai);
-	if (ret == 1) {
-		printf("SPI INIT COLLECT!\r\n");
-	} else {
-		printf("SPI INIT FAILURE x_x \r\n");
-	}
-#endif
-
 }
 
 /* USER CODE END 4 */

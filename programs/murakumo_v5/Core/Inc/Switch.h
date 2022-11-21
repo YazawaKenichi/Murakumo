@@ -1,7 +1,8 @@
 #ifndef __SWITCH_H__
 #define __SWITCH_H__
 
-#include "main.h"
+#include "print.h"
+#include "defines.h"
 
 typedef struct
 {

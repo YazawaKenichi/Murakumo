@@ -40,28 +40,28 @@ void motor_set(double motor_left_, double motor_right_)
 {
     if(motor_left_ < 0)
     {
-        HAL_GPIO_WritePin(DRV1_PH_GPIO_Port, DRV1_PH_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
         motor_left_ = motor_left_ * -1;
     }
     else
     {
-        HAL_GPIO_WritePin(DRV1_PH_GPIO_Port, DRV1_PH_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
     }
 
     if(motor_right_ < 0)
     {
-        HAL_GPIO_WritePin(DRV2_PH_GPIO_Port, DRV2_PH_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
         motor_right_ = motor_right_ * -1;
     }
     else
     {
-        HAL_GPIO_WritePin(DRV2_PH_GPIO_Port, DRV2_PH_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
     }
 
     motor_left_ = motor_left_ > PWMMAX ? PWMMAX : motor_left_;
     motor_right_ = motor_right_ > PWMMAX ? PWMMAX : motor_right_;
 
-    if(enable)
+    if(!enable)
     {
         motor_left_ = 0;
         motor_right_ = 0;

@@ -108,8 +108,9 @@ void tim10_main()
 void tim10_d_print()
 {
   #if D_TIM10
-  printf("[tim10] > encoder_length_left() = %7.5f, encoder_length_right() = %7.5f, encoder_length() = %7.5f\r\n", encoder_length_left(), encoder_length_right(), encoder_length());
-  printf("[tim10] > velocity_left = %7.3f, velocity_right = %7.3f, velocity = %7.3f\r\n", velocity_left, velocity_right, velocity);
-  printf("[tim10] > length_left = %7.3f, length_right = %7.3f, length = %7.3f\r\n", length_left, length_right, length);
+  printf("tim10.c > ");
+  printf("tim10_d_print() > encoder_length_left() = %7.5f, encoder_length_right() = %7.5f, encoder_length() = %7.5f\r\n", encoder_length_left(), encoder_length_right(), encoder_length());
+  printf("tim10_d_print() > velocity_left = %7.3f, velocity_right = %7.3f, velocity = %7.3f\r\n", velocity_left, velocity_right, velocity);
+  printf("tim10_d_print() > length_left = %7.3f, length_right = %7.3f, length = %7.3f\r\n", length_left, length_right, length);
   #endif
 }

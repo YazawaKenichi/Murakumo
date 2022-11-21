@@ -50,7 +50,6 @@ void tim6_stop()
 
 void tim6_main()
 {
-    motor_set(500, 500);
     #if !D_TIM6
     uint16_t analogl, analogr;
     int direction;
@@ -88,8 +87,21 @@ void tim6_main()
 
     if(motor_read_enable())
     {
-        // leftmotor   = velotrace_solve(tim10_read_velocity()) + tracer_solve(direction);
-        // rightmotor  = velotrace_solve(tim10_read_velocity()) - tracer_solve(direction);
+        switch(rotary_read_playmode())
+        {
+            case tracer_tuning:
+                leftmotor   = 0 + tracer_solve(direction);
+                rightmotor  = 0 - tracer_solve(direction);
+                break;
+            case velotrace_tuning:
+                leftmotor   = velotrace_solve(tim10_read_velocity()) + 0;
+                rightmotor  = velotrace_solve(tim10_read_velocity()) - 0;
+                break;
+            default:
+                leftmotor   = velotrace_solve(tim10_read_velocity()) + tracer_solve(direction);
+                rightmotor  = velotrace_solve(tim10_read_velocity()) - tracer_solve(direction);
+                break;
+        }
     }
     else
     {
@@ -97,12 +109,19 @@ void tim6_main()
         rightmotor = 0;
     }
 
-    // motor_set(leftmotor, rightmotor);
+    if(rotary_read_playmode() == motor_free)
+    {
+        motor_set(0, 0);
+    }
+    else
+    {
+        motor_set(leftmotor, rightmotor);
+    }
 }
 
 void tim6_d_print()
 {
     #if D_TIM6
-    printf("[tim6] > analogl = %5d, analogr = %5d, direction = %5d, leftmotor = %5.3f, rightmotor = %5.3f\r\n", analogl, analogr, direction, leftmotor, rightmotor);
+    printf("tim6.c > tim6_d_print() > analogl = %5d, analogr = %5d, direction = %5d, tracer_solve(direction) = %7.3f, leftmotor = %5.3f, rightmotor = %5.3f\r\n", analogl, analogr, direction, tracer_solve(direction), leftmotor, rightmotor);
     #endif
 }

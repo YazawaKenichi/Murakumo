@@ -1,4 +1,4 @@
-#include "defs.h"
+#include "function.h"
 
 double low_pass_filter(double val, double pre_val, double gamma)
 {

@@ -1,10 +1,11 @@
 #ifndef __MOTOR_H__
 #define __MOTOR_H__
 
-#include "main.h"
 #include "print.h"
+#include "defines.h"
+#include "stm32f4xx_hal_tim.h"
 
-#define D_MOTOR 1
+#define D_MOTOR 0
 
 #define PWMMAX 1000
 

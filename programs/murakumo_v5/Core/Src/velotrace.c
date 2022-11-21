@@ -9,15 +9,20 @@ PID pid;
 void velotrace_start()
 {
     velotrace_init(1);
-    if(rotary_read_playmode() == search)
+    switch(rotary_read_playmode())
     {
-        velotrace_set_gain(0);
-        velotrace_set_target(0);
-    }
-    else
-    {
-        velotrace_set_gain(rotary_read_value());
-        velotrace_set_target(rotary_read_value());
+        case search:
+            velotrace_set_gain(0);
+            velotrace_set_target(0);
+            break;
+        case velotrace_tuning:
+            pid.target = 0;
+            velotrace_set_gain(rotary_read_value());
+            break;
+        default:
+            velotrace_set_gain(rotary_read_value());
+            velotrace_set_target(rotary_read_value());
+            break;
     }
 }
 
@@ -71,13 +76,25 @@ void velotrace_set_target(unsigned short int i)
 
 double velotrace_solve(double reference_)
 {
-    double error = reference_ - pid.target;
-    double d_error = error - before_error;
-    s_error += error;
-    double result = pid.kp * error + pid. ki * s_error * samplingtime + pid.kd * d_error / samplingtime;
+    double error;
+    double d_error;
+    double result;
 
-    error = before_error;
+    error = reference_ - pid.target;
+
+    d_error = error - before_error / samplingtime;
+    s_error += error * samplingtime;
+
+    result = pid.kp * error + pid. ki * s_error + pid.kd * d_error;
+
+    before_error = error;
 
     return result;
 }
 
+void velotrace_print_values()
+{
+	printf("Velotrace\r\n");
+	printf("target = %5.3f\r\n", velotrace_read_target(rotary_read_value()));
+	printf("kp = %5.3f, ki = %5.3f, kd = %5.3f\r\n", velotrace_read_gain_kp(rotary_read_value()), velotrace_read_gain_ki(rotary_read_value()), velotrace_read_gain_kd(rotary_read_value()));
+}

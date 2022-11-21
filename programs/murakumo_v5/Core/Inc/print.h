@@ -2,8 +2,7 @@
 #define __PRINT_H__
 
 #include "stdio.h"
-#include "main.h"
-#include "analog.h"
+#include "defines.h"
 
 #define ESC_MAG	"\x1b[35m"
 #define ESC_RED "\x1b[31m"
@@ -21,12 +20,9 @@
 
 PUTCHAR_PROTOTYPE;
 
-void d_print();
-void print_playmode();
 void print_rotary_value();
-void print_while();
-void print_tracer_values();
-void print_velotrace_values();
+void tracer_print_values();
+void velotrace_print_values();
 void print_analog_rate();
 
 #endif

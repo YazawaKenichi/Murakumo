@@ -1,14 +1,14 @@
 #ifndef __TIM10_H__
 #define __TIM10_H__
 
-#include "main.h"
+#include "print.h"
 #include "encoder.h"
 #include "sidesensor.h"
-#include "LED.h"
+#include "defines.h"
 
 #define D_TIM10 1
 
-#define TIM10_Hz 0.001
+#define TIM10_Hz 0.001f
 
 void tim10_length_init();
 void tim10_start();

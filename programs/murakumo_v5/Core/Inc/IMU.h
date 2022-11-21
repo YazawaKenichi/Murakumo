@@ -1,8 +1,8 @@
 #ifndef ICM_20648_H
 #define ICM_20648_H
 
-#include "main.h"
-#include <math.h>
+#include "math.h"
+#include "print.h"
 
 extern SPI_HandleTypeDef hspi2;
 #define CS_RESET HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET)
@@ -59,6 +59,7 @@ double RADPERDEG;	// ( M_PI / 180 )	[rad / deg]
 
 uint8_t imu_read_byte(uint8_t);
 void imu_write_byte(uint8_t, uint8_t);
+void imu_initialize();
 uint8_t imu_init(uint8_t*);
 void imu_fin();
 void imu_set_offset();

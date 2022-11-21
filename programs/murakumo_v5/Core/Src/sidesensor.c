@@ -8,8 +8,8 @@ uint8_t sidesensor_read()
     uint8_t subsens;
 
     subsens = 0;
-    subsens += !HAL_GPIO_ReadPin(SubSens1_GPIO_Port, SubSens1_Pin) ? 1 : 0;
-    subsens += !HAL_GPIO_ReadPin(SubSens2_GPIO_Port, SubSens2_Pin) ? 2 : 0;
+    subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) ? 1 : 0;
+    subsens += !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) ? 2 : 0;
 
     return subsens;
 }

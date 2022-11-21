@@ -1,7 +1,7 @@
+#define __LED_H__ // 今は使われてないライブラリ
+
 #ifndef __LED_H__
 #define __LED_H__
-
-#include "main.h"
 
 /* set led1 value */
 void write_led1(uint8_t value_);
@@ -28,3 +28,4 @@ void write_led(uint8_t mask_, uint8_t value_);
     }
 */
 #endif
+

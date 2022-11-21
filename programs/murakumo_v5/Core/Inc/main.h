@@ -32,7 +32,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "defs.h"
+#include "defines.h"
+#include "print.h"
+#include "IMU.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -47,7 +49,6 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -56,6 +57,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+/* defines.h �?ですでに宣�?済みなので省略 */
+#ifndef EXTERN
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_adc1;
 
@@ -72,11 +75,7 @@ extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim14;
 
 extern UART_HandleTypeDef huart6;
-
-void main_init();
-void running_start();
-void running_stop();
-void imu_initialize();
+#endif /* EXTERN */
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -125,6 +124,12 @@ void imu_initialize();
 #define DRV2_EN_Pin GPIO_PIN_7
 #define DRV2_EN_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+
+void main_init();
+void running_start();
+void main_print_while();
+void main_d_print();
+void running_stop();
 
 /* USER CODE END Private defines */
 

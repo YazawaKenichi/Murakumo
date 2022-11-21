@@ -1,7 +1,10 @@
 #ifndef __TIM11_H__
 #define __TIM11_H__
 
-#include "main.h"
+#include "print.h"
+#include "Switch.h"
+#include "Rotary.h"
+#include "defines.h"
 
 void tim11_start();
 void tim11_stop();

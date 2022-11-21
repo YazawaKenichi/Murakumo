@@ -1,26 +1,14 @@
+/*
+    main.h 内で stm32f4xx_hal.h の後に呼び出されるヘッダファイル
+
+    この中で include したヘッダファイルは STM32 特有の型や変数が使用可能になる
+*/
 #ifndef __DEFINES_H__
 #define __DEFINES_H__
 
-#define PLAY 1
+#include "stm32f4xx_hal.h"
 
-#define D_ANALOG 0
-#define D_ANALOGRATE 0
-#define D_SIDESENS 0	//
-#define D_PWM 0
-#define D_ROTARY 0
-#define D_PLAYMODE 0
-#define D_SWITCH 0
-#define D_IMU 1
-#define D_FLASH 1
-#define D_LED 0
-#define D_VELOCITY_CONTROL 0
-#define D_VELOCITY_CONTROL_TIMER 0
-#define D_MATH 0
-#define D_SLOWSTART 0
-#define D_SEARCH 1
-#define D_WHILE_PRINT 0
-#define D_COURSE_SAVING 0
-#define D_PRINT 1
+#define PLAY 1
 
 #define USE_ANALOG 1
 #define USE_MOTOR 1
@@ -46,5 +34,31 @@
 #define LENGTH_SAMPLING 1
 #define LEFTMARKER_SAMPLING 0
 #define SAMPLING_LENGTH 10000
+
+/* main.h で再び宣言されるのを防ぐ */
+#define EXTERN
+#ifdef EXTERN
+
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
+extern I2C_HandleTypeDef hi2c1;
+extern SPI_HandleTypeDef hspi2;
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim10;
+extern TIM_HandleTypeDef htim11;
+extern TIM_HandleTypeDef htim14;
+extern UART_HandleTypeDef huart6;
+
+void Error_Handler(void);
+
+#endif /* EXTERN */
+
+#include "tim6.h"
+#include "tim10.h"
+#include "tim11.h"
+#include "imu.h"
 
 #endif

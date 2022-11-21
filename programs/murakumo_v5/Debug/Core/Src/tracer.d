@@ -1,6 +1,6 @@
 Core/Src/tracer.o: ../Core/Src/tracer.c ../Core/Inc/tracer.h \
- ../Core/Inc/velodef.h ../Core/Inc/defines.h ../Core/Inc/pid.h \
- ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Inc/pid.h ../Core/Inc/print.h ../Core/Inc/defines.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -33,22 +33,19 @@ Core/Src/tracer.o: ../Core/Src/tracer.c ../Core/Inc/tracer.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/defs.h ../Core/Inc/analog.h ../Core/Inc/print.h \
- ../Core/Inc/encoder.h ../Core/Inc/flash.h ../Core/Inc/IMU.h \
- ../Core/Inc/LED.h ../Core/Inc/motor.h ../Core/Inc/Rotary.h \
- ../Core/Inc/sidesensor.h ../Core/Inc/Switch.h ../Core/Inc/tim6.h \
- ../Core/Inc/velotrace.h ../Core/Inc/tracer.h ../Core/Inc/tim10.h \
- ../Core/Inc/tim11.h
+ ../Core/Inc/tim6.h ../Core/Inc/analog.h ../Core/Inc/flash.h \
+ ../Core/Inc/motor.h ../Core/Inc/velotrace.h ../Core/Inc/tracer.h \
+ ../Core/Inc/Rotary.h ../Core/Inc/tim10.h ../Core/Inc/encoder.h \
+ ../Core/Inc/sidesensor.h ../Core/Inc/tim11.h ../Core/Inc/Switch.h \
+ ../Core/Inc/imu.h
 
 ../Core/Inc/tracer.h:
 
-../Core/Inc/velodef.h:
-
-../Core/Inc/defines.h:
-
 ../Core/Inc/pid.h:
 
-../Core/Inc/main.h:
+../Core/Inc/print.h:
+
+../Core/Inc/defines.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
@@ -116,34 +113,28 @@ Core/Src/tracer.o: ../Core/Src/tracer.c ../Core/Inc/tracer.h \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
-../Core/Inc/defs.h:
+../Core/Inc/tim6.h:
 
 ../Core/Inc/analog.h:
 
-../Core/Inc/print.h:
-
-../Core/Inc/encoder.h:
-
 ../Core/Inc/flash.h:
 
-../Core/Inc/IMU.h:
-
-../Core/Inc/LED.h:
-
 ../Core/Inc/motor.h:
-
-../Core/Inc/Rotary.h:
-
-../Core/Inc/sidesensor.h:
-
-../Core/Inc/Switch.h:
-
-../Core/Inc/tim6.h:
 
 ../Core/Inc/velotrace.h:
 
 ../Core/Inc/tracer.h:
 
+../Core/Inc/Rotary.h:
+
 ../Core/Inc/tim10.h:
 
+../Core/Inc/encoder.h:
+
+../Core/Inc/sidesensor.h:
+
 ../Core/Inc/tim11.h:
+
+../Core/Inc/Switch.h:
+
+../Core/Inc/imu.h:

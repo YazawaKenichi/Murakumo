@@ -1,8 +1,10 @@
 #ifndef __FLASH_H__
 #define __FLASH_H__
 
-#include "main.h"
 #include "analog.h"
+#include "defines.h"
+#include "print.h"
+#include "string.h"
 
 #define BACKUP_FLASH_SECTORNUM FLASH_SECTOR_11
 #define BACKUP_FLASH_SECTOR_SIZE (1024*16)

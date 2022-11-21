@@ -41,6 +41,45 @@ uint8_t rotary_read()
     return rotary_value_;
 }
 
+void rotary_print_playmode()
+{
+	printf("playmode = ");
+	switch(rotary_read_playmode())
+	{
+		case calibration:
+			printf("calibration");
+			break;
+		case search:
+			printf("search");
+			break;
+		case accel:
+			printf("accel");
+			break;
+		case max_enable:
+			printf("max_enable");
+			break;
+        case motor_free:
+            printf("motor_free");
+            break;
+		case tracer_tuning:
+			printf("tracer_tuning");
+			break;
+		case velotrace_tuning:
+			printf("velotrace_tuning");
+			break;
+		case banquet:
+			printf("banquet");
+			break;
+		case flash_print:
+			printf("flash_print");
+			break;
+		default:
+			printf("unknown playmode...");
+			break;
+	}
+	printf("\r\n");
+}
+
 /* Usuage */
 /*
     void main()

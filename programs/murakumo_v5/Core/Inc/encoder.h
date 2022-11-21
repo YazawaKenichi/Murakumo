@@ -1,16 +1,16 @@
 #ifndef __ENCODER_H__
 #define __ENCODER_H__
 
-#ifndef __MAIN_H
-#include "main.h"
-#endif
 #include "math.h"
+#include "defines.h"
+#include "print.h"
 
 #ifndef D_ENCODER
 #define D_ENCODER 1
 #endif
 
-#define ENCODER_MIDDLE (2048/2)
+// #define ENCODER_MIDDLE (4096/2)
+#define ENCODER_MIDDLE (4096/2)
 
 /* LENGTH PER PULSE */
 #define TIREDIAMETER 21000

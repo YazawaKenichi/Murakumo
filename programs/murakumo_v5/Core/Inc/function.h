@@ -1,28 +1,12 @@
 #ifndef __DEFS_H__
 #define __DEFS_H__
 
+/* ↓これ何に使ってん？
 #include "string.h"
 #include "stdint.h"
+*/
 
-#include "analog.h"
-// #include "course.h"
-#include "encoder.h"
-#include "flash.h"
-#include "IMU.h"
-#include "LED.h"
-#include "motor.h"
-#include "pid.h"
-#include "print.h"
-#include "Rotary.h"
-#include "sidesensor.h"
-// #include "slow."
-#include "Switch.h"
-#include "tim6.h"
-#include "tim10.h"
-#include "tim11.h"
-#include "tracer.h"
-#include "velodef.h"
-#include "velotrace.h"
+#include "math.h"
 
 #define COURSE_START_TIME_PLUSE 1
 

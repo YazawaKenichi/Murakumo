@@ -48,6 +48,22 @@ void imu_write_byte(uint8_t reg, uint8_t val)
 #endif
 }
 
+void imu_initialize()
+{
+	printf("Starting SPI2 (IMU)\r\n");
+	uint8_t wai, ret;
+	ret = imu_init(&wai);
+	printf("who_am_i = %d\r\n", wai);
+	if(ret == 1)
+	{
+		printf("SPI INIT COLLECT!\r\n");
+	}
+	else
+	{
+		printf("SPI INIT FAILURE x_x \r\n");
+	}
+}
+
 uint8_t imu_init(uint8_t* wai)
 {
 	CS_RESET;
