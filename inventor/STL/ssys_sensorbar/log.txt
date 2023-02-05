@@ -1,0 +1,46 @@
+session {2/5 5:34:38pm > Yazawa opened job C:/ProgramData/Stratasys/FDMControlCenter/10.2/jobs/Yazawa/Default.sjb.  Insight 10.2 (4618).}
+msg {5:34:39pm > Read 2942 facets in 0:00 from "C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/sensorbar.stl"}
+msg {5:34:39pm > STL comment: STLB ATF 10.3.0.1329}
+msg {5:34:39pm > Bounding box of this STL X, Y, Z:}
+msg {5:34:39pm >       min = (-9.5000, -0.0000, -9.5000)}
+msg {5:34:39pm >       max = (9.5000, 3.0000, 9.5000)}
+msg {5:34:39pm > Done loading STL file after 1 sec.}
+msg {5:34:59pm > 	Slice height:	0.2540}
+msg {5:34:59pm > Done slicing.}
+msg {5:34:59pm > Supports removed}
+msg {5:34:59pm > 	Support style:	SMART}
+msg {5:35:00pm > Inspecting part curves}
+msg {5:35:00pm > Generating supports}
+msg {5:35:00pm > Done generating supports.}
+msg {5:35:01pm > Done writing boundary curves.}
+msg {5:35:01pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_sensorbar/sensorbar.sjb}
+msg {5:35:01pm > 	Part fill style:	One contour /  rasters}
+msg {5:35:01pm > 	Part interior style:	Sparse - high density}
+msg {5:35:01pm > 	Contour width:	0.5080}
+msg {5:35:01pm > 	Part raster width:	0.5080}
+msg {5:35:02pm > Done generating toolpaths.}
+msg {5:35:03pm > CMB moved to envelope center.}
+msg {5:35:03pm > Toolpath Information}
+msg {5:35:03pm > 	Est. build time:	7 min }
+msg {5:35:03pm > 	Model material:	0.608 cm³}
+msg {5:35:03pm > 	Support material:	0.485 cm³}
+msg {5:35:03pm > Done writing CMB file after 1 sec.}
+msg {5:35:03pm > Job Summary}
+msg {5:35:03pm > 	Full job path:	C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_sensorbar/sensorbar.sjb}
+msg {5:35:03pm > 	Toolpath file name:	sensorbar.cmb}
+msg {5:35:03pm > 	Modeler:		Fortus 250mc}
+msg {5:35:03pm > 	Est. build time:	7 min }
+msg {5:35:03pm > 	Model material:	0.608 cm³,	T14,	ABS P430}
+msg {5:35:03pm > 	Support material:	0.485 cm³,	T16,	ABS SR30}
+msg {5:35:03pm > 	Slice height:	0.2540}
+msg {5:35:03pm > 	Part fill style:	One contour /  rasters}
+msg {5:35:03pm > 	Part interior style:	Sparse - high density}
+msg {5:35:03pm > 	Visible surface style:	Enhanced}
+msg {5:35:03pm > 	Support style:	SMART}
+msg {5:35:03pm > 	Contour width:	0.5080}
+msg {5:35:03pm > 	Number of contours:	6.3500}
+msg {5:35:03pm > 	Part interior contours:	0.5080}
+msg {5:35:03pm > 	Part raster width:	0.5080}
+msg {5:35:03pm > 	Application:	Insight 10.2, Build version: 4618}
+msg {5:35:03pm > Saved job:  C:/Users/Yazawa/Documents/GitHub/murakumo/inventor/STL/ssys_sensorbar/sensorbar.sjb,  approximate build time 7 min }
+session {2/5 5:47:53pm > Yazawa closed job.}
