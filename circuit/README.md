@@ -41,7 +41,14 @@ DRV8874 のデータシートを読んで得た情報
 - CPH CPL 間に 22nF のコンデンサ
 - nFault は故障で LOW nSleep は LOW でスリープ => nFault と nSleep を直結すると故障と同時にスリープに入る。
 - nFault には外部プルアップが必要。
-- 
+
+SR ピンは 1 にすると FET 経由で回生する
+
+SR ピンを 0 にするとダイオード経由で回生する
+
+Figure 2: Fast Decay Power Bridge Current Paths が一番創造に近いモータドライバの制御に近い
+
+PWMH PWML には常に 1 を入れて、PHASE に 
 
 
 ##### CPU
