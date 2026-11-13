@@ -107,6 +107,8 @@ extern UART_HandleTypeDef huart6;
 #define LED_R_GPIO_Port GPIOA
 #define Rotary4_Pin GPIO_PIN_12
 #define Rotary4_GPIO_Port GPIOA
+#define Buzzer_Pin GPIO_PIN_15
+#define Buzzer_GPIO_Port GPIOA
 #define Rotary2_Pin GPIO_PIN_10
 #define Rotary2_GPIO_Port GPIOC
 #define Rotary8_Pin GPIO_PIN_11
